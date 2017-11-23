@@ -3,7 +3,7 @@ package Data;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
 
 @objid ("587a7c14-a3db-4c65-9f1e-2070b222a8b2")
-public class Scenario Resume {
+public class ScenarioResume {
     @objid ("aaa8b7ec-a476-4919-ad86-62104ba85a97")
     private int cancelledTripCounter;
 
