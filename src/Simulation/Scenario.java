@@ -4,6 +4,9 @@ import Data.Result;
 import Data.Scenario Resume;
 import Data.Station;
 import Data.Trip;
+
+import java.util.List;
+
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
 
 @objid ("458f34b7-cc9d-41e9-a830-5211ea597923")
@@ -26,7 +29,7 @@ public class Scenario {
     public List<Station> stationList = new ArrayList<Station> ();
 
     @objid ("a7965491-a9ad-4376-b287-6c1711ebad0b")
-    public Scenario Resume scenarioResume;
+    public Scenario scenarioResume;
 
     @objid ("ca2b6870-101c-402d-a43d-6e7ad9b37f6b")
     public Result result;
@@ -77,12 +80,33 @@ public Scenario (float growthParameter) {
     	return growthParameter;
     }
 
+    
+    /** function to execute trips, essential simulation tool */
     @objid ("f01db4d9-90db-4bda-94db-61f6485dda6d")
     public void runTrips() {
+    	for(i=0; i < tripList.size(); i++) {
+    		
+    		tripList.get(i).getStartStation().takeBike();
+    		tripList.get(i).getStartStation().returnBike();
+    		
+    	}
     }
 
+    /** method to simulate a Velib Scenario without regulation */
     @objid ("74708208-9372-4c59-9ef0-e11fb9faeffb")
     public void noRegulation() {
+    	
+    	// supression of regulation trips
+    	for (i=0; i < tripList.size(); i++) {
+    		
+    		if (tripList.get(i).getReason() = enum regulation) {
+    			tripList.remove(i);
+    		}    		
+    	}
+    	
+    	//trip execution without regulation
+    	this.runTrips();
+    	
     }
 
     @objid ("1bc0983b-93f7-4430-a171-4e92a3d9dcf9")
