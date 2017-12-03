@@ -1,23 +1,57 @@
 package Data;
 
-import java.util.Date;
-import com.modeliosoft.modelio.javadesigner.annotations.objid;
+import java.text.*;
+import java.util.*;
 
-@objid ("a8a85582-bdea-4a51-ab18-8c93a444132f")
+
+
 public class State {
-    @objid ("43050d5b-9d0a-4007-845d-80aa75647e8f")
-    private Date date;
 
-    @objid ("87ee4dbf-da7a-49ae-9e55-054098856980")
+    private Date date;
     private int bikes;
 
-    @objid ("235422ac-0a9f-4334-81d8-ab507bc14af7")
-    public void getDate(Date date) {
+    /* Constructeur */
+    /* Date format "yyyy-MM-dd hh:mm:ss" */ 
+    public State(int numOfBikes, Date currentDate) {
+      bikes = numOfBikes;
+      date = currentDate;
+    }
+    
+    /* Input Date String "yyyy-MM-dd hh:mm:ss" */ 
+    /* Date format "yyyy-MM-dd hh:mm:ss" */ 
+    public State(int numOfBikes, String currentDateString) {
+      bikes = numOfBikes;
+      SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+      try {
+        date = ft.parse(currentDateString);
+      } catch (ParseException e) {
+        System.out.println("Unparseable using" + ft);
+      }
+    }
+    
+
+    public Date getDate(Date date) {
+      return date;
     }
 
-    @objid ("16e82aa2-6385-4944-8df5-b959a5ddc1de")
     public void setDate(final Date p1) {
+      date = p1;
+    }
+    
+    public int getBikes() {
+      return bikes;
+    }
+    
+    public String toString() {
+      return date.toString();
     }
 
+    
+    /*Pour tester le code*/
+    public static void main(String [] args) {
+      Date date1 = new Date();
+      State st = new State(3,date1);
+      System.out.println(st);
+    }
+    
 }
-// top
