@@ -6,20 +6,19 @@ import java.util.*;
 public class State {
     
     private Date date;
-    private int freeBikes;
-    private boolean isOpen;
+    private int numberOfFreeBikes;
 
     /* Constructeur */
     /* Date format "yyyyMMddhhmmss" */ 
     public State(int numOfFreeBikes, Date currentDate) {
-      freeBikes = numOfFreeBikes;
+      numberOfFreeBikes = numOfFreeBikes;
       date = currentDate;
     }
     
     /* Input Date String "yyyyMMddhhmmss" */ 
     /* Date format "yyyyMMddhhmmss" */ 
     public State(int numOfFreeBikes, String currentDateString) {
-      freeBikes = numOfFreeBikes;
+      numberOfFreeBikes = numOfFreeBikes;
       if (currentDateString.length() == 14) {
         SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmmss");
         try {
@@ -38,8 +37,8 @@ public class State {
       date = p1;
     }
     
-    public int getBikes() {
-      return freeBikes;
+    public int getNumberOfFreeBikes() {
+      return numberOfFreeBikes;
     }
     
     public boolean isOpen() {
@@ -47,7 +46,7 @@ public class State {
     }
     
     public String toString() {
-      return date.toString()+"\t Number of free bikes: "+getBikes();
+      return date.toString()+"\t Number of free bikes: "+getNumberOfFreeBikes();
     }
 
     
