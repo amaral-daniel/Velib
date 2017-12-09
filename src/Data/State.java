@@ -8,18 +8,21 @@ public class State {
     private Date date;
     private int numberOfFreeBikes;
     private boolean isFull;
+    private boolean isEmpty;
     
 
     /* Constructeur */
     /* Date format "yyyyMMddhhmmss" */ 
-    public State(int numOfFreeBikes, Date currentDate) {
+    public State(int numOfFreeBikes, Date currentDate, int capacity) {
       numberOfFreeBikes = numOfFreeBikes;
+      isFull = (numOfFreeBikes == capacity);
+      isEmpty = (numOfFreeBikes == 0);
       date = currentDate;
     }
     
     /* Input Date String "yyyyMMddhhmmss" */ 
     /* Date format "yyyyMMddhhmmss" */ 
-    public State(int numOfFreeBikes, String currentDateString) {
+    public State(int numOfFreeBikes, String currentDateString, int capacity) {
       numberOfFreeBikes = numOfFreeBikes;
       if (currentDateString.length() == 14) {
         SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmmss");
@@ -37,14 +40,22 @@ public class State {
     public Date getDate(Date date) {
       return date;
     }
-    public void setDate(final Date p1) {
-      date = p1;
-    }
     
     public int getNumberOfFreeBikes() {
       return numberOfFreeBikes;
     }
     
+    public boolean isFull() {
+      return isFull;
+    }
+    public boolean isEmpty() {
+      return isEmpty;
+    }
+    
+    /* Setters */
+    public void setDate(final Date p1) {
+      date = p1;
+    }
     
     public String toString() {
       return date.toString()+"\t Number of free bikes: "+getNumberOfFreeBikes();

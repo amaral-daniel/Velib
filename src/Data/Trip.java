@@ -4,9 +4,7 @@ import java.util.Date;
 
 //import com.modeliosoft.modelio.javadesigner.annotations.objid;
 
-
 public class Trip {
-
     private enum Reason{
                   RENT, MAINTENANCE,REGULATION };
     private Reason reason;
@@ -17,7 +15,7 @@ public class Trip {
     public Station startStation;
     public Station endStation;
 
-    /*Constructeur*/
+    /* Constructeur reason: 1-RENT, 2-MAINTENANCE, 3-REGULATION*/
     public Trip (int rsn, Date start, Date end, boolean isValid) {
       switch (rsn) {
         case 1: this.reason = Reason.RENT;
@@ -40,14 +38,7 @@ public class Trip {
     public void validateTrip() {
       isValid = true;
     }
-    
-    public boolean isFull() {
-      
-    }
-    
-    public boolean isEmpty() {
-    
-    }
+
     
     /* Getters */
     public Reason getReason() {
@@ -70,7 +61,7 @@ public class Trip {
       return endStation;
     }
     
-    public boolean getIsValid() {
+    public boolean isValid() {
       return isValid;
     }
     
