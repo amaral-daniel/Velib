@@ -6,34 +6,59 @@ import Data.*;
 import Simulation.*;
 import java.util.ArrayList;
 
-public class EvaluateurScenario {
+public class EvaluateurScenario 
+{
     private Scenario refScenario;
+    
+	public EvaluateurScenario(Scenario newScenario)
+	{
+		refScenario = newScenario;
+	}
 	
-	
-	/** The Method evaluates for a given Scenario the critical States of all Stations and writes it to file **/
-    public ArrayList<Station> identifyCriticalStations(Scenario refScenario) 
-    {
-
+    public ArrayList<Station> identifyCriticalStations() 
+    { 	
+    		ArrayList<Station> criticalStations = ArrayList<Station>();
+    		ArrayList<Station> stationList = refScenario.getStationList();
     	
-    	ArrayList<Station> criticalStations;
-    	ArrayList<Station> stationList = refScenario.getStations();
-    	
-    	for (int i; i < stationList.size(); i++) 
-    	{
     		
-    		Station currentStation = stationList.get(i);
-    		ArrayList<State> stationStates = currentStation.getStates();
-    		int criticalTime = 0;
-    		
-
-    		if(EvaluateurStation.isCritical(currentStation ))
+    		for (int i = 0; i < stationList.size(); i++) 
     		{
-    			criticalStations.add(currentStation);
-    		}
-    			
-    	}   	
-    	
-    	return criticalStations;
+	    		Station currentStation = stationList.get(i);
+	    		int criticalTime = 0;
+	    		if(EvaluateurStation.isCritical(currentStation ))
+	    		{
+	    			criticalStations.add(currentStation);
+	    		}   			
+	    	}   		    	
+	    	return criticalStations;
     }
+
+    //fonction pour dire si le scenario est deja desequilibre, return true si ils est desequilibre.
+    //Il n'est pas encore implemente
+    
+    public int getSecondsTrajets()
+    {
+    		ArrayList<Trip> trips = refScenario.getTrips();
+    		int totalSecondsTrajets = 0;
+    		
+    		for(int i = 0; i < trips.size(); i++)
+    		{
+    			Trip currentTrip = trips.get(i);
+    			if(trips.get(i).isValid())
+    			{
+    				long duration = currentTrip.getEndDate().getTime() - currentTrip.getStartDate().getTime();
+    				totalSecondsTrajets += (int)duration;
+    			}
+    			
+    		}
+    		return totalSecondsTrajets;
+    }
+    
+    //fonction pour dire si le scenario est deja desequilibre, return true si ils est desequilibre.
+    //Il n'est pas encore implemente
+	public boolean isUnbalanced()
+	{
+		return true;
+	}
 
 }
