@@ -182,7 +182,7 @@ public Scenario (float growthParameter) {
     		return;
     	} */
 
-    
+    /** simple Version of runTrips for testing purpose */
     public void runTripsTest () {
     	
     	for(int i=0; i < tripList.size(); i++) {
