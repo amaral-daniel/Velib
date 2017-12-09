@@ -16,7 +16,7 @@ public class Trip {
     public Station endStation;
 
     /* Constructeur reason: 1-RENT, 2-MAINTENANCE, 3-REGULATION*/
-    public Trip (int rsn, Date start, Date end, boolean isValid) {
+    public Trip (int rsn, Date start, Date end) {
       switch (rsn) {
         case 1: this.reason = Reason.RENT;
                 break;
@@ -62,8 +62,13 @@ public class Trip {
     
     
     /* Setters */
-    public void setters(final String p1) {
+    public void setStartStation(Station newStartStation) {
+      startStation = newStartStation;
     }
-
+    
+    public void setEndStation(Station newEndStation) {
+      endStation = newEndStation;
+    }
+   
 
 }
