@@ -193,6 +193,7 @@ public Scenario (float growthParameter) {
     			currentTrip.getEndStation().returnBike(currentTrip);
     		}
     	}
+    	return;
     	}
         	/*Trip selectedTrip = tripList.get(i);
         	Trip currentTrip = findNextTrip(selectedTrip); //Schleifentyp
