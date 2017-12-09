@@ -44,26 +44,22 @@ public class Trip {
     public Reason getReason() {
       return reason;
     }
-    
     public Date getStartDate() {
       return startDate;
     }
-    
     public Date getEndDate() {
       return endDate;
     }
-    
+    public boolean isValid() {
+      return isValid;
+    }
     public Station getStartStation() {
       return startStation;
     }
-    
     public Station getEndStation() {
       return endStation;
     }
     
-    public boolean isValid() {
-      return isValid;
-    }
     
     /* Setters */
     public void setters(final String p1) {
