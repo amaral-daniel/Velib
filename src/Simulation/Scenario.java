@@ -8,8 +8,6 @@ import Data.Trip;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.modeliosoft.modelio.javadesigner.annotations.objid;
-
 public class Scenario {
 	
 	/** declaration of attributes */
@@ -19,11 +17,11 @@ public class Scenario {
 
     private float growthParameter;
     
-    public ArrayList<Trip> tripList = new ArrayList <Trip> ();
+    private ArrayList<Trip> tripList = new ArrayList <Trip> ();
 
-    public ArrayList<Station> stationList = new ArrayList <Station> ();
+    private ArrayList<Station> stationList = new ArrayList <Station> ();
     
-    public ArrayList<Trip> waitingTrips = new ArrayList <Trip> ();
+    private ArrayList<Trip> waitingTrips = new ArrayList <Trip> ();
 
     public Scenario scenarioResume;
 
@@ -63,6 +61,14 @@ public Scenario (float growthParameter) {
     	return;
     }
 
+	public ArrayList <Trip> getTripList () {
+	return tripList;
+	}
+	
+	public ArrayList <Station> getStationList () {
+		return stationList;
+		}
+
     public boolean getRegulation () {
     	return regulation;
     }
@@ -85,28 +91,33 @@ public Scenario (float growthParameter) {
 			trip.cancelTrip();
 		}
 		
-		else if (trip.getStartStation().getLastState.isEmpty())	{
+		else if (trip.getStartStation().getLatestState().isEmpty())	{
 			trip.cancelTrip();
 		}
 		
 		else {
-			trip.getStartStation().takeBike();
+			trip.getStartStation().takeBike(trip);
 			waitingTrips.add(trip);
+			trip.validateTrip();
 		}
     	
     	return;
     }
     
-    public void endTrip { //Operation
-    	tripList.get(i).getStartStation().returnBike();
+    public void endTrip (Trip trip){ //Operation
+    	
+    	trip.getStartStation().returnBike(trip);
+    	
+    	return;
     }
     
-    public Trip findNextTrip() { //Operation
-    	//
+    public Trip findNextTrip(Trip selectedTrip) { //Operation
+    	
     	//implementation with isValid??
-    	Trip nextTrip = //;
-    	if	(nextTrip.getDate.after(waitingTrips.get(0)))  {
-    		nextTrip = waitingTrips.get(0)
+    	Trip nextTrip = selectedTrip;
+    	
+    	if	(nextTrip.getStartDate().after(waitingTrips.get(0).getEndDate()))  {
+    		nextTrip = waitingTrips.get(0);
     	}
     	
     	return nextTrip;
@@ -115,18 +126,19 @@ public Scenario (float growthParameter) {
     
     /** function to execute trips, essential simulation tool */
     public void runTrips() {
-    	// for(int i=0; i < tripList.size(); i++) { // überarbeiten
-    	Trip currenttrip;
-    	currentTrip = findNextTrip();
-    	startTrip(currentTrip);
-    	findnext
-    	endTrip(currenttrip);
-    		
-    			//is full => find close station
-    		
-    		
+    	for(int i=0; i < tripList.size(); i++) {
+    	Trip selectedTrip = tripList.get(i);
+    	Trip currentTrip = findNextTrip(selectedTrip); //Schleifentyp
+    	if (selectedTrip.equals(currentTrip)) {
+    		startTrip(currentTrip);
     	}
-    }
+    	else {
+    		endTrip(currentTrip);
+    	}  	
+    	//is full => find close station
+    	}
+    		return;
+    	}
 
     /** method to simulate a Velib Scenario without regulation */
     public void noRegulation() {
@@ -151,7 +163,7 @@ public Scenario (float growthParameter) {
     	
    float helpvar=1/(growthParameter-1);
     			
-for (int i=tripList.size(); i > 0; ((float) i)-helpvar ) { //schleifenkopf überprüfen
+for (int i=tripList.size(); i > 0; i=((float) i)-helpvar ) { //schleifenkopf überprüfen
     	
 	//clone implementation
     	tripList.get((int) i).clone();
