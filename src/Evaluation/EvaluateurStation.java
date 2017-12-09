@@ -17,21 +17,21 @@ public final class EvaluateurStation {
 	}
 	
 	
-	public static boolean isCritical(Station stationAEvaluer)
+	public static boolean isCritical(Station station)
 	{
 
-		ArrayList<State> stationStates = stationAEvaluer.getStates();
 		int criticalTime = 0;
 		
 		//loop running through all States j of the selected Station i
-		for	(int j; j < stationStates.size() - 1; j++) {
+		//Must change this!!!!!!!!!!!!!!! Methods have changed
+		for	(int j; j < station.getNumberOfStates() - 1; j++)
+		{
 			
-			State currentState = stationStates.get(j);
-					
+			State currentState = station.getState(j);
+			State nextState = station.getStateList(j + 1);
 			//check if the station i is almost empty or full in State j
-			if (currentState.getBikes() == < 2 || currentState.getBikes() == currentStation.getCapacity()) 
+			if (currentState.getNBikes() <= 2 || currentState.getNBikes() == station.getCapacity()) 
 			{			
-				State nextState = stationStates.get(j + 1);
 				int durationState = nextState.getTime() - currentState.getTime() ;	
 				criticalTime += durationState;
 			}
@@ -44,6 +44,6 @@ public final class EvaluateurStation {
 		}
 		return false;
 	}
-	
+
 	
 }
