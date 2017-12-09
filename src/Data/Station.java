@@ -124,8 +124,8 @@ public class Station {
 
     
     public String toString() {
-      String info = getName()+getAddress()+getIdentity()+" "+getCapacity()+" "+getLongitude()+" "+getLatitude();
-      info = info + "\n";
+      String info = "id: "+getIdentity()+"\tnm: "+getName()+"\tad: "+getAddress()+"\tcpct: "+getCapacity()+"\tlog: "+getLongitude()+"\tlat: "+getLatitude();
+      info = info + "\n Latest state:" + getLatestState().toString()+isOpen();
       return name;
       
     }

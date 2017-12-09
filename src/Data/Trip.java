@@ -16,7 +16,7 @@ public class Trip {
     public Station endStation;
 
     /* Constructeur reason: 1-RENT, 2-MAINTENANCE, 3-REGULATION*/
-    public Trip (int rsn, Date start, Date end) {
+    public Trip (int rsn, Date start, Date end, Station startStation, Station endStation) {
       switch (rsn) {
         case 1: this.reason = Reason.RENT;
                 break;
@@ -27,7 +27,9 @@ public class Trip {
       }
       this.startDate = start;
       this.endDate = end;
-      this.isValid = isValid;
+      this.startStation = startStation;
+      this.endStation = endStation;
+      
     }
     
     /* Trip manipulation */
