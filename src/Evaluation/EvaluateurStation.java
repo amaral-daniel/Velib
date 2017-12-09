@@ -15,35 +15,51 @@ public final class EvaluateurStation {
 	{
 		minimalCriticalTime = n;
 	}
-	
-	
+		
 	public static boolean isCritical(Station station)
 	{
 
 		int criticalTime = 0;
+		//System.out.println("--------------------");
+		//System.out.println("looking station:" + station + "\n");
 		
 		//loop running through all States j of the selected Station i
 		//Must change this!!!!!!!!!!!!!!! Methods have changed
-		for	(int j; j < station.getNumberOfStates() - 1; j++)
+		//System.out.println("number of state:::" + station.getNumberOfStates());
+		for	(int j = 0; j < station.getNumberOfStates() - 1; j++)
 		{
-			
+
 			State currentState = station.getState(j);
-			State nextState = station.getStateList(j + 1);
+			State nextState = station.getState(j + 1);
 			//check if the station i is almost empty or full in State j
+		//	System.out.println("state::::" + currentState);
 			if (currentState.getNBikes() <= 2 || currentState.getNBikes() == station.getCapacity()) 
 			{			
-				int durationState = nextState.getTime() - currentState.getTime() ;	
-				criticalTime += durationState;
+		//		System.out.println("next:::" + nextState.getDate().getTime() + "\n");
+		//		System.out.println("current:::" + currentState.getDate().getTime() + "\n");
+				long durationState = nextState.getDate().getTime() - currentState.getDate().getTime() ;	
+				criticalTime += (int)durationState;
+		//		System.out.println("adding critical time:" + (int)durationState + "\n");
 			}
 					
 		}			
 		
 		if(criticalTime >= minimalCriticalTime)
 		{
-			return true;
+				return true;
 		}
 		return false;
 	}
 
+	public static void main(String[] args)
+	{
+		System.out.println("test");
+		
+	}	
+	
+	
+	
 	
 }
+
+		
