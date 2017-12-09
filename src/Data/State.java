@@ -36,7 +36,7 @@ public class State {
     
     
     /* Getters */
-    public Date getDate(Date date) {
+    public Date getDate() {
       return date;
     }
     public int getNBikes() {
