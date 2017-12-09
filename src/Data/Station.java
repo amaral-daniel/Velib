@@ -51,7 +51,7 @@ public class Station {
 
     public void returnBike(Date date) {
       int numberOfFreeBikesNew = stateList.get(stateList.size()).getNumberOfFreeBikes() + 1;
-      stateLists.add(new State(numberOfFreeBikesNew, date,capacity));
+      stateList.add(new State(numberOfFreeBikesNew, date,capacity));
     }
 
     public void returnBike(Trip trip) {
@@ -72,8 +72,11 @@ public class Station {
     
     
     /* Getters */
-    public State getStateList(int n) {
+    public State getState(int n) {
       return stateList.get(n);
+    }
+    public ArrayList<State> getStateList(){
+      return stateList;
     }
     public int getNumberOfStates() {
       return stateList.size();
