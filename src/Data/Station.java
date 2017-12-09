@@ -2,6 +2,7 @@ package Data;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 //import com.modeliosoft.modelio.javadesigner.annotations.objid;
 
 public class Station {
@@ -147,7 +148,7 @@ public class Station {
       station1.takeBike(date1);
       System.out.println(station1);
       
-      TimeUnit.SECONDS.sleep(1);
+
       Date date2 = new Date();
       station1.returnBike(date2);
       System.out.println(station1);
