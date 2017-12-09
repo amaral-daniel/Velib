@@ -2,7 +2,7 @@ package Data;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
+
 //import com.modeliosoft.modelio.javadesigner.annotations.objid;
 
 public class Station {
@@ -24,7 +24,8 @@ public class Station {
     /* Veuillez utiliser le setPrimaryState et setIsOpen après la création d'une station impérativement */
     public Station(int identity, int capacity) {
       this.identity = identity;
-      this.capacity = capacity; 
+      this.capacity = capacity;
+      this.isOpen = true;
     }
     
     /* Constructeurs, plus des informations supplémentraires */
@@ -36,6 +37,7 @@ public class Station {
       this.longitude = longitude;
       this.latitude = latitude;
       stateList = new ArrayList<State> ();
+      this.isOpen = true;
     }
     
     /* Operations des trips (trajets), on prends qu'un vélo chaque fois */
@@ -139,22 +141,43 @@ public class Station {
     
 
     public static void main (String [] args) {
+      // Création d'une station
       Station station1 = new Station(901,20,"00901 - ALLEE DU BELVEDERE","ALLEE DU BELVEDERE PARIS 19 - 0 75000 Paris - 75000 PARIS",2.391225227186182,48.892795924112306);
       State state1 = new State(6,"20131030125959",station1.getCapacity());
       station1.setIsOpen(true);
-      station1.getStateList().add(state1);
+      station1.setPrimaryState(state1);
+//      station1.getStateList().add(state1);
+      System.out.println("Creation of a station");
       System.out.println(station1);
+      
+      // Test de takeBike() et returnBike()
       Date date1 = new Date();
       station1.takeBike(date1);
+      System.out.println();
+      System.out.println("After taking a bike:");
       System.out.println(station1);
+      try        
+      {
+          Thread.sleep(2000); //après 2 secondes
+      } 
+      catch(InterruptedException ex) 
+      {
+          Thread.currentThread().interrupt();
+      }
       
-
       Date date2 = new Date();
+      System.out.println();
       station1.returnBike(date2);
+      System.out.println("After returning a bike:");
       System.out.println(station1);
       
       
-     // Station station2 = new Station(903,20,"00903 - QUAI MAURIAC  / PONT DE BERCY","FETE DE L\u0027OH (BERCY) - QUAI MAURIAC ANG PONT DE BERCY",2.374340554605615,48.83713368945151);
-      
+      Station station2 = new Station(903,20,"00903 - QUAI MAURIAC  / PONT DE BERCY","FETE DE L\u0027OH (BERCY) - QUAI MAURIAC ANG PONT DE BERCY",2.374340554605615,48.83713368945151);
+      State state2 = new State(15,"20131030125959",station1.getCapacity());
+      station2.setIsOpen(true);
+      station2.setPrimaryState(state2);
+      System.out.println();      
+      System.out.println("Creation of an other station");
+      System.out.println(station2);
     }
 }
