@@ -38,14 +38,14 @@ public class Scenario {
     }
     
     /** regulation constructor */
-public Scenario (boolean regulation) {
+/* public Scenario (boolean regulation) {
     	
 	this.Scenario(regulation,(float) 1,(float) 1);
 	
     	return;
     }
     
-/** collaborationRate constructor */
+/** collaborationRate constructor 
 public Scenario (float collaborationRate) {
 	
 	this.Scenario( false, collaborationRate, (float) 1);
@@ -53,13 +53,13 @@ public Scenario (float collaborationRate) {
     	return;
     }
     
-/** growthParameter constructor */
+/** growthParameter constructor 
 public Scenario (float growthParameter) {
 	
 	this.Scenario( false,(float) 1, growthParameter);
 	
     	return;
-    }
+    } */
 
 	public ArrayList <Trip> getTripList () {
 	return tripList;
@@ -104,9 +104,29 @@ public Scenario (float growthParameter) {
     	return;
     }
     
+    public Station findNextUsableStation(Station referenceStation) {
+    	
+    	Station usableStation;
+    	for (int i=0; i<referenceStation.getClosestStations().size(); i++) {
+    		
+    	if (!referenceStation.getClosestStations().get(i).isFull()) {
+    		usableStation = referenceStation.getClosestStations().get(i);
+    		return usableStation;
+    	}
+    	
+    	}
+    	return; // catch all closest stations are full
+    }
+    
     public void endTrip (Trip trip){ //Operation
     	
-    	trip.getStartStation().returnBike(trip);
+    	if (!trip.getEndStation().isOpen() || trip.getEndStation().getLatestState().isFull()) {//is full => find close station
+    		
+    		// find closest station that is not already full
+    		trip.setEndStation(findNextUsableStation(trip.getEndStation()));
+    	}
+    	
+    	trip.getEndStation().returnBike(trip);
     	
     	return;
     }
@@ -132,10 +152,11 @@ public Scenario (float growthParameter) {
     	if (selectedTrip.equals(currentTrip)) {
     		startTrip(currentTrip);
     	}
+    	
     	else {
     		endTrip(currentTrip);
     	}  	
-    	//is full => find close station
+    	
     	}
     		return;
     	}
