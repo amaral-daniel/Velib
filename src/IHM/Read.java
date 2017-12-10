@@ -20,7 +20,7 @@
 package IHM;
 
 import Data.*;
-import IO.State;
+//import IO.State;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -39,13 +39,17 @@ public class Read
 	 * 
 	 * */
 	private String stationsAddressesFileName;
+	private String initialStatesFileName;
 	private String tripsFileName;
 	
-	public Read (String stationsAddressesFileName, String tripsFileName)
+	public Read (String stationsAddressesFileName, String initialStatesFileName, String tripsFileName)
 	{	
 		this.stationsAddressesFileName = stationsAddressesFileName;
+		this.initialStatesFileName = initialStatesFileName;
 		this.tripsFileName = tripsFileName;
 	}
+	
+	
 	
 	
 	public ArrayList<Station> createStationList(String stationsAddressesFileName)
@@ -54,33 +58,71 @@ public class Read
 		
 		String line = null;
 		
+		//List to be returned
+		ArrayList<Station> stationList = new ArrayList<Station>();
+		
+		
 		try 
 		{
 			FileReader fr = new FileReader(stationsFile);
 		
 			BufferedReader buffer = new BufferedReader(fr);
 			
-			//List to be returned
-			ArrayList <Station> stationList = new ArrayList();
+			
+			//Starting from index 140 to ignore some thrash at the beginning of the .txt
+			int ind = 140;
 			
 			while((line = buffer.readLine())!= null)
 			{				
-				//How to get info from this stupid file...?
-			//	int identity;
-			//	int capacity;
-			//	String name;
-			//	String address;
-			//	int longitude; 
-			//	int latitude;
-			//	State primaryState;	
-			//	Station station = new Station(/*only infos in the txt file*/);
-			//	stationList.add(station); 
-			
+				while(true)
+				{
+					String nb = line.substring(line.indexOf("\"nb\"", ind)+5, 
+							line.indexOf(",", line.indexOf("\"nb\"", ind)+5));
+					int identity = Integer.parseInt(nb);
+			//		System.out.println(identity);
+					
+					String name = line.substring(line.indexOf("\"lb\"", ind)+5, 
+							line.indexOf(",", line.indexOf("\"lb\"",ind)+5));
+			//		System.out.println(name);
+					
+					String address = line.substring(line.indexOf("\"add\"", ind)+6, 
+							line.indexOf(",", line.indexOf("\"add\"",ind)+6));
+			//		System.out.println(address);
+					
+					String cap = line.substring(line.indexOf("\"totbs\"", ind)+8, 
+							line.indexOf(",", line.indexOf("\"totbs\"",ind)+8));
+					int capacity = Integer.parseInt(cap);
+			//		System.out.println(capacity);
+					
+					String lng = line.substring(line.indexOf("\"lng\"", ind)+6, 
+							line.indexOf(",", line.indexOf("\"lng\"",ind)+6));
+					double longitude = Double.parseDouble(lng);
+			//		System.out.println(longitude);
+					
+					String lat = line.substring(line.indexOf("\"lat\"", ind)+6, 
+							line.indexOf(",", line.indexOf("\"lat\"",ind)+6));
+					double latitude = Double.parseDouble(lat);
+			//		System.out.println(latitude);
+					
+					Station station = new Station(identity, 
+							capacity, name, address, longitude, latitude);
+					
+					stationList.add(station);
+					
+					//Update the index to the latitude's (the last info of each station) index + 60
+					ind = line.indexOf("\"lat\"", ind)+60; 
+					
+					//Stop condition: if it's the last station in the list
+					//indexOf("nb", ind) won't find anything and will return -1 
+					if(line.indexOf("\"nb\"", ind) < 0)
+						break;
+				}
 			}
 			
 			buffer.close();
 			
-			return stationList;
+		//	return stationList;
+			
 		}
 		catch(FileNotFoundException error) 
 		{
@@ -90,6 +132,8 @@ public class Read
 		{
 			System.out.println("Something went wrong");
 		}
+		
+		return stationList;
 	}
 	
 	
@@ -105,15 +149,45 @@ public class Read
 		
 			BufferedReader buffer = new BufferedReader(fr);
 			
+			int ind = 33;
+			
 			while((line = buffer.readLine())!= null)
-			{				
-				//How to get info from this stupid file...?
-				/*Need:
-				 * int numOfFreeBikes, Date currentDate, int capacity;
-				 */
-				State state = new State(/*infos in this file*/);
-				/*Define a function that searches a station inside stationList 
-				 * and then stationList.setState(state); */
+			{	
+				while(true)
+				{
+					String nb = line.substring(line.indexOf("\"nb\"", ind)+5, 
+							line.indexOf(",", line.indexOf("\"nb\"", ind)+5));
+			//		int identity = Integer.parseInt(nb);
+			//		System.out.println(identity);
+					
+					String stt = line.substring(line.indexOf("\"state\"", ind)+5, 
+							line.indexOf(",", line.indexOf("\"state\"",ind)+5));
+			//		boolean state = (stt == "open") ? true : false;
+			//		System.out.println(state);
+					
+					String freebk = line.substring(line.indexOf("\"freebk\"", ind)+6, 
+							line.indexOf(",", line.indexOf("\"freebk\"",ind)+6));
+			//		int freeBikes = Integer.parseInt(freebk);
+			//		System.out.println(freeBikes);
+					
+					String freebs = line.substring(line.indexOf("\"freebs\"", ind)+6, 
+							line.indexOf(",", line.indexOf("\"freebs\"",ind)+6));
+			//		int freeStands = Integer.parseInt(freebs);
+			//		System.out.println(freeStands);
+					
+					State state = new State();
+					
+			//		findStation(identity).
+					
+					
+					//Update the index to the latitude's (the last info of each station) index + 60
+					ind = line.indexOf("\"freebs\"", ind)+10; 
+					
+					//Stop condition: if it's the last station in the list
+					//indexOf("nb", ind) won't find anything and will return -1 
+					if(line.indexOf("\"nb\"", ind) < 0)
+						break;
+				}
 			}
 			
 			buffer.close();
@@ -144,7 +218,7 @@ public class Read
 			BufferedReader buffer = new BufferedReader(fr);
 			
 			//List to be returned
-			ArrayList <Trip> tripList = new ArrayList();
+			ArrayList<Trip> tripList = new ArrayList<Trip>();
 			
 			while((line = buffer.readLine())!= null)
 			{	
@@ -153,22 +227,27 @@ public class Read
 					continue;
 				else
 				{
-				//here the data will be stored in the
-				//different objects of the project
-				String[] split = line.split("\t");	
-				// "\t" or "\\t", not entirely sure
-				//Warning: sometimes the items are separated by " ", not "\t"
+					//here the data will be stored in the
+					//different objects of the project
+					String[] split = line.split("\t");	
+					// "\t" or "\\t", not entirely sure
+					//Warning: sometimes the items are separated by " ", not "\t"
 				
-				int reason = Integer.parseInt(split[0]);
-				String startTime = split[1];
-				int startSation = Integer.parseInt(split[2]); 
-			//	int startBikeStand = Integer.parseInt(split[3]);   
-				String endTime = split[4];
-				int endSation = Integer.parseInt(split[5]); 
-			//	int endBikeStand = Integer.parseInt(split[6]);
-				Trip trip = new Trip(/*must declare Java.Date objects to construct*/);
+					int reason = Integer.parseInt(split[0]);
+					String startTime = split[1];
+					int startSationId = Integer.parseInt(split[2]); 
+					String endTime = split[4];
+					int endSationId = Integer.parseInt(split[5]); 
+					
+					//	Leaving the stands here just for precaution
+					//	int startBikeStand = Integer.parseInt(split[3]);   
+					//	int endBikeStand = Integer.parseInt(split[6]);
 				
-				tripList.add(trip);
+					// findStation(startStationId) and findStation(endStationId)
+				
+					Trip trip = new Trip(reason, startTime, Station startStation, endTime, Station endStation);
+				
+					tripList.add(trip);
 				}
 			}
 			buffer.close();
@@ -189,12 +268,13 @@ public class Read
 	
 	public static void main (String[] args) 
 	{
-		String tripsFileName = "Velib\\src\\files\\trips-2013-10-31.txt";
 		String addressesFileName = "Velib\\src\\files\\stationAddresses.txt";
-		String test = "Velib\\src\\files\\writing_test.txt";
+		String initialStatesFileName = "Velib\\src\\files\\.txt";
+		String tripsFileName = "Velib\\src\\files\\trips-2013-10-31.txt";
 		
 		
-		Read read = new Read(addressesFileName, tripsFileName);
+		
+		Read read = new Read(addressesFileName, initialStatesFileName, tripsFileName);
 		
 		read.createTripsList(tripsFileName);
 		
