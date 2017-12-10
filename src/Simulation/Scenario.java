@@ -122,7 +122,7 @@ public Scenario (float growthParameter) {
 		else {
 			trip.getStartStation().takeBike(trip);
 			waitingTrips.add(trip);
-			waitingTrips.sort(endDate,)
+			// waitingTrips.sort(endDate,) //sort List => endDates
 			trip.validateTrip();
 		}
     	
@@ -141,7 +141,7 @@ public Scenario (float growthParameter) {
     	}
     	
     	// catch all closest stations are full => find randomStation
-    	int j = 0;
+    	/* int j = 0;
     	if (usableStation == referenceStation) {
     		if (j>5) {
     			// break after 5 iterations
@@ -153,7 +153,7 @@ public Scenario (float growthParameter) {
     		Station randomStation = stationList.get(randomIndex);
     		findNextUsableStation(randomStation);	 //recursive!!
     	}
-    	
+    	*/
     	return usableStation;
     }
     
@@ -175,10 +175,20 @@ public Scenario (float growthParameter) {
     	
     	//implementation with isValid??
     	Trip nextTrip = selectedTrip;
+    	Trip nextEndTrip = waitingTrips.get(0);
     	
-    	if	(nextTrip.getStartDate().after(waitingTrips.get(0).getEndDate()))  {
-    		nextTrip = waitingTrips.get(0);
+    	for (int i = 0; i < waitingTrips.size(); i++) {
+    		
+    		if (nextEndTrip.getEndDate().after(waitingTrips.get(i).getEndDate())) {
+    		nextEndTrip = waitingTrips.get(i);
     	}
+    	}
+    	
+    	if	(!selectedTrip.isValid() && nextTrip.getStartDate().after(nextEndTrip.getEndDate()))  {
+    		nextTrip = nextEndTrip;
+    	}
+    	
+    	//else if (selectedTrip.isValid())
     	
     	return nextTrip;
     }
@@ -201,10 +211,17 @@ public Scenario (float growthParameter) {
     	} 
     	}
     	
-    	int j = 0;
-    	while (waitingTrips.size()>0) {
+    	while (waitingTrips.size() > 0) {
     		
-    		endTrip(waitingTrips.get(j));
+    		Trip tempTrip = waitingTrips.get(0);
+    		for (int p = 0; p < waitingTrips.size(); p++) {
+        		
+        		if (tempTrip.getEndDate().after(waitingTrips.get(p).getEndDate())) {
+        		tempTrip = waitingTrips.get(p);
+        	}	
+        	}
+    		
+    		endTrip(tempTrip);
     	}
     	/* for(int i=0; i < tripList.size(); i++) {
     	Trip selectedTrip = tripList.get(i);
@@ -291,13 +308,13 @@ for (int i=tripList.size(); i > 0; i=((float) i)-helpvar ) { //schleifenkopf übe
     	ArrayList <Station> testStations = new ArrayList <Station> ();
     	
     	//creation of test stations + states
-    	Station station1 = new Station(901,20,"00901 - ALLEE DU BELVEDERE","ALLEE DU BELVEDERE PARIS 19 - 0 75000 Paris - 75000 PARIS",2.391225227186182,48.892795924112306);
+    	Station station1 = new Station(901,"00901 - ALLEE DU BELVEDERE","ALLEE DU BELVEDERE PARIS 19 - 0 75000 Paris - 75000 PARIS", 20,2.391225227186182,48.892795924112306);
     	State state1 = new State(6,"20131030125959",station1.getCapacity());
     	station1.setIsOpen(true);
     	station1.setPrimaryState(state1);
     	testStations.add(station1);
     	    
-    	Station station2 = new Station( 903, 20, "00903 - QUAI MAURIAC  / PONT DE BERCY", "FETE DE L\u0027OH (BERCY) - QUAI MAURIAC ANG PONT DE BERCY", 2.374340554605615, 48.83713368945151);
+    	Station station2 = new Station( 903, "00903 - QUAI MAURIAC  / PONT DE BERCY", "FETE DE L\u0027OH (BERCY) - QUAI MAURIAC ANG PONT DE BERCY", 20, 2.374340554605615, 48.83713368945151);
     	State state2 = new State(18,"1383173780727",station2.getCapacity());
     	station2.setIsOpen(true);
     	station2.setPrimaryState(state2);
