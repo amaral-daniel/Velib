@@ -1,11 +1,10 @@
 package Simulation;
 
-import Data.Result;
-import Data.ScenarioResume;
-import Data.Station;
-import Data.Trip;
-
+import Data.*;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.*;
+import java.text.*;
 
 public class Scenario {
 	
@@ -205,20 +204,20 @@ public Scenario (float growthParameter) {
     	
     	for(int i=0; i < tripList.size(); i++) {
     		
-    		String dummyNumberBikes =  Station.getLatestState().getNBikes().toString();
+    		Trip currentTrip = tripList.get(i);
+    		String dummyNumberBikes =  Integer.toString(currentTrip.getStartStation().getLatestState().getNBikes());
     		System.out.println(dummyNumberBikes + "before: free bikes");
-    		String dummyNumberStands =  Station.getLatestState().getNStands();
+    		String dummyNumberStands =  Integer.toString(currentTrip.getStartStation().getLatestState().getNStands());
     		System.out.println(dummyNumberStands + "before: free places");
     		
-    		Trip currentTrip = tripList.get(i);
     		if(currentTrip.getStartStation().isOpen() && currentTrip.getEndStation().isOpen() && !currentTrip.getStartStation().getLatestState().isEmpty() && !currentTrip.getEndStation().getLatestState().isFull ())	{
     			currentTrip.getStartStation().takeBike(currentTrip);
     			currentTrip.getEndStation().returnBike(currentTrip);
     		}
     		
-    		dummyNumberBikes =  Station.getLatestState().getNBikes();
+    		dummyNumberBikes =  Integer.toString(currentTrip.getStartStation().getLatestState().getNBikes());
     		System.out.println(dummyNumberBikes + "after: free bikes");
-    		dummyNumberStands =  Station.getLatestState().getNStands();
+    		dummyNumberStands =  Integer.toString(currentTrip.getStartStation().getLatestState().getNStands());
     		System.out.println(dummyNumberStands + "after: free places");
     		System.out.println();
     	}
@@ -266,14 +265,55 @@ for (int i=tripList.size(); i > 0; i=((float) i)-helpvar ) { //schleifenkopf übe
     public static void main (String args[]) {
     	
     	Scenario baseScenario;
-    	ArrayList <Trip> testTrips;
-    	ArrayList <Station> testStations;
+    	ArrayList <Trip> testTrips = new ArrayList <Trip> ();
+    	ArrayList <Station> testStations = new ArrayList <Station> ();
+    	
+    	//creation of test stations + states
+    	Station station1 = new Station(901,20,"00901 - ALLEE DU BELVEDERE","ALLEE DU BELVEDERE PARIS 19 - 0 75000 Paris - 75000 PARIS",2.391225227186182,48.892795924112306);
+    	State state1 = new State(6,"20131030125959",station1.getCapacity());
+    	station1.setIsOpen(true);
+    	station1.setPrimaryState(state1);
+    	testStations.add(station1);
+    	    
+    	Station station2 = new Station( 903, 20, "00903 - QUAI MAURIAC  / PONT DE BERCY", "FETE DE L\u0027OH (BERCY) - QUAI MAURIAC ANG PONT DE BERCY", 2.374340554605615, 48.83713368945151);
+    	State state2 = new State(18,"1383173780727",station2.getCapacity());
+    	station2.setIsOpen(true);
+    	station2.setPrimaryState(state2);
+    	testStations.add(station2);
     	
     	
-    	for (int i = 0; i< 10; i++) {
-    		
+    	SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMddhhmmss");
+    	try {
+    		Date date1 = ft.parse ("20131030125960");
+    		Date date2 = ft.parse ("20131030127959");		
+        	Date date3 = ft.parse ("20131030125961");	
+        	Date date4 = ft.parse ("20131030126959");	
+      		Date date5 = new Date ("20131030125965");
+      		Date date6 = new Date ("20131030126970");
     	}
-    	baseScenario = new Scenario (testTrips, testStations);
+    	catch (ParseException e) {
+    		System.out.println("Unparseable using" + ft);
+    	}
+    	Date date2 = new Date ("20131030127959");		
+    	Date date3 = new Date ("20131030125961");	
+    	Date date4 = new Date ("20131030126959");	
+  		Date date5 = new Date ("20131030125965");
+  		Date date6 = new Date ("20131030126970");
+    			
+    	Trip trip1 = new Trip(Reason.RENT, date1, station1, date2, station2); // 2000s
+    	
+    	Trip trip2 = new Trip (Reason.RENT, date3, station1, date4, station2); // later shorter 1000s
+    	
+    	Trip trip3 = new Trip (Reason.RENT, date5, station2, date6, station1); //inverse direction
+    
+    	baseScenario = new Scenario (testStations, testTrips);
+    	
+    	
+    	baseScenario.runTripsTest();
+    	for (int i = 0; i < baseScenario.stationList.size(); i++) {
+    		System.out.println(baseScenario.stationList.get(i));
+    	}
+    	
     }
 
 }
