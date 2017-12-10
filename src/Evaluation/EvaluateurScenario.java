@@ -9,7 +9,6 @@ import java.util.Date;
 import java.text.*;
 import java.util.GregorianCalendar;
 
-
 public class EvaluateurScenario 
 {
     private Scenario refScenario;
@@ -108,8 +107,8 @@ public class EvaluateurScenario
 		
 		
 		
-		Trip trip = new Trip(1, startTrip1 ,endTrip1, station1, station2);
-		Trip trip2 = new Trip(1, startTrip2 ,endTrip2, station1, station2);
+		Trip trip = new Trip(Reason.RENT, startTrip1, station1,endTrip1, station2);
+		Trip trip2 = new Trip(Reason.RENT, startTrip2 , station1,endTrip2, station2);
 		ArrayList<Trip> tripList = new ArrayList<Trip>();
 		tripList.add(trip);
 		
