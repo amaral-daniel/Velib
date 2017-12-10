@@ -157,28 +157,23 @@ public class Read
 				{
 					String nb = line.substring(line.indexOf("\"nb\"", ind)+5, 
 							line.indexOf(",", line.indexOf("\"nb\"", ind)+5));
-			//		int identity = Integer.parseInt(nb);
-			//		System.out.println(identity);
+					int identity = Integer.parseInt(nb);
+					System.out.println(identity);
 					
-					String stt = line.substring(line.indexOf("\"state\"", ind)+5, 
-							line.indexOf(",", line.indexOf("\"state\"",ind)+5));
-			//		boolean state = (stt == "open") ? true : false;
-			//		System.out.println(state);
+					String stt = line.substring(line.indexOf("\"state\"", ind)+8, 
+							line.indexOf(",", line.indexOf("\"state\"",ind)+8));
+					boolean state = (stt.equals("\"open\"")) ? true : false;
+					System.out.println(state);
 					
-					String freebk = line.substring(line.indexOf("\"freebk\"", ind)+6, 
-							line.indexOf(",", line.indexOf("\"freebk\"",ind)+6));
-			//		int freeBikes = Integer.parseInt(freebk);
-			//		System.out.println(freeBikes);
+					String freebk = line.substring(line.indexOf("\"freebk\"", ind)+9, 
+							line.indexOf(",", line.indexOf("\"freebk\"",ind)+9));
+					int freeBikes = Integer.parseInt(freebk);
+					System.out.println(freeBikes);
 					
-					String freebs = line.substring(line.indexOf("\"freebs\"", ind)+6, 
-							line.indexOf(",", line.indexOf("\"freebs\"",ind)+6));
-			//		int freeStands = Integer.parseInt(freebs);
-			//		System.out.println(freeStands);
-					
-					State state = new State();
-					
-			//		findStation(identity).
-					
+					String freebs = line.substring(line.indexOf("\"freebs\"", ind)+9, 
+							line.indexOf("}", line.indexOf("\"freebs\"",ind)+9));
+					int freeStands = Integer.parseInt(freebs);
+					System.out.println(freeStands);
 					
 					//Update the index to the latitude's (the last info of each station) index + 60
 					ind = line.indexOf("\"freebs\"", ind)+10; 
@@ -187,6 +182,11 @@ public class Read
 					//indexOf("nb", ind) won't find anything and will return -1 
 					if(line.indexOf("\"nb\"", ind) < 0)
 						break;
+					
+					State state = new State();
+					
+			//		findStation(identity).
+					
 				}
 			}
 			
@@ -227,8 +227,6 @@ public class Read
 					continue;
 				else
 				{
-					//here the data will be stored in the
-					//different objects of the project
 					String[] split = line.split("\t");	
 					// "\t" or "\\t", not entirely sure
 					//Warning: sometimes the items are separated by " ", not "\t"
@@ -250,6 +248,7 @@ public class Read
 					tripList.add(trip);
 				}
 			}
+			
 			buffer.close();
 			return tripList;
 		}
