@@ -17,8 +17,9 @@
 //  }
 //}
 
+//
 package IHM;
-
+//hello
 import Data.*;
 //import IO.State;
 
@@ -49,6 +50,17 @@ public class Read
 		this.tripsFileName = tripsFileName;
 	}
 	
+	public static Station findStationWithId(int id, ArrayList<Station> stationList)
+	{
+		for(Station stat : stationList)
+		{
+			if(stat.getIdentity() == id)
+			{
+				return stat;
+			}
+		}
+		return null;
+	}
 	
 	
 	
@@ -104,8 +116,8 @@ public class Read
 					double latitude = Double.parseDouble(lat);
 			//		System.out.println(latitude);
 					
-					Station station = new Station(identity, 
-							capacity, name, address, longitude, latitude);
+					Station station = new Station(identity, name, address,
+							capacity, longitude, latitude);
 					
 					stationList.add(station);
 					
@@ -120,8 +132,6 @@ public class Read
 			}
 			
 			buffer.close();
-			
-		//	return stationList;
 			
 		}
 		catch(FileNotFoundException error) 
@@ -162,8 +172,8 @@ public class Read
 					
 					String stt = line.substring(line.indexOf("\"state\"", ind)+8, 
 							line.indexOf(",", line.indexOf("\"state\"",ind)+8));
-					boolean state = (stt.equals("\"open\"")) ? true : false;
-					System.out.println(state);
+					boolean isOpen = (stt.equals("\"open\"")) ? true : false;
+					System.out.println(isOpen);
 					
 					String freebk = line.substring(line.indexOf("\"freebk\"", ind)+9, 
 							line.indexOf(",", line.indexOf("\"freebk\"",ind)+9));
@@ -183,7 +193,14 @@ public class Read
 					if(line.indexOf("\"nb\"", ind) < 0)
 						break;
 					
-					State state = new State();
+					State state1 = new State(freeBikes, freeStands, "20131031000001");
+					
+					//How to avoid repeating the search?
+					findStationWithId(identity, stationList).setIsOpen(isOpen);
+					findStationWithId(identity, stationList).setPrimaryState(state1);
+					
+					
+					
 					
 			//		findStation(identity).
 					
@@ -205,20 +222,20 @@ public class Read
 	
 	
 	
-	public ArrayList<Trip> createTripsList(String tripsFileName)
+	public ArrayList<Trip> createTripsList(String tripsFileName, ArrayList<Station> stationList)
 	{	
 		File tripsFile = new File(tripsFileName);
 		
 		String line = null;
+		
+		//List to be returned
+		ArrayList<Trip> tripList = new ArrayList<Trip>();
 		
 		try 
 		{
 			FileReader fr = new FileReader(tripsFile);
 		
 			BufferedReader buffer = new BufferedReader(fr);
-			
-			//List to be returned
-			ArrayList<Trip> tripList = new ArrayList<Trip>();
 			
 			while((line = buffer.readLine())!= null)
 			{	
@@ -233,24 +250,24 @@ public class Read
 				
 					int reason = Integer.parseInt(split[0]);
 					String startTime = split[1];
-					int startSationId = Integer.parseInt(split[2]); 
+					int startStationId = Integer.parseInt(split[2]); 
 					String endTime = split[4];
-					int endSationId = Integer.parseInt(split[5]); 
+					int endStationId = Integer.parseInt(split[5]); 
 					
 					//	Leaving the stands here just for precaution
 					//	int startBikeStand = Integer.parseInt(split[3]);   
 					//	int endBikeStand = Integer.parseInt(split[6]);
+					
 				
-					// findStation(startStationId) and findStation(endStationId)
-				
-					Trip trip = new Trip(reason, startTime, Station startStation, endTime, Station endStation);
+					Trip trip = new Trip(reason, startTime, findStationWithId(startStationId, stationList), 
+							endTime, findStationWithId(endStationId, stationList));
 				
 					tripList.add(trip);
 				}
 			}
 			
 			buffer.close();
-			return tripList;
+			
 		}
 		catch(FileNotFoundException error) 
 		{
@@ -260,6 +277,8 @@ public class Read
 		{
 			System.out.println("Something went wrong");
 		}
+		
+		return tripList;
 	}
 	
 	
@@ -267,15 +286,15 @@ public class Read
 	
 	public static void main (String[] args) 
 	{
-		String addressesFileName = "Velib\\src\\files\\stationAddresses.txt";
-		String initialStatesFileName = "Velib\\src\\files\\.txt";
+		String stationAddressesFileName = "Velib\\src\\files\\stationAddresses.txt";
+		String initialStatesFileName = "Velib\\src\\files\\initialstates.txt";
 		String tripsFileName = "Velib\\src\\files\\trips-2013-10-31.txt";
 		
+		Read read = new Read(stationAddressesFileName, initialStatesFileName, tripsFileName);
 		
+		ArrayList<Station> stationList01 = read.createStationList(stationAddressesFileName);
+		ArrayList<Trip> tripList01 = read.createTripsList(tripsFileName, stationList01);
 		
-		Read read = new Read(addressesFileName, initialStatesFileName, tripsFileName);
-		
-		read.createTripsList(tripsFileName);
 		
 		
 	}
