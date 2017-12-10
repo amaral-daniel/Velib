@@ -115,13 +115,13 @@ public class Trip {
     public static void main(String[] args) {
       //Station de départ
       Station station1 = new Station(901,"00901 - ALLEE DU BELVEDERE","ALLEE DU BELVEDERE PARIS 19 - 0 75000 Paris - 75000 PARIS",20,2.391225227186182,48.892795924112306);
-      State state1 = new State(6,"20131030125959",station1.getCapacity());
+      State state1 = new State(6,14,"20131030125959");
       station1.setIsOpen(true);
       station1.setPrimaryState(state1);
       
       //Station de retourne
       Station station2 = new Station(903,"00903 - QUAI MAURIAC  / PONT DE BERCY","FETE DE L\u0027OH (BERCY) - QUAI MAURIAC ANG PONT DE BERCY",20,2.374340554605615,48.83713368945151);
-      State state2 = new State(15,"20131030125959",station1.getCapacity());
+      State state2 = new State(15,5,"20131030125959");
       station2.setIsOpen(true);
       station2.setPrimaryState(state2);
       
