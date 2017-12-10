@@ -26,6 +26,36 @@ public class Trip {
       this.isValid = false;
     }
     
+    public Trip (int rsn, String startDateString, Station startStation, 
+                             String endDateString, Station endStation) {
+      switch(rsn) {
+        case 1 : this.reason = Reason.RENT;
+                  break;
+        case 2 : this.reason = Reason.MAINTENANCE;
+                  break;
+        case 3 : this.reason = Reason.REGULATION;
+      }
+      SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmmss");
+      if (startDateString.length() == 14) {
+        try {
+          this.startDate = ft.parse(startDateString);
+        } catch (ParseException e) {
+          System.out.println("Unparseable using" + ft);
+        }
+      }
+      if (endDateString.length() == 14) {
+        try {
+          this.endDate = ft.parse(endDateString);
+        } catch (ParseException e) {
+          System.out.println("Unparseable using" + ft);
+        }
+      }
+      this.startStation = startStation;
+      this.endStation = endStation;
+      this.isValid = false;
+    }
+    
+    
     /* Trip manipulation */
     public void cancelTrip() {
       isValid = false;
@@ -84,13 +114,13 @@ public class Trip {
     
     public static void main(String[] args) {
       //Station de départ
-      Station station1 = new Station(901,20,"00901 - ALLEE DU BELVEDERE","ALLEE DU BELVEDERE PARIS 19 - 0 75000 Paris - 75000 PARIS",2.391225227186182,48.892795924112306);
+      Station station1 = new Station(901,"00901 - ALLEE DU BELVEDERE","ALLEE DU BELVEDERE PARIS 19 - 0 75000 Paris - 75000 PARIS",20,2.391225227186182,48.892795924112306);
       State state1 = new State(6,"20131030125959",station1.getCapacity());
       station1.setIsOpen(true);
       station1.setPrimaryState(state1);
       
       //Station de retourne
-      Station station2 = new Station(903,20,"00903 - QUAI MAURIAC  / PONT DE BERCY","FETE DE L\u0027OH (BERCY) - QUAI MAURIAC ANG PONT DE BERCY",2.374340554605615,48.83713368945151);
+      Station station2 = new Station(903,"00903 - QUAI MAURIAC  / PONT DE BERCY","FETE DE L\u0027OH (BERCY) - QUAI MAURIAC ANG PONT DE BERCY",20,2.374340554605615,48.83713368945151);
       State state2 = new State(15,"20131030125959",station1.getCapacity());
       station2.setIsOpen(true);
       station2.setPrimaryState(state2);
@@ -124,6 +154,12 @@ public class Trip {
       System.out.println();
       System.out.println("After change of end station, NB: the trip becomes invalid");
       System.out.println(trp);
+      
+      //Créeation d'un nouveau trip
+      Trip trp2 = new Trip(1,"20131031000002",station1,"20131031000906",station2);
+      System.out.println();
+      System.out.println();
+      System.out.println(trp2);
       
     }
 
