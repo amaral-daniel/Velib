@@ -65,7 +65,7 @@ public class Write
 		String fileName = "Velib\\src\\files\\wrinting_test.txt";
 		Write escritura = new Write(fileName);
 		escritura.writeFile();
-		//bla
+		
 		
 	}
 }
