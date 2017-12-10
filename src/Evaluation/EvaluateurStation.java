@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import Data.State;
 import Data.Station;
@@ -59,18 +60,58 @@ public final class EvaluateurStation {
 		return false;
 	}
 	
+	public static boolean isEmptyOrFull(Station station,Date date)
+	{
+		for(int i = 0; i < station.getNumberOfStates() - 1; i++)
+		{
+			State currentState = station.getState(i);
+			State nextState = station.getState(i + 1);
+			
+			if(currentState.getDate().getTime() <= date.getTime() &&  nextState.getDate().getTime() > date.getTime() ) 
+			{
+				if(currentState.getNBikes() == 0 || currentState.getNStands() == 0 )
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+		
+		if(station.getLatestState().getDate().getTime()   <= date.getTime() )
+		{
+			if(station.getLatestState().getNBikes() == 0 || station.getLatestState().getNStands() == 0 )
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}		
+		
+		System.out.println("INVALID DATE AT isEmptyOrFull!!!!!!!!!!!" + date);
+		return false;
+	}
+	
 	public static void exportCSVStationStates(Station station) throws FileNotFoundException
 	{
 	
 		ArrayList<State> stateList = station.getStateList();
 
-		PrintWriter out = new PrintWriter( "src/Evaluation/states_" + station.getName() )  ;
+		PrintWriter out = new PrintWriter( "src/Evaluation/states_" + station.getName() + ".csv")  ;
+		out.println("Time, Bikes");
 		for(int i = 0; i < stateList.size(); i++)
 		{    		     	 
-			DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");      
+			DateFormat df = new SimpleDateFormat("MM-dd-yyyy HH:mm");    //SimpleDateFormat("MM-dd-yyyy HH:mm:ss");     
 		    String reportDate = df.format(stateList.get(i).getDate());
 		   	out.println(reportDate + "," + stateList.get(i).getNBikes());
 		}
+		DateFormat df = new SimpleDateFormat("MM-dd-yyyy");    //SimpleDateFormat("MM-dd-yyyy HH:mm:ss");     
+	    String reportDate = df.format(stateList.get(stateList.size() - 1).getDate());
+	   	out.println(reportDate + " 23:59"+ "," + stateList.get(stateList.size() - 1).getNBikes());
 		
 		out.close();
 	}
