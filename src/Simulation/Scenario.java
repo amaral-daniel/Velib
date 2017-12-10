@@ -6,7 +6,6 @@ import Data.Station;
 import Data.Trip;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Scenario {
 	
@@ -27,7 +26,11 @@ public class Scenario {
 
     private Result result;
     
-   public Scenario (ArrayList <Station> stationList, ArrayList <Trip> tripList) {
+    
+    /** Constructors */
+    
+   /** Base Scenario Constructor */
+    public Scenario (ArrayList <Station> stationList, ArrayList <Trip> tripList) {
 	   
 	   this.tripList = tripList;
 	   this.stationList = stationList;
@@ -69,13 +72,15 @@ public Scenario (float growthParameter) {
     	return;
     } */
 
+    /** getters */
+    
 	public ArrayList <Trip> getTripList () {
-	return tripList;
+		return tripList;
 	}
 	
 	public ArrayList <Station> getStationList () {
 		return stationList;
-		}
+	}
 
     public boolean getRegulation () {
     	return regulation;
@@ -88,7 +93,9 @@ public Scenario (float growthParameter) {
     public float getGrowthParameter () {
     	return growthParameter;
     }
-
+    
+    /** setters */
+    
     /* public void setTripList () {
     	return;
     }
@@ -102,10 +109,7 @@ public Scenario (float growthParameter) {
     }
     */
     
-    //public void tripFlowRegulation() { // Operation
-    	
-   // }
-    
+    /** supplementary methods for runTrips()*/
   /*  public void startTrip(Trip trip) { //Operation
     	
     	if (!trip.getStartStation().isOpen()) {
@@ -163,11 +167,25 @@ public Scenario (float growthParameter) {
     	
     	return nextTrip;
     }
+    */
     
+    /** function to execute trips, essential simulation tool */
+   
+   /* public void runTrips() {
     
-    /** function to execute trips, essential simulation tool 
-    public void runTrips() {
-    	for(int i=0; i < tripList.size(); i++) {
+    	int i = 0;
+    	while (i < tripList.size()){
+    	Trip selectedTrip = tripList.get(i);
+    	Trip currentTrip = findNextTrip(selectedTrip); //Schleifentyp
+    	if (selectedTrip.equals(currentTrip)) {
+    		startTrip(currentTrip);
+    	}
+    	
+    	else {
+    		endTrip(currentTrip);
+    	} 
+    	}
+    	/* for(int i=0; i < tripList.size(); i++) {
     	Trip selectedTrip = tripList.get(i);
     	Trip currentTrip = findNextTrip(selectedTrip); //Schleifentyp
     	if (selectedTrip.equals(currentTrip)) {
@@ -178,44 +196,45 @@ public Scenario (float growthParameter) {
     		endTrip(currentTrip);
     	}  	
     	
-    	}
-    		return;
     	} */
+    	/*	return;
+    	} 
 
-    /** simple Version of runTrips for testing purpose */
+    /** simple Version of runTrips to run tests */
     public void runTripsTest () {
     	
     	for(int i=0; i < tripList.size(); i++) {
+    		
+    		String dummyNumberBikes =  Station.getLatestState().getNBikes().toString();
+    		System.out.println(dummyNumberBikes + "before: free bikes");
+    		String dummyNumberStands =  Station.getLatestState().getNStands();
+    		System.out.println(dummyNumberStands + "before: free places");
     		
     		Trip currentTrip = tripList.get(i);
     		if(currentTrip.getStartStation().isOpen() && currentTrip.getEndStation().isOpen() && !currentTrip.getStartStation().getLatestState().isEmpty() && !currentTrip.getEndStation().getLatestState().isFull ())	{
     			currentTrip.getStartStation().takeBike(currentTrip);
     			currentTrip.getEndStation().returnBike(currentTrip);
     		}
+    		
+    		dummyNumberBikes =  Station.getLatestState().getNBikes();
+    		System.out.println(dummyNumberBikes + "after: free bikes");
+    		dummyNumberStands =  Station.getLatestState().getNStands();
+    		System.out.println(dummyNumberStands + "after: free places");
+    		System.out.println();
     	}
     	return;
     	}
-        	/*Trip selectedTrip = tripList.get(i);
-        	Trip currentTrip = findNextTrip(selectedTrip); //Schleifentyp
-        	if (selectedTrip.equals(currentTrip)) {
-        		startTrip(currentTrip);
-        	}
-        	
-        	else {
-        		endTrip(currentTrip);
-        	}  	
-        	
-        	}
-        		return;
-    } */
     
     /** method to simulate a Velib Scenario without regulation */
-    /*public void noRegulation() {
+   /* public void noRegulation() {
+    
+    	ScenarioResume.setSimulationType("Simulation without regulation");
+    	ScenarioResume.setRegulation(false);
     	
     	// supression of regulation trips
     	for (i=0; i < tripList.size(); i++) {
     		
-    		if (tripList.get(i).getReason() = enum regulation) {
+    		if (tripList.get(i).getReason() == Reason.REGULATION) {
     			tripList.remove(i);
     		}    		
     	}
@@ -223,8 +242,12 @@ public Scenario (float growthParameter) {
     	//trip execution without regulation
     	this.runTrips();
     	
+    	Result.setResultStations(stationList); // deep copy!!
+    	Result.setResultTrips(tripList);
+    	
     }
-
+    */
+/*
     public void newBehaviour() {
     }
 
@@ -242,7 +265,15 @@ for (int i=tripList.size(); i > 0; i=((float) i)-helpvar ) { //schleifenkopf übe
 }*/
     public static void main (String args[]) {
     	
+    	Scenario baseScenario;
+    	ArrayList <Trip> testTrips;
+    	ArrayList <Station> testStations;
+    	
+    	
+    	for (int i = 0; i< 10; i++) {
+    		
+    	}
+    	baseScenario = new Scenario (testTrips, testStations);
     }
 
 }
-
