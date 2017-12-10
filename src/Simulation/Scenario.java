@@ -1,10 +1,10 @@
 package Simulation;
 
 import Data.*;
+
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.*;
-import java.text.*;
+import java.util.GregorianCalendar;
 
 public class Scenario {
 	
@@ -109,7 +109,7 @@ public Scenario (float growthParameter) {
     */
     
     /** supplementary methods for runTrips()*/
-  /*  public void startTrip(Trip trip) { //Operation
+    public void startTrip(Trip trip) { //Operation
     	
     	if (!trip.getStartStation().isOpen()) {
 			trip.cancelTrip();
@@ -122,6 +122,7 @@ public Scenario (float growthParameter) {
 		else {
 			trip.getStartStation().takeBike(trip);
 			waitingTrips.add(trip);
+			waitingTrips.sort(endDate,)
 			trip.validateTrip();
 		}
     	
@@ -130,16 +131,30 @@ public Scenario (float growthParameter) {
     
     public Station findNextUsableStation(Station referenceStation) {
     	
-    	Station usableStation;
+    	Station usableStation = referenceStation;
     	for (int i=0; i<referenceStation.getClosestStations().size(); i++) {
     		
-    	if (!referenceStation.getClosestStations().get(i).isFull()) {
+    	if (!referenceStation.getClosestStations().get(i).getLatestState().isFull()) {
     		usableStation = referenceStation.getClosestStations().get(i);
-    		return usableStation;
+    		break;
+    	}
     	}
     	
+    	// catch all closest stations are full => find randomStation
+    	int j = 0;
+    	if (usableStation == referenceStation) {
+    		if (j>5) {
+    			// break after 5 iterations
+    		}
+    		
+    		
+    		int tempMax = stationList.size()-1;
+    		int randomIndex = (int) (tempMax * Math.random());
+    		Station randomStation = stationList.get(randomIndex);
+    		findNextUsableStation(randomStation);	 //recursive!!
     	}
-    	return; // catch all closest stations are full
+    	
+    	return usableStation;
     }
     
     public void endTrip (Trip trip){ //Operation
@@ -151,6 +166,7 @@ public Scenario (float growthParameter) {
     	}
     	
     	trip.getEndStation().returnBike(trip);
+    	waitingTrips.remove(trip);
     	
     	return;
     }
@@ -166,16 +182,16 @@ public Scenario (float growthParameter) {
     	
     	return nextTrip;
     }
-    */
+    
     
     /** function to execute trips, essential simulation tool */
    
-   /* public void runTrips() {
+    public void runTrips() {
     
     	int i = 0;
     	while (i < tripList.size()){
     	Trip selectedTrip = tripList.get(i);
-    	Trip currentTrip = findNextTrip(selectedTrip); //Schleifentyp
+    	Trip currentTrip = findNextTrip(selectedTrip);
     	if (selectedTrip.equals(currentTrip)) {
     		startTrip(currentTrip);
     	}
@@ -183,6 +199,12 @@ public Scenario (float growthParameter) {
     	else {
     		endTrip(currentTrip);
     	} 
+    	}
+    	
+    	int j = 0;
+    	while (waitingTrips.size()>0) {
+    		
+    		endTrip(waitingTrips.get(j));
     	}
     	/* for(int i=0; i < tripList.size(); i++) {
     	Trip selectedTrip = tripList.get(i);
@@ -196,7 +218,7 @@ public Scenario (float growthParameter) {
     	}  	
     	
     	} */
-    	/*	return;
+    		return;
     	} 
 
     /** simple Version of runTrips to run tests */
@@ -280,36 +302,43 @@ for (int i=tripList.size(); i > 0; i=((float) i)-helpvar ) { //schleifenkopf übe
     	station2.setIsOpen(true);
     	station2.setPrimaryState(state2);
     	testStations.add(station2);
-    	
-    	
+    
+    	/*
     	SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMddhhmmss");
+    
     	try {
-    		Date date1 = ft.parse ("20131030125960");
-    		Date date2 = ft.parse ("20131030127959");		
-        	Date date3 = ft.parse ("20131030125961");	
-        	Date date4 = ft.parse ("20131030126959");	
-      		Date date5 = new Date ("20131030125965");
-      		Date date6 = new Date ("20131030126970");
+    		date1 = ft.parse("20131030125960");
+    		date2 = ft.parse("20131030127959");		
+        	date3 = ft.parse("20131030125961");	
+        	date4 = ft.parse("20131030126959");	
+      		date5 = ft.parse("20131030125965");
+      		date6 = ft.parse("20131030126970");
     	}
     	catch (ParseException e) {
     		System.out.println("Unparseable using" + ft);
     	}
-    	Date date2 = new Date ("20131030127959");		
-    	Date date3 = new Date ("20131030125961");	
-    	Date date4 = new Date ("20131030126959");	
-  		Date date5 = new Date ("20131030125965");
-  		Date date6 = new Date ("20131030126970");
-    			
+    	*/
+    	
+    	Date date1 = new GregorianCalendar(2013, 10, 30,13,0,0).getTime();
+    	Date date2 = new GregorianCalendar(2013, 10, 30,13,20,0).getTime();		
+    	Date date3 = new GregorianCalendar(2013, 10, 30,13,0,1).getTime();	
+    	Date date4 = new GregorianCalendar(2013, 10, 30,13,10,0).getTime();	
+  		Date date5 = new GregorianCalendar(2013, 10, 30,13,0,5).getTime();
+  		Date date6 = new GregorianCalendar(2013, 10, 30,13,10,10).getTime();
+    	
     	Trip trip1 = new Trip(Reason.RENT, date1, station1, date2, station2); // 2000s
-    	
-    	Trip trip2 = new Trip (Reason.RENT, date3, station1, date4, station2); // later shorter 1000s
-    	
+    	testTrips.add(trip1);
+    	Trip trip2 = new Trip (Reason.RENT, date3, station1, date4, station2); // later shorter 1000s  
+    	testTrips.add(trip2);
     	Trip trip3 = new Trip (Reason.RENT, date5, station2, date6, station1); //inverse direction
+    	testTrips.add(trip3);
+    	
     
     	baseScenario = new Scenario (testStations, testTrips);
     	
     	
     	baseScenario.runTripsTest();
+    	
     	for (int i = 0; i < baseScenario.stationList.size(); i++) {
     		System.out.println(baseScenario.stationList.get(i));
     	}
