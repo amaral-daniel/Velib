@@ -105,11 +105,11 @@ public final class EvaluateurStation {
 		out.println("Time, Bikes");
 		for(int i = 0; i < stateList.size(); i++)
 		{    		     	 
-			DateFormat df = new SimpleDateFormat("MM-dd-yyyy HH:mm");    //SimpleDateFormat("MM-dd-yyyy HH:mm:ss");     
+			DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm");    //SimpleDateFormat("MM-dd-yyyy HH:mm:ss");     
 		    String reportDate = df.format(stateList.get(i).getDate());
 		   	out.println(reportDate + "," + stateList.get(i).getNBikes());
 		}
-		DateFormat df = new SimpleDateFormat("MM-dd-yyyy");    //SimpleDateFormat("MM-dd-yyyy HH:mm:ss");     
+		DateFormat df = new SimpleDateFormat("dd-MM-yyyy");    //SimpleDateFormat("MM-dd-yyyy HH:mm:ss");     
 	    String reportDate = df.format(stateList.get(stateList.size() - 1).getDate());
 	   	out.println(reportDate + " 23:59"+ "," + stateList.get(stateList.size() - 1).getNBikes());
 		

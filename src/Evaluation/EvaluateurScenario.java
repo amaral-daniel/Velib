@@ -147,13 +147,15 @@ public class EvaluateurScenario
 		int capacity1 = 20;
 		String name1 = "Meuh";
 		String address1 = "Rue Saint Jacques";
-		int numberOfFreeBikes1 = 5;
+		int numberOfFreeBikes1 = 4;
+		int numberOfFreeStands1 = 15;
 		
 		int identity2 = 1;
 		int capacity2 = 20;
 		String name2 = "Mines";
 		String address2 = "Boulevard St. Michel";
 		int numberOfFreeBikes2 = 6;
+		int numberOfFreeStands2 = 14;
 		
 		Station station1 = new Station(identity1,name1,address1,capacity1,0,0);
 		station1.setIsOpen(true);
@@ -168,8 +170,8 @@ public class EvaluateurScenario
 		Date dateState1 = new GregorianCalendar(1995, 02, 31,0,0).getTime();
 		Date dateState2 = new GregorianCalendar(1995, 02, 31,0,0).getTime();	
 		
-		State state1 = new State(numberOfFreeBikes1,dateState1, 20);
-		State state2 = new State(numberOfFreeBikes2,dateState2 , 20);
+		State state1 = new State(numberOfFreeBikes1,numberOfFreeStands1,dateState1);
+		State state2 = new State(numberOfFreeBikes2,numberOfFreeStands2,dateState2);
 		
 		station1.setPrimaryState(state1);
 		station2.setPrimaryState(state2);
@@ -261,7 +263,7 @@ public class EvaluateurScenario
 		
 		boolean isUnbalanced = my_evaluateur.isUnbalanced();
 		
-		System.out.println("is unbalanced" + isUnbalanced);
+		System.out.println("is unbalanced? " + isUnbalanced);
 		
 		
 	}
