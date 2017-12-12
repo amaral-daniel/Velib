@@ -1,6 +1,8 @@
 package Simulation;
 
 import Data.*;
+import Evaluation.EvaluateurScenario;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -281,36 +283,41 @@ public Scenario (float growthParameter) {
     	return nextTrip;
     }
     
-    /** Finds another close station based on the referenceStation*/
     public Station findNextUsableStation(Station referenceStation) {
+    	return findNextUsableStation(referenceStation, 1);
+    }
+    
+    /** Finds another close station based on the referenceStation*/
+    public Station findNextUsableStation(Station referenceStation, int iteration) {
     	
     	Station usableStation = referenceStation;
-    	
+    	ArrayList<Station> closestStations = referenceStation.getClosestStations(); //Zhehao => implement get
+    
     	// search all the closest stations for the reference station
     	// the list should ideally be sorted by distance to the reference station
-    	for (int i=0; i<referenceStation.getClosestStations().size(); i++) {
+    	for (int i = 0; i < closestStations.size(); i++) {
     		
     		// when you find a non full station => select it and break the loop
-    		if (!referenceStation.getClosestStations().get(i).getLatestState().isFull()) {
-    			usableStation = referenceStation.getClosestStations().get(i);
+    		if (!closestStations.get(i).getLatestState().isFull()) {
+    			usableStation = closestStations.get(i);
     			break;
     		}
     	}
     	
     	// catch all closest stations are full => find randomStation
-    	/* int j = 0;
     	if (usableStation == referenceStation) {
-    		if (j>5) {
-    			// break after 5 iterations
+    		if (iteration > 5) {
+    			
+    			//throw NoStationsAvailableException....
     		}
     		
-    		
-    		int tempMax = stationList.size()-1;
-    		int randomIndex = (int) (tempMax * Math.random());
-    		Station randomStation = stationList.get(randomIndex);
-    		findNextUsableStation(randomStation);	 //recursive!!
+    		else {
+    			int tempMax = stationList.size() - 1;
+    			int randomIndex = (int) (tempMax * Math.random());
+    			Station randomStation = stationList.get(randomIndex);
+    			findNextUsableStation(randomStation, iteration + 1);	 //recursive!!
+    		}
     	}
-    	*/
     	return usableStation;
     }
    
@@ -366,13 +373,13 @@ for (int i=tripList.size(); i > 0; i=((float) i)-helpvar ) { //schleifenkopf übe
     	
     	//creation of test stations + states
     	Station station1 = new Station(901,"00901 - ALLEE DU BELVEDERE","ALLEE DU BELVEDERE PARIS 19 - 0 75000 Paris - 75000 PARIS", 20,2.391225227186182,48.892795924112306);
-    	State state1 = new State(6,"20131030125959",station1.getCapacity());
+    	State state1 = new State(1,19, "20131030125959");
     	station1.setIsOpen(true);
     	station1.setPrimaryState(state1);
     	testStations.add(station1);
     	    
     	Station station2 = new Station( 903, "00903 - QUAI MAURIAC  / PONT DE BERCY", "FETE DE L\u0027OH (BERCY) - QUAI MAURIAC ANG PONT DE BERCY", 20, 2.374340554605615, 48.83713368945151);
-    	State state2 = new State(18,"1383173780727",station2.getCapacity());
+    	State state2 = new State(15,5,"1383173780727");
     	station2.setIsOpen(true);
     	station2.setPrimaryState(state2);
     	testStations.add(station2);
@@ -380,28 +387,46 @@ for (int i=tripList.size(); i > 0; i=((float) i)-helpvar ) { //schleifenkopf übe
     	// initializing test dates
     	Date date1 = new GregorianCalendar(2013, 10, 30,13,0,0).getTime();
     	Date date2 = new GregorianCalendar(2013, 10, 30,13,20,0).getTime();		
-    	Date date3 = new GregorianCalendar(2013, 10, 30,13,0,1).getTime();	
+    	Date date3 = new GregorianCalendar(2013, 10, 30,13,0,2).getTime();	
     	Date date4 = new GregorianCalendar(2013, 10, 30,13,10,0).getTime();	
-  		Date date5 = new GregorianCalendar(2013, 10, 30,13,0,5).getTime();
-  		Date date6 = new GregorianCalendar(2013, 10, 30,13,10,10).getTime();
+  		Date date5 = new GregorianCalendar(2013, 10, 30,12,0,5).getTime();
+  		Date date6 = new GregorianCalendar(2013, 10, 30,13,0,1).getTime();
     	
   		// initializing test trips
+  		Trip trip3 = new Trip (Reason.RENT, date5, station2, date6, station1); //inverse direction
+    	testTrips.add(trip3);
     	Trip trip1 = new Trip(Reason.RENT, date1, station1, date2, station2); // 2000s
     	testTrips.add(trip1);
     	Trip trip2 = new Trip (Reason.RENT, date3, station1, date4, station2); // later shorter 1000s  
     	testTrips.add(trip2);
-    	Trip trip3 = new Trip (Reason.RENT, date5, station2, date6, station1); //inverse direction
-    	testTrips.add(trip3);
+    	
     	
     	// call of the functions to be tested
     	baseScenario = new Scenario (testStations, testTrips);
+    	EvaluateurScenario baseScenarioEvaluateur = new EvaluateurScenario (baseScenario);
     	//baseScenario.runTripsTest();
+    	
+    	ArrayList <Trip> baseScenarioTripList = baseScenario.tripList;
+    	for (int i = 0; i < baseScenarioTripList.size(); i++) {
+    		System.out.println(baseScenarioTripList.get(i).isValid());
+    	}
+    	
     	baseScenario.runTrips();
     	
     	// print of results
     	// states
-    	for (int i = 0; i < baseScenario.stationList.size(); i++) {
-    		System.out.println(baseScenario.stationList.get(i));
+    	
+    	ArrayList <Station> baseScenarioStationList = baseScenario.stationList;
+    	/* for (int i = 0; i < baseScenarioStationList.size(); i++) {
+    		System.out.println(baseScenarioStationList.get(i));
+    	} */
+    	//baseScenarioStationList.get(i).getIdentity()
+    	for (int i = 0; i < baseScenarioStationList.size(); i++) {
+    	baseScenarioEvaluateur.exportCSVStationStates(901);
+    	}
+    	// ArrayList <Trip> baseScenarioTripList = baseScenario.tripList;
+    	for (int i = 0; i < baseScenarioTripList.size(); i++) {
+    		System.out.println(baseScenarioTripList.get(i).isValid());
     	}
     	
     }
