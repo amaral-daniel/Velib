@@ -2,6 +2,8 @@ package Data;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 
 //import com.modeliosoft.modelio.javadesigner.annotations.objid;
@@ -55,6 +57,11 @@ public class Trip {
       this.isValid = false;
     }
     
+    public Trip(Trip trip) {
+      this(trip.getReason(), trip.getStartDate(),trip.getStartStation(), 
+          trip.getEndDate(), trip.getEndStation());
+    }
+    
     
     /* Trip manipulation */
     public void cancelTrip() {
@@ -64,7 +71,22 @@ public class Trip {
     public void validateTrip() {
       isValid = true;
     }
-
+    
+    /**
+     * En ordre de croissance du temps
+     */
+    public static Comparator<Trip> endDateComparator = new Comparator<Trip>() {
+      public int compare(Trip t1, Trip t2) {
+        return t1.endDate.compareTo(t2.endDate);
+      }
+    };
+    
+    public static Comparator<Trip> startDateComparator = new Comparator<Trip>() {
+      public int compare(Trip t1, Trip t2) {
+        return t1.startDate.compareTo(t2.startDate);
+      }
+    };
+    
     
     /* Getters */
     public Reason getReason() {
@@ -97,6 +119,40 @@ public class Trip {
       isValid = false;
     }
    
+    public void setReason(int i) {
+      switch(i) {
+      case 1: this.reason = Reason.RENT;
+               break;
+      case 2: this.reason = Reason.MAINTENANCE;
+              break;
+      case 3: this.reason = Reason.REGULATION;
+              break;
+      }
+    }
+    
+    public void setStartSateString(String date) {
+      SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmmss");
+      if (date.length() == 14) {
+        try {
+          this.startDate = ft.parse(date);
+        } catch (ParseException e) {
+          System.out.println("Unparseable using" + ft);
+        }
+      }
+    }
+    
+    public void setEndSateString(String date) {
+      SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmmss");
+      if (date.length() == 14) {
+        try {
+          this.endDate = ft.parse(date);
+        } catch (ParseException e) {
+          System.out.println("Unparseable using" + ft);
+        }
+      }
+    }
+
+    
     public String toString() {
       String info;
       SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmmss");
@@ -156,11 +212,22 @@ public class Trip {
       System.out.println(trp);
       
       //Créeation d'un nouveau trip
-      Trip trp2 = new Trip(1,"20131031000002",station1,"20131031000906",station2);
+      Trip trp2 = new Trip(1,"20131031000002",station1,"20131031000907",station2);
       System.out.println();
       System.out.println();
       System.out.println(trp2);
       
+      Trip trp3 = new Trip(1,"20131031000002",station1,"20131031000908",station2);
+      
+      //Usage de comparator
+      ArrayList<Trip> tripList = new ArrayList<Trip> ();
+      tripList.add(trp);
+      tripList.add(trp2);
+      tripList.add(trp3);
+      tripList.sort(endDateComparator);
+      System.out.println();
+      System.out.println();
+      System.out.println(tripList);
     }
 
 }

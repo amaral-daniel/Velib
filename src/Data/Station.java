@@ -18,12 +18,15 @@ public class Station {
     private ArrayList <State> stateList;
     private boolean isOpen;
     /* Info supplémentaires */
-    private ArrayList <Integer> closestStationsListId;
+    private ArrayList <Integer> closestStationIdList;
+    private ArrayList <Station> closestStationList;
     // RADIUS_OF_EARTH Ressource: https://rechneronline.de/earth-radius/ 
     // using 48.83713368945151 latitude, 50 meters above sea level, 
     private static double RADIUS_OF_EARTH = 6366111; 
     
  
+    
+    /* Constructeurs */
     /**
      * Constructeur qui prends des informations essentiels 
      * Veuillez utiliser le setPrimaryState et setIsOpen après la création d'une station impérativement
@@ -34,11 +37,11 @@ public class Station {
       this.identity = identity;
       this.capacity = capacity;
       stateList = new ArrayList<State> ();
-      closestStationsListId = new ArrayList<Integer> ();
+      closestStationIdList = new ArrayList<Integer> ();
+      closestStationList = new ArrayList<Station> ();
       this.isOpen = true;
     }
     
-
     /**
      * Constructeur qui prend à la fois des informations essentiels et supplémentraires 
      * Veuillez utiliser impérativement le setPrimaryState() et setIsOpen() après la création d'une station
@@ -57,7 +60,8 @@ public class Station {
       this.longitude = longitude;
       this.latitude = latitude;
       stateList = new ArrayList<State> ();
-      closestStationsListId = new ArrayList<Integer> ();
+      closestStationIdList = new ArrayList<Integer> ();
+      closestStationList = new ArrayList<Station> ();
       this.isOpen = true;
     }
     
@@ -108,41 +112,50 @@ public class Station {
       stateList.add(new State(numberOfFreeBikesNew, numberOfFreeStandsNew,date));
     }
     
+    
     /* Operations des states*/
     public void deleteLatestState() {
       stateList.remove(stateList.size());
     }
 
     
-    /* Operations des stations */    
+    /* Operations des stations */   
+    /* Assez long ! */
+    /* 1.Find the Station qui porte un certain  id*/
     /**
-     * Transformation de ArrayList<Staion> à ArrayList<StationDistance>
-     * @param stationsList
-     * @return stationDistanceList
+     * Find Station selon le id
+     * @param id
+     * @param stationList
+     * @return
      */
-    public ArrayList<StationDistance> sortStationsList(ArrayList<Station> stationsList){
-      ArrayList<StationDistance> sDisList = new ArrayList<StationDistance> ();
-      for(Station st:stationsList) {
-        sDisList.add(new StationDistance(st.getDistanceToStationGiven(this),st.getIdentity()));
+    public static Station findStation(int id, ArrayList<Station> stationList) {
+      int i = 0;
+      while(stationList.get(i).getIdentity() != id) {
+        i++;
       }
-      Collections.sort(sDisList, StationDistance.DisComparator);
-      return sDisList;
+      return stationList.get(i);
+      
+//      for(Station st : stationList) {
+//        if (st.getIdentity() == id) {
+//          return st;        
+//        }
     }
     
+    /* 2.1. Get Closest Station ID */
     /**
      * Trouve et enregistre les premières n identités des stations plus proches
      * @param number de stations à constituer la liste des stations plus proches
-     * @param stationsList
+     * @param stationList
      */
-    public void setClosestStations(int number, ArrayList<Station> stationsList) {
-      ArrayList<StationDistance> sDisList =  sortStationsList(stationsList);
+    public void setClosestStationsId(int number, ArrayList<Station> stationList) {
+      ArrayList<StationDistance> sDisList =  sortStationsList(stationList);
       if (number <= sDisList.size()) {
         for (StationDistance st : sDisList) {
           if (st.getIdentity() == this.identity) {
             number = number + 1;
           }
           else {
-            this.closestStationsListId.add(st.getIdentity());
+            this.closestStationIdList.add(st.getIdentity());
           }
         }
       }
@@ -151,35 +164,24 @@ public class Station {
       }
     }
     
-    
+    /* 2.2. Méthode auxiliaire pour Get Closest Station ID */
     /**
-     * La méthode pour set toutes les stations dans un rayon de certaines mètres
-     * @param radius en mètre
+     * Transformation de ArrayList<Staion> à ArrayList<StationDistance>
      * @param stationList
+     * @return stationDistanceList
      */
-    /*
-    public void setClosestStations(int radius, ArrayList<Station> stationList) {
-      for (int i = 0; i < stationList.size(); i++) {
-        Station st = stationList.get(i);
-        if (st.getIdentity() == this.getIdentity()) {
-          // On ne fait rien
-        }
-        else if (Station.getDistanceBetweenTwoStations(this, st) <= radius) {
-          closestStationsList.add(st);
-        }
+    private ArrayList<StationDistance> sortStationsList(ArrayList<Station> stationList){
+      ArrayList<StationDistance> sDisList = new ArrayList<StationDistance> ();
+      for(Station st:stationList) {
+        sDisList.add(new StationDistance(st.getDistanceToStationGiven(this),st.getIdentity()));
       }
-    }
-    
-    */
-    // https://beginnersbook.com/2013/12/java-arraylist-of-object-sort-example-comparable-and-comparator/
-    
-    //????????????????????, de quelle maniètre à arranger ces stations ?
-    public ArrayList<Station> sortStations(ArrayList<Station> stationList){
-      return stationList;
-      
+      Collections.sort(sDisList, StationDistance.DisComparator);
+      return sDisList;
     }
     
     
+    /* 2.3.1. Méthode auxiliaire utilisé pendant finding closest stataion ID 
+     * Find the distance between two stations*/
     /**
      * Sources des formules: https://andrew.hedges.name/experiments/haversine/
      * @param st1
@@ -201,6 +203,8 @@ public class Station {
       return d;
     }
     
+    /* 2.3.2. Méthode auxiliaire utilisé pendant finding closest stataion ID 
+     * Find the distance between this station and an another*/
     /**
      * La distance entre this station et une autre station
      * @param st2
@@ -220,6 +224,44 @@ public class Station {
       int d = (int) Math.round(RADIUS_OF_EARTH * c);
       return d;
     }
+    
+    
+    /* Une anciene idée sur la finding closest stations*/
+    /**
+     * La méthode pour set toutes les stations dans un rayon de certaines mètres
+     * @param radius en mètre
+     * @param stationList
+     */
+    /*
+    public void setClosestStations(int radius, ArrayList<Station> stationList) {
+      for (int i = 0; i < stationList.size(); i++) {
+        Station st = stationList.get(i);
+        if (st.getIdentity() == this.getIdentity()) {
+          // On ne fait rien
+        }
+        else if (Station.getDistanceBetweenTwoStations(this, st) <= radius) {
+          closestStationsList.add(st);
+        }
+      }
+    } 
+   */
+  
+    /* 3. Find the Closest Station qui setter les informations des closest stations 
+     * comme instances de Staions in the attributs*/
+    public void setClosestStaion(int n, ArrayList<Station> stationList) {
+      if (closestStationIdList.size() == n) {
+        for (int id : this.closestStationIdList ) {
+          this.closestStationList.add(Station.findStation(id, stationList));
+        }
+      }
+      else {
+        this.setClosestStationsId(n, stationList);
+        for (int id : this.closestStationIdList ) {
+          this.closestStationList.add(Station.findStation(id, stationList));
+        }
+       } 
+     }
+    
     
     /* Setters */
     /**
@@ -275,8 +317,11 @@ public class Station {
     public String getAddress() {
       return address;
     }
-    public ArrayList<Integer> getClosestStationsId() {
-      return closestStationsListId;
+    public ArrayList<Integer> getClosestStationIdList() {
+      return closestStationIdList;
+    }
+    public ArrayList<Station> getClosestStationList(){
+      return closestStationList;
     }
     
     
@@ -359,7 +404,6 @@ public class Station {
       System.out.println(station4);
       
       //Creation d'une ArrayList de stations
-      
       ArrayList<Station> stationList = new ArrayList<Station> ();
       stationList.add(station1);
       stationList.add(station2);
@@ -370,13 +414,20 @@ public class Station {
       System.out.println(Station.getDistanceBetweenTwoStations(station1, station2));
       System.out.println(Station.getDistanceBetweenTwoStations(station1, station3));
       System.out.println(Station.getDistanceBetweenTwoStations(station1, station4));
-      station1.setClosestStations(3, stationList);
+      station1.setClosestStationsId(3, stationList);
      
-      System.out.println("Size of the closestStationId:");
-      System.out.println(stationList.get(0).getClosestStationsId().size());
-      System.out.println(stationList.get(0).getClosestStationsId().get(0)); 
-      System.out.println(stationList.get(0).getClosestStationsId().get(1));
-      System.out.println(stationList.get(0).getClosestStationsId().get(2)); 
+      System.out.println("Size of the closestStationIdList for station1:");
+      System.out.println(station1.getClosestStationIdList().size());
+      System.out.println(station1.getClosestStationIdList().get(0)); 
+      System.out.println(station1.getClosestStationIdList().get(1));
+      System.out.println(station1.getClosestStationIdList().get(2)); 
+     
+      System.out.println(Station.findStation(903, stationList)); 
+      
+      System.out.println();
+      System.out.println();
+      station1.setClosestStaion(3, stationList);
+      System.out.println(station1.getClosestStationList());
       
     }
 }
