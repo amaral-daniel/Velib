@@ -18,16 +18,18 @@
 //}
 
 //
+
+
 package IHM;
-//hello
+
 import Data.*;
-//import IO.State;
+
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 
- 
+
 public class Read 
 {
 	/* Class Read:
@@ -168,22 +170,28 @@ public class Read
 					String nb = line.substring(line.indexOf("\"nb\"", ind)+5, 
 							line.indexOf(",", line.indexOf("\"nb\"", ind)+5));
 					int identity = Integer.parseInt(nb);
-					System.out.println(identity);
+				//	System.out.println(identity);
 					
 					String stt = line.substring(line.indexOf("\"state\"", ind)+8, 
 							line.indexOf(",", line.indexOf("\"state\"",ind)+8));
 					boolean isOpen = (stt.equals("\"open\"")) ? true : false;
-					System.out.println(isOpen);
+				//	System.out.println(isOpen);
 					
 					String freebk = line.substring(line.indexOf("\"freebk\"", ind)+9, 
 							line.indexOf(",", line.indexOf("\"freebk\"",ind)+9));
 					int freeBikes = Integer.parseInt(freebk);
-					System.out.println(freeBikes);
+				//	System.out.println(freeBikes);
 					
 					String freebs = line.substring(line.indexOf("\"freebs\"", ind)+9, 
 							line.indexOf("}", line.indexOf("\"freebs\"",ind)+9));
 					int freeStands = Integer.parseInt(freebs);
-					System.out.println(freeStands);
+				//	System.out.println(freeStands);
+					
+					State state1 = new State(freeBikes, freeStands, "20131031000001");
+					
+					//How to avoid repeating the search?
+					findStationWithId(identity, stationList).setIsOpen(isOpen);
+					findStationWithId(identity, stationList).setPrimaryState(state1);
 					
 					//Update the index to the latitude's (the last info of each station) index + 60
 					ind = line.indexOf("\"freebs\"", ind)+10; 
@@ -193,21 +201,15 @@ public class Read
 					if(line.indexOf("\"nb\"", ind) < 0)
 						break;
 					
-					State state1 = new State(freeBikes, freeStands, "20131031000001");
-					
-					//How to avoid repeating the search?
-					findStationWithId(identity, stationList).setIsOpen(isOpen);
-					findStationWithId(identity, stationList).setPrimaryState(state1);
 					
 					
 					
-					
-			//		findStation(identity).
 					
 				}
 			}
 			
 			buffer.close();
+		
 
 		}
 		catch(FileNotFoundException error) 
@@ -284,20 +286,7 @@ public class Read
 	
 	
 	
-	public static void main (String[] args) 
-	{
-		String stationAddressesFileName = "Velib\\src\\files\\stationAddresses.txt";
-		String initialStatesFileName = "Velib\\src\\files\\initialstates.txt";
-		String tripsFileName = "Velib\\src\\files\\trips-2013-10-31.txt";
-		
-		Read read = new Read(stationAddressesFileName, initialStatesFileName, tripsFileName);
-		
-		ArrayList<Station> stationList01 = read.createStationList(stationAddressesFileName);
-		ArrayList<Trip> tripList01 = read.createTripsList(tripsFileName, stationList01);
-		
-		
-		
-	}
+	
 	
 	
 
