@@ -73,16 +73,19 @@ public class Station {
     		this(station.getIdentity(),station.getName(),station.getAddress(),station.getCapacity(),station.getLongitude(),station.getLatitude());
     }
     /* Opération des trips */
+    
     /**
      * On prends qu'un vélo chaque fois
      * Cette méthode prend une instance de Date comme entrée 
      * @param date
      */
+    /*
     public void takeBike(Date date) {
       int numberOfFreeBikesNew = stateList.get(stateList.size()-1).getNBikes() - 1;
       int numberOfFreeStandsNew = stateList.get(stateList.size()-1).getNStands() + 1;
       stateList.add(new State(numberOfFreeBikesNew,numberOfFreeStandsNew,date));
     }
+    */
 
     /**
      * On prends qu'un vélo chaque fois 
@@ -101,11 +104,13 @@ public class Station {
      * Cette méthode prend une instance de Date comme entrée
      * @param date
      */
+    /*
     public void returnBike(Date date) {
       int numberOfFreeBikesNew = stateList.get(stateList.size()-1).getNBikes() + 1;
       int numberOfFreeStandsNew = stateList.get(stateList.size()-1).getNStands() - 1;
       stateList.add(new State(numberOfFreeBikesNew, numberOfFreeStandsNew,date));
     }
+    */
 
     /**
      * On retourne qu'un vélo chaque fois 
