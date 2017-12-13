@@ -12,8 +12,8 @@ import java.util.Date;
 import Data.State;
 import Data.Station;
 
-public final class EvaluateurStation {
-	private EvaluateurStation()
+public final class EvaluatorStation {
+	private EvaluatorStation()
 	{
 		minimalCriticalTime = 30*60; //30 minutes 
 	}
@@ -96,12 +96,12 @@ public final class EvaluateurStation {
 		return false;
 	}
 	
-	public static void exportCSVStationStates(Station station) throws FileNotFoundException
+	public static void exportCSVStationStates(Station station,String fileName) throws FileNotFoundException
 	{
 	
 		ArrayList<State> stateList = station.getStateList();
 
-		PrintWriter out = new PrintWriter( "src/Evaluation/states_" + station.getName() + ".csv")  ;
+		PrintWriter out = new PrintWriter( fileName + station.getName() + ".csv")  ;
 		out.println("Time, Bikes");
 		for(int i = 0; i < stateList.size(); i++)
 		{    		     	 

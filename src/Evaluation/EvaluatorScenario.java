@@ -10,19 +10,19 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-public class EvaluateurScenario 
+public class EvaluatorScenario 
 {
     private Scenario refScenario;
     private float unbalancedCriteria;
     
-	public EvaluateurScenario(Scenario newScenario)
+	public EvaluatorScenario(Scenario newScenario)
 	{
 		refScenario = newScenario;
 		unbalancedCriteria = (float)0.7;
 	}
 	
 	//fonction qui va identifier tous les stations qui sont restes vide ou pleines pendant plus que 30 minutes
-    public ArrayList<Station> identifyCriticalStations() 
+    private ArrayList<Station> identifyCriticalStations() 
     { 	
     		ArrayList<Station> criticalStations = new ArrayList<Station>();
     		ArrayList<Station> stationList = refScenario.getStationList();
@@ -31,8 +31,8 @@ public class EvaluateurScenario
     		for (int i = 0; i < stationList.size(); i++) 
     		{
 	    		Station currentStation = stationList.get(i);
-	    		EvaluateurStation.setMinimalCriticalTime(30*60);
-	    		if(EvaluateurStation.isCritical(currentStation ))
+	    		EvaluatorStation.setMinimalCriticalTime(30*60);
+	    		if(EvaluatorStation.isCritical(currentStation ))
 	    		{
 	    			criticalStations.add(currentStation);
 	    		}   			
@@ -40,12 +40,12 @@ public class EvaluateurScenario
 	    	return criticalStations;
     }
 
-    public void exportCSVCriticalStations(int step) throws FileNotFoundException
+    public void exportCSVCriticalStationsVariation(int step,String fileName) throws FileNotFoundException
     {
     		ArrayList<Station> stations = refScenario.getStationList();
     		Date initialDate = stations.get(0).getState(0).getDate();		
     		
-    		PrintWriter out = new PrintWriter( "src/Evaluation/variationOfCriticalStations.csv") ;
+    		PrintWriter out = new PrintWriter( fileName) ;
     		out.println("Time, CriticalStations");
     		DateFormat df = new SimpleDateFormat("MM-dd-yyyy HH:mm"); 
     		
@@ -57,7 +57,7 @@ public class EvaluateurScenario
 
     			for(int j = 0; j < stations.size() ; j++)
     			{
-    				if(EvaluateurStation.isEmptyOrFull(stations.get(j), currentDate))
+    				if(EvaluatorStation.isEmptyOrFull(stations.get(j), currentDate))
     				{
     					numberOfBadStations += 1;
     				}
@@ -71,7 +71,20 @@ public class EvaluateurScenario
     		
     }
     
-    public void exportCSVStationStates(int identity) throws FileNotFoundException
+    public void exportCSVCriticalStationsNames(String fileName) throws FileNotFoundException
+    {
+   		PrintWriter out = new PrintWriter( fileName) ;
+		out.println("StationName, StationID");
+    		ArrayList<Station> criticalStations = identifyCriticalStations();
+    		for(int i = 0; i < criticalStations.size(); i++)
+    		{
+    			out.println(criticalStations.get(i).getName() + "," + criticalStations.get(i).getIdentity());
+    		}
+    		out.close();
+		
+    }
+    
+    public void exportCSVStationStates(int identity,String fileName) throws FileNotFoundException
     {
     		ArrayList<Station> stationList = refScenario.getStationList();
     		Station searchedStation = null;
@@ -91,9 +104,31 @@ public class EvaluateurScenario
     			return;
     		}
     		
-    		EvaluateurStation.exportCSVStationStates(searchedStation);	
+    		EvaluatorStation.exportCSVStationStates(searchedStation,fileName);	
     }
-         
+
+    public void exportCSVStationStates(String stationName,String fileName) throws FileNotFoundException
+    {
+    		ArrayList<Station> stationList = refScenario.getStationList();
+    		Station searchedStation = null;
+    		
+    		
+    		for(int i = 0; i < stationList.size(); i++)
+    		{
+    			if(stationList.get(i).getName() == stationName )
+    			{
+    				searchedStation = stationList.get(i);
+    				i = stationList.size(); //ugly solution to quit the loop
+    			}
+    		}
+    		if(searchedStation == null)
+    		{
+    			System.out.println("station " + stationName + " not found!!!!!!!!!!!111 \n");
+    			return;
+    		}
+    		
+    		EvaluatorStation.exportCSVStationStates(searchedStation,fileName);	
+    }
     //fonction qui va donner la somme du temps de tous les trajets valides
     public int getSecondsTrajets()
     {
@@ -214,7 +249,7 @@ public class EvaluateurScenario
 		//System.out.println("running trips....\n");
 		scenario.runTripsTest();
 		
-		EvaluateurScenario my_evaluateur = new EvaluateurScenario(scenario);
+		EvaluatorScenario my_evaluateur = new EvaluatorScenario(scenario);
 		
 		int secondsTrajet  = my_evaluateur.getSecondsTrajets();
 		
@@ -242,22 +277,22 @@ public class EvaluateurScenario
 		
 		for(int i = 0; i < stations.size(); i++)
 		{
-			EvaluateurStation.exportCSVStationStates(stations.get(i));
+			EvaluatorStation.exportCSVStationStates(stations.get(i),"src/Evaluation/states_");
 		}
 		
 		System.out.println("----------testing isEmptyOrFull-------------");
 		
 		Date date1 = new GregorianCalendar(1995, 02, 31,2,36).getTime();
-		boolean isCritical =  EvaluateurStation.isEmptyOrFull(station1, date1);
+		boolean isCritical =  EvaluatorStation.isEmptyOrFull(station1, date1);
 		System.out.println("Station 1 is critical at" + date1 + " ? " + isCritical);
 		
 		Date date2 = new GregorianCalendar(1995, 02, 31,2,34).getTime();
-		isCritical =  EvaluateurStation.isEmptyOrFull(station2, date2);
+		isCritical =  EvaluatorStation.isEmptyOrFull(station2, date2);
 		System.out.println("Station 2 is critical at" + date2 + " ? " + isCritical);
 		
 		System.out.println("--------------testing exportCSVCriticalStations--------");
 		
-		my_evaluateur.exportCSVCriticalStations(30*60);
+		my_evaluateur.exportCSVCriticalStationsVariation(30*60,"src/Evaluation/variationOfCriticalStations.csv");
 		
 		System.out.println("-------------testing isUnbalanced-------------");
 		
