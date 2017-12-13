@@ -65,6 +65,13 @@ public class Station {
       this.isOpen = true;
     }
     
+    /**
+     * Constructeur pour faire une copie
+     **/
+    public Station(Station station)
+    {
+    		this(station.getIdentity(),station.getName(),station.getAddress(),station.getCapacity(),station.getLongitude(),station.getLatitude());
+    }
     /* Opération des trips */
     /**
      * On prends qu'un vélo chaque fois
