@@ -178,6 +178,11 @@ public Scenario (float growthParameter) {
     		=> end currentTrip */
     		else {
     			
+    			State currentEndState = currentTrip.getEndStation().getLatestState();
+    			
+    			if (currentEndState.isCriticallyFull() && !currentEndState.isCriticallyEmpty()) { //peut yetre autre critère empty closest Station exists
+    			proposeCollaboration(currentTrip);
+    			}
     			endTrip(currentTrip);
     		} 
     	} //loop end
@@ -197,6 +202,24 @@ public Scenario (float growthParameter) {
     	}
     	
     		return;
+    }
+    
+    private void proposeCollaboration (Trip currentTrip) {
+    	
+    	if ((float) Math.random() <= this.collaborationRate) {
+    		ArrayList<Station> closestStations = currentTrip.getEndStation().getClosestStationList();
+    		for (int j; j < closestStations.size(); j++) {
+    		
+    			Station currentStation = closestStations.get(j);
+    			State currentState = currentStation.getLatestState();
+    		
+    			if (currentState.isCriticallyEmpty()) {
+    				currentTrip.setEndStation(currentStation);
+    				break;
+    			}
+    		}
+    	}
+    	return;
     }
 
     /** simple Version of runTrips to run tests */
