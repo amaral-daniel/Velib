@@ -18,9 +18,11 @@ public class Main {
 		//Construct reader
 		Read read = new Read(stationAddressesFileName, initialStatesFileName, tripsFileName);
 		
-		//Create the stationList with their initial condition and also tripList
+		//Creates stationList with their initial condition
 		ArrayList<Station> stationList = read.createStationList(stationAddressesFileName);
 		read.defineInitalStates(initialStatesFileName, stationList);
+		
+		//Creates trip list
 		ArrayList<Trip> tripList = read.createTripsList(tripsFileName, stationList);
 		
 		

@@ -190,8 +190,11 @@ public class Read
 					State state1 = new State(freeBikes, freeStands, "20131031000001");
 					
 					//How to avoid repeating the search?
-					findStationWithId(identity, stationList).setIsOpen(isOpen);
-					findStationWithId(identity, stationList).setPrimaryState(state1);
+					Station dummyStation = findStationWithId(identity, stationList);
+					
+					dummyStation.setIsOpen(isOpen);
+					dummyStation.setPrimaryState(state1);
+					dummyStation.setClosestStations(5,stationList);
 					
 					//Update the index to the latitude's (the last info of each station) index + 60
 					ind = line.indexOf("\"freebs\"", ind)+10; 
