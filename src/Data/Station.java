@@ -176,8 +176,8 @@ public class Station extends StationExtendedDynamic {
    */
   
     /* 3. Find the Closest Station qui setter les informations des closest stations 
-     * comme instances de Staions in the attributs*/
-    public void setClosestStaion(int n, ArrayList<Station> stationList) {
+     * comme instances de Stations in the attributs*/
+    public void setClosestStations(int n, ArrayList<Station> stationList) {
       if (closestStationIdList.size() == n) {
         for (int id : this.closestStationIdList ) {
           this.closestStationList.add(Station.findStation(id, stationList));
@@ -294,7 +294,7 @@ public class Station extends StationExtendedDynamic {
       
       System.out.println();
       System.out.println();
-      station1.setClosestStaion(3, stationList);
+      station1.setClosestStations(3, stationList);
       System.out.println(station1.getClosestStationList());
       
     }
