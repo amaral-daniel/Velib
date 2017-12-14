@@ -1,5 +1,6 @@
 package IHM;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import Data.*;
@@ -8,7 +9,7 @@ import Simulation.*;
 
 public class Main {
 	
-	public static void main(String[] args)
+	public static void main(String[] args) throws FileNotFoundException
 	{
 		//File Names
 		String stationAddressesFileName = "src/files/stationsAddresses.txt";
@@ -25,8 +26,10 @@ public class Main {
 		//Creates trip list
 		ArrayList<Trip> tripList = read.createTripsList(tripsFileName, stationList);
 		
+		Scenario scenario01 = new Scenario (stationList, tripList);
 		
-		
+		Simulator simul = new Simulator(tripList, stationList);
+		simul.analyze();
 		
 		
 		
