@@ -9,6 +9,8 @@ public class State {
     private int numberOfFreeStands;
     private boolean isFull;
     private boolean isEmpty;
+    private boolean isCriticallyFull; // changed by Jul
+    private boolean isCriticallyEmpty; //
 
     /* Constructeur */
     /* Date format "yyyyMMddhhmmss" */ 
@@ -17,6 +19,8 @@ public class State {
       this.numberOfFreeStands = numOfFreeStands;
       this.isFull = (numOfFreeStands == 0);
       this.isEmpty = (numOfFreeBikes == 0);
+      this.isCriticallyFull = (numOfFreeStands <= 3); //changed by Jul
+      this.isCriticallyEmpty = (numOfFreeBikes <= 3); //
       this.date = currentDate;
       if (numOfFreeStands < 0 ) {
         String info = "ATTENTION: FREE STANDS OVER DECHARGED, WITH NUMBER OF STANDS EQUALS TO";
@@ -37,6 +41,8 @@ public class State {
       this.numberOfFreeStands = numOfFreeStands;
       this.isFull = (numOfFreeStands == 0);
       this.isEmpty = (numOfFreeBikes == 0);
+      this.isCriticallyFull = (numOfFreeStands <= 3);
+      this.isCriticallyEmpty = (numOfFreeBikes <= 3);
       if (currentDateString.length() == 14) {
         SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmmss");
         try {

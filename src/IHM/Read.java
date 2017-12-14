@@ -259,6 +259,12 @@ public class Read
 					String endTime = split[4];
 					int endStationId = Integer.parseInt(split[5]); 
 					
+					if(startStationId < 900 || endStationId < 900)
+					{
+						System.out.println("Invalid trip: "+startStationId+" and "+endStationId);
+						continue;
+					}
+					
 					//	Leaving the stands here just for precaution
 					//	int startBikeStand = Integer.parseInt(split[3]);   
 					//	int endBikeStand = Integer.parseInt(split[6]);
