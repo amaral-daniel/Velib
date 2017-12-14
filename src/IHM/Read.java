@@ -259,9 +259,25 @@ public class Read
 					String endTime = split[4];
 					int endStationId = Integer.parseInt(split[5]); 
 					
-					if(startStationId < 900 || endStationId < 900)
+					
+					//Corrigir depois pra implementar trips com station 0
+					if(startStationId == 0)
+					{	
+						Trip trip = new Trip(reason, startTime, null, 
+								endTime, findStationWithId(endStationId, stationList));
+					
+						tripList.add(trip);
+						
+						continue;
+					}
+					
+					else if (endStationId == 0)
 					{
-						System.out.println("Invalid trip: "+startStationId+" and "+endStationId);
+						Trip trip = new Trip(reason, startTime, findStationWithId(endStationId, stationList), 
+								endTime, null);
+					
+						tripList.add(trip);
+						
 						continue;
 					}
 					
