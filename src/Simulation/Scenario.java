@@ -3,6 +3,9 @@ package Simulation;
 import Data.*;
 import Evaluation.EvaluateurScenario;
 
+import java.io.FileNotFoundException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -324,7 +327,8 @@ public Scenario (float growthParameter) {
     
     /* different Simulation Methods */
     
-    /** method to simulate a Velib Scenario without regulation */
+    /** method to simulate a Velib Scenario without regulation 
+     * @throws FileNotFoundException */
    /* public void noRegulation() {
     
     	ScenarioResume.setSimulationType("Simulation without regulation");
@@ -364,7 +368,7 @@ for (int i=tripList.size(); i > 0; i=((float) i)-helpvar ) { //schleifenkopf übe
 }*/
     
     // Main method for testing
-    public static void main (String args[]) {
+    public static void main (String args[]) throws FileNotFoundException {
     	
     	// declaration of attributes
     	Scenario baseScenario;
@@ -391,6 +395,13 @@ for (int i=tripList.size(); i > 0; i=((float) i)-helpvar ) { //schleifenkopf übe
     	Date date4 = new GregorianCalendar(2013, 10, 30,13,10,0).getTime();	
   		Date date5 = new GregorianCalendar(2013, 10, 30,12,0,5).getTime();
   		Date date6 = new GregorianCalendar(2013, 10, 30,13,0,1).getTime();
+  		
+  		 SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmmss");
+         try {
+           date = ft.parse(currentDateString);
+         } catch (ParseException e) {
+           System.out.println("Unparseable using" + ft);
+         }
     	
   		// initializing test trips
   		Trip trip3 = new Trip (Reason.RENT, date5, station2, date6, station1); //inverse direction
@@ -422,7 +433,7 @@ for (int i=tripList.size(); i > 0; i=((float) i)-helpvar ) { //schleifenkopf übe
     	} */
     	//baseScenarioStationList.get(i).getIdentity()
     	for (int i = 0; i < baseScenarioStationList.size(); i++) {
-    	baseScenarioEvaluateur.exportCSVStationStates(901);
+    	baseScenarioEvaluateur.exportCSVStationStates(baseScenarioStationList.get(i).getIdentity());
     	}
     	// ArrayList <Trip> baseScenarioTripList = baseScenario.tripList;
     	for (int i = 0; i < baseScenarioTripList.size(); i++) {
