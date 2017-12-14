@@ -6,7 +6,17 @@ import java.util.Date;
 
 //import com.modeliosoft.modelio.javadesigner.annotations.objid;
 
-public class Station2 extends StationExtendedDynamic {
+public class Station2  {
+    /* Attributs statiques */
+    protected int identity;
+    protected int capacity;
+    protected double longitude;
+    protected double latitude;
+    protected String name;
+    protected String address;
+    /* Attributs dynamiques */
+    private ArrayList <State> stateList;
+    private boolean isOpen;
     /* Info supplémentaires */
     private ArrayList <Integer> closestStationIdList;
     private ArrayList <Station2> closestStationList;
@@ -24,9 +34,12 @@ public class Station2 extends StationExtendedDynamic {
      * @param capacity
      */
     public Station2(int identity, int capacity) {
-      super(identity,capacity);
+      this.identity = identity;
+      this.capacity = capacity;
       closestStationIdList = new ArrayList<Integer> ();
       closestStationList = new ArrayList<Station2> ();
+      stateList = new ArrayList<State> ();
+      this.isOpen = true;
     }
     
     /**
@@ -40,9 +53,16 @@ public class Station2 extends StationExtendedDynamic {
      * @param latitude
      */
     public Station2(int identity, String name, String address, int capacity, double longitude, double latitude) {
-      super(identity,name,address,capacity,longitude,latitude);
+      this.identity = identity;
+      this.capacity = capacity;
+      this.name = name;
+      this.address = address;
+      this.longitude = longitude;
+      this.latitude = latitude;
       closestStationIdList = new ArrayList<Integer> ();
       closestStationList = new ArrayList<Station2> ();
+      stateList = new ArrayList<State> ();
+      this.isOpen = true;
     }
     
     /**
@@ -50,7 +70,9 @@ public class Station2 extends StationExtendedDynamic {
      **/
     public Station2(Station2 station)
     {
-      super(station);
+      this(station.getIdentity(),station.getName(),
+          station.getAddress(),station.getCapacity(),
+          station.getLongitude(),station.getLatitude());
     }
     
     
