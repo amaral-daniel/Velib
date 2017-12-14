@@ -29,26 +29,17 @@ public final class EvaluatorStation {
 	{
 
 		int criticalTime = 0;
-		//System.out.println("--------------------");
-		//System.out.println("looking station:" + station + "\n");
-		
-		//loop running through all States j of the selected Station i
-		//Must change this!!!!!!!!!!!!!!! Methods have changed
-		//System.out.println("number of state:::" + station.getNumberOfStates());
+
 		for	(int j = 0; j < station.getNumberOfStates() - 1; j++)
 		{
 
 			State currentState = station.getState(j);
 			State nextState = station.getState(j + 1);
-			//check if the station i is almost empty or full in State j
-		//	System.out.println("state::::" + currentState);
+			
 			if (currentState.getNBikes() <= 0 || currentState.getNBikes() == station.getCapacity()) 
 			{			
-		//		System.out.println("next:::" + nextState.getDate().getTime() + "\n");
-		//		System.out.println("current:::" + currentState.getDate().getTime() + "\n");
 				long durationState = nextState.getDate().getTime() - currentState.getDate().getTime() ;	
 				criticalTime += (int)durationState;
-		//		System.out.println("adding critical time:" + (int)durationState + "\n");
 			}
 					
 		}			
@@ -117,25 +108,7 @@ public final class EvaluatorStation {
 	}
 	
 	 public static void main(String args[]) throws IOException {  
-	      FileInputStream in = null;
-	      FileOutputStream out = null;
 
-	      try {
-	         in = new FileInputStream("src/Evaluation/input.txt");
-	         out = new FileOutputStream("src/Evaluation/output.txt");
-	         
-	         int c;
-	         while ((c = in.read()) != -1) {
-	            out.write(c);
-	         }
-	      }finally {
-	         if (in != null) {
-	            in.close();
-	         }
-	         if (out != null) {
-	            out.close();
-	         }
-	      }
 	   }
 	
 	

@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.io.FileNotFoundException;
 import java.util.GregorianCalendar;
+
+import org.jfree.ui.RefineryUtilities;
+
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -104,9 +107,53 @@ public class EvaluatorScenario
     			return;
     		}
     		
+    		
     		EvaluatorStation.exportCSVStationStates(searchedStation,fileName);	
     }
+    
+    public void visualizeStationStates(int identity)
+    {
+		ArrayList<Station> stationList = refScenario.getStationList();
+		Station searchedStation = null;
+		for(int i = 0; i < stationList.size(); i++)
+		{
+			if(stationList.get(i).getIdentity() == identity )
+			{
+				searchedStation = stationList.get(i);
+				i = stationList.size(); //ugly solution to quit the loop
+			}
+		}
+		if(searchedStation == null)
+		{
+			System.out.println("station " + identity + " not found!!!!!!!!!!!111 \n");
+			return;
+		}
+		GraphStation my_graph = new GraphStation(searchedStation);
+		my_graph.showWindow();
+    }
+    
+    public void visualizeStationStates(String name)
+    {
+		ArrayList<Station> stationList = refScenario.getStationList();
+		Station searchedStation = null;
+		for(int i = 0; i < stationList.size(); i++)
+		{
+			if(stationList.get(i).getName() == name )
+			{
+				searchedStation = stationList.get(i);
+				i = stationList.size(); //ugly solution to quit the loop
+			}
+		}
+		if(searchedStation == null)
+		{
+			System.out.println("station " + name + " not found!!!!!!!!!!!111 \n");
+			return;
+		}
+		GraphStation my_graph = new GraphStation(searchedStation);
+		my_graph.showWindow();
+    }
 
+    
     public void exportCSVStationStates(String stationName,String fileName) throws FileNotFoundException
     {
     		ArrayList<Station> stationList = refScenario.getStationList();
@@ -277,10 +324,20 @@ public class EvaluatorScenario
 		
 		for(int i = 0; i < stations.size(); i++)
 		{
-			EvaluatorStation.exportCSVStationStates(stations.get(i),"src/Evaluation/states_");
+			my_evaluateur.exportCSVStationStates(stations.get(i).getName(),"src/Evaluation/states_");
+			my_evaluateur.visualizeStationStates(stations.get(i).getName());
+			
 		}
+		System.out.println("--------------drawing graphs stations------------- ");
 		
-		System.out.println("----------testing isEmptyOrFull-------------");
+		//GraphStation my_graph = new GraphStation(stations.get(0));
+		//my_graph.showWindow();
+		
+		//GraphStation my_graph2 = new GraphStation(stations.get(1));
+		//my_graph2.showWindow();
+		
+		System.out.println("--------------drawing graph");
+	    System.out.println("----------testing isEmptyOrFull-------------");
 		
 		Date date1 = new GregorianCalendar(1995, 02, 31,2,36).getTime();
 		boolean isCritical =  EvaluatorStation.isEmptyOrFull(station1, date1);
@@ -299,7 +356,7 @@ public class EvaluatorScenario
 		boolean isUnbalanced = my_evaluateur.isUnbalanced();
 		
 		System.out.println("is unbalanced? " + isUnbalanced);
-		
+		return;
 		
 	}
 
