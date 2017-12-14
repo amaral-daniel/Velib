@@ -6,14 +6,16 @@ import java.util.Date;
 
 //import com.modeliosoft.modelio.javadesigner.annotations.objid;
 
-public class Station extends StationExtendedDynamic {
+public class Station2 extends StationExtendedDynamic {
     /* Info supplémentaires */
     private ArrayList <Integer> closestStationIdList;
-    private ArrayList <Station> closestStationList;
+    private ArrayList <Station2> closestStationList;
     // RADIUS_OF_EARTH Ressource: https://rechneronline.de/earth-radius/ 
     // using 48.83713368945151 latitude, 50 meters above sea level, 
     private static double RADIUS_OF_EARTH = 6366111; 
-        
+    
+ 
+    
     /* Constructeurs */
     /**
      * Constructeur qui prends des informations essentiels 
@@ -21,10 +23,10 @@ public class Station extends StationExtendedDynamic {
      * @param identity
      * @param capacity
      */
-    public Station(int identity, int capacity) {
+    public Station2(int identity, int capacity) {
       super(identity,capacity);
       closestStationIdList = new ArrayList<Integer> ();
-      closestStationList = new ArrayList<Station> ();
+      closestStationList = new ArrayList<Station2> ();
     }
     
     /**
@@ -37,20 +39,78 @@ public class Station extends StationExtendedDynamic {
      * @param longitude
      * @param latitude
      */
-    public Station(int identity, String name, String address, int capacity, double longitude, double latitude) {
+    public Station2(int identity, String name, String address, int capacity, double longitude, double latitude) {
       super(identity,name,address,capacity,longitude,latitude);
       closestStationIdList = new ArrayList<Integer> ();
-      closestStationList = new ArrayList<Station> ();
+      closestStationList = new ArrayList<Station2> ();
     }
     
     /**
      * Constructeur pour faire une copie
      **/
-    public Station(Station station)
+    public Station2(Station2 station)
     {
       super(station);
     }
     
+    
+    /* Opération des trips */
+    /**
+     * On prends qu'un vélo chaque fois
+     * Cette méthode prend une instance de Date comme entrée 
+     * @param date
+     */
+    
+    public void takeBike(Date date) {
+      int numberOfFreeBikesNew = stateList.get(stateList.size()-1).getNBikes() - 1;
+      int numberOfFreeStandsNew = stateList.get(stateList.size()-1).getNStands() + 1;
+      stateList.add(new State(numberOfFreeBikesNew,numberOfFreeStandsNew,date));
+    }
+    
+
+    /**
+     * On prends qu'un vélo chaque fois 
+     * Cette méthode prend une indtance de Trip comme entrée
+     * @param trip
+     */
+    public void takeBike(Trip trip) {
+      int numberOfFreeBikesNew = stateList.get(stateList.size()-1).getNBikes() - 1;
+      int numberOfFreeStandsNew = stateList.get(stateList.size()-1).getNStands() + 1;
+      Date date = trip.getStartDate();
+      stateList.add(new State(numberOfFreeBikesNew,numberOfFreeStandsNew,date));
+    }
+    
+    /**
+     * On retourne qu'un vélo chaque fois 
+     * Cette méthode prend une instance de Date comme entrée
+     * @param date
+     */
+    
+    public void returnBike(Date date) {
+      int numberOfFreeBikesNew = stateList.get(stateList.size()-1).getNBikes() + 1;
+      int numberOfFreeStandsNew = stateList.get(stateList.size()-1).getNStands() - 1;
+      stateList.add(new State(numberOfFreeBikesNew, numberOfFreeStandsNew,date));
+    }
+    
+
+    /**
+     * On retourne qu'un vélo chaque fois 
+     * Cette méthode prend une indtance de Trip comme entrée
+     * @param trip
+     */
+    public void returnBike(Trip trip) {
+      int numberOfFreeBikesNew = stateList.get(stateList.size()-1).getNBikes() + 1;
+      int numberOfFreeStandsNew = stateList.get(stateList.size()-1).getNStands() - 1;
+      Date date = trip.getEndDate();
+      stateList.add(new State(numberOfFreeBikesNew, numberOfFreeStandsNew,date));
+    }
+    
+    
+    /* Operations des states*/
+    public void deleteLatestState() {
+      stateList.remove(stateList.size());
+    }
+
     
     /* Operations des stations */   
     /* Assez long ! */
@@ -61,13 +121,17 @@ public class Station extends StationExtendedDynamic {
      * @param stationList
      * @return
      */
-    public static Station findStation(int id, ArrayList<Station> stationList) {
+    public static Station2 findStation(int id, ArrayList<Station2> stationList) {
       int i = 0;
       while(stationList.get(i).getIdentity() != id) {
         i++;
       }
       return stationList.get(i);
       
+//      for(Station st : stationList) {
+//        if (st.getIdentity() == id) {
+//          return st;        
+//        }
     }
     
     /* 2.1. Get Closest Station ID */
@@ -76,7 +140,7 @@ public class Station extends StationExtendedDynamic {
      * @param number de stations à constituer la liste des stations plus proches
      * @param stationList
      */
-    public void setClosestStationsId(int number, ArrayList<Station> stationList) {
+    public void setClosestStationsId(int number, ArrayList<Station2> stationList) {
       ArrayList<StationDistance> sDisList =  sortStationsList(stationList);
       if (number <= sDisList.size()) {
         for (StationDistance st : sDisList) {
@@ -99,9 +163,9 @@ public class Station extends StationExtendedDynamic {
      * @param stationList
      * @return stationDistanceList
      */
-    private ArrayList<StationDistance> sortStationsList(ArrayList<Station> stationList){
+    private ArrayList<StationDistance> sortStationsList(ArrayList<Station2> stationList){
       ArrayList<StationDistance> sDisList = new ArrayList<StationDistance> ();
-      for(Station st:stationList) {
+      for(Station2 st:stationList) {
         sDisList.add(new StationDistance(st.getDistanceToStationGiven(this),st.getIdentity()));
       }
       Collections.sort(sDisList, StationDistance.DisComparator);
@@ -117,7 +181,7 @@ public class Station extends StationExtendedDynamic {
      * @param st2
      * @return la distance entre les deux stations en question en mètre
      */
-    public static int getDistanceBetweenTwoStations(Station st1, Station st2) {
+    public static int getDistanceBetweenTwoStations(Station2 st1, Station2 st2) {
       double lon1 = Math.toRadians(st1.getLongitude());
       double lon2 = Math.toRadians(st2.getLongitude());
       double lat1 = Math.toRadians(st1.getLatitude());
@@ -139,7 +203,7 @@ public class Station extends StationExtendedDynamic {
      * @param st2
      * @return distance en mètre
      */
-    public int getDistanceToStationGiven(Station st2) {
+    public int getDistanceToStationGiven(Station2 st2) {
       double lon1 = longitude;
       double lon2 = Math.toRadians(st2.getLongitude());
       double lat1 = latitude;
@@ -177,39 +241,100 @@ public class Station extends StationExtendedDynamic {
   
     /* 3. Find the Closest Station qui setter les informations des closest stations 
      * comme instances de Staions in the attributs*/
-    public void setClosestStaion(int n, ArrayList<Station> stationList) {
+    public void setClosestStaion(int n, ArrayList<Station2> stationList) {
       if (closestStationIdList.size() == n) {
         for (int id : this.closestStationIdList ) {
-          this.closestStationList.add(Station.findStation(id, stationList));
+          this.closestStationList.add(Station2.findStation(id, stationList));
         }
       }
       else {
         this.setClosestStationsId(n, stationList);
         for (int id : this.closestStationIdList ) {
-          this.closestStationList.add(Station.findStation(id, stationList));
+          this.closestStationList.add(Station2.findStation(id, stationList));
         }
        } 
      }
     
     
     /* Setters */
+    /**
+     * Setter pour l'état primaire
+     * @param primaryState
+     */
+    public void setPrimaryState(State primaryState) {
+      this.stateList.add(primaryState);
+    }
 
+    /**
+     * Setter pour isOpen
+     * Open-true, Closed-false
+     * @param isOpen
+     */
+    public void setIsOpen(boolean isOpen) {
+      this.isOpen = isOpen;
+    }
+    
+    
+    
     /* Getters */
+    public State getState(int n) {
+      return stateList.get(n);
+    }
+    public ArrayList<State> getStateList(){
+      return stateList;
+    }
+    public int getNumberOfStates() {
+      return stateList.size();
+    }
+    public State getLatestState() {
+      return stateList.get(stateList.size()-1);
+    }
+    public boolean isOpen() {
+      return isOpen;
+    }
+    public int getIdentity() {
+      return identity;
+    }
+    public int getCapacity() {
+      return capacity;
+    }
+    public double getLongitude() {
+      return longitude;
+    }
+    public double getLatitude() {
+      return latitude;
+    }
+    public String getName() {
+      return name;
+    }
+    public String getAddress() {
+      return address;
+    }
     public ArrayList<Integer> getClosestStationIdList() {
       return closestStationIdList;
     }
-    public ArrayList<Station> getClosestStationList(){
+    public ArrayList<Station2> getClosestStationList(){
       return closestStationList;
     }
     
+    
     public String toString() {
-       return super.toString();
+      String info = "id: "+getIdentity()+"\tnm: "+getName()+"\tad: "+getAddress();
+      info = info + "\ncpct: "+getCapacity()+"\tlog: "+getLongitude()+"\tlat: "+getLatitude();
+      info = info + "\nLatest state: " + getLatestState().toString();
+      if (isOpen()) {
+        info = info + "\tOpen";
+        }
+      else {
+        info = info + "\tClosed";
+      }
+      return info;      
     }
     
 
     public static void main (String [] args) {
       // Création de la 1e station
-      Station station1 = new Station(901,"00901 - ALLEE DU BELVEDERE","ALLEE DU BELVEDERE PARIS 19 - 0 75000 Paris - 75000 PARIS",
+      Station2 station1 = new Station2(901,"00901 - ALLEE DU BELVEDERE","ALLEE DU BELVEDERE PARIS 19 - 0 75000 Paris - 75000 PARIS",
           20,2.391225227186182,48.892795924112306);
       State state1 = new State(6,14,"20131030125959");
       station1.setIsOpen(true);
@@ -240,7 +365,7 @@ public class Station extends StationExtendedDynamic {
       System.out.println(station1);
       
       //Creation de la 2e station
-      Station station2 = new Station(903,"00903 - QUAI MAURIAC  / PONT DE BERCY","FETE DE L\u0027OH (BERCY) - QUAI MAURIAC ANG PONT DE BERCY",
+      Station2 station2 = new Station2(903,"00903 - QUAI MAURIAC  / PONT DE BERCY","FETE DE L\u0027OH (BERCY) - QUAI MAURIAC ANG PONT DE BERCY",
           20,2.374340554605615,48.83713368945151);
       State state2 = new State(15,5,"20131030125959");
       station2.setIsOpen(true);
@@ -251,7 +376,7 @@ public class Station extends StationExtendedDynamic {
       
       
       //Creation de la 3e station
-      Station station3 = new Station(904,"00904 - PLACE JOFFRE / ECOLE MILITAIRE","ECOLE MILITAIRE-AVENUE DE LA MOTTE PICQUET - 75007 PARIS",
+      Station2 station3 = new Station2(904,"00904 - PLACE JOFFRE / ECOLE MILITAIRE","ECOLE MILITAIRE-AVENUE DE LA MOTTE PICQUET - 75007 PARIS",
           30,2.301961227213259,48.85213620522547);
       State state3 = new State(24,6,"20131030125959");
       station3.setIsOpen(true);
@@ -262,7 +387,7 @@ public class Station extends StationExtendedDynamic {
       
       
       //Creation de la 4e station
-      Station station4 = new Station(905,"00905 - GARE DE BERCY (STATION MOBILE 5)","GARE DE BERCY - ANGLE RUE CORBINEAU - 75012 PARIS",
+      Station2 station4 = new Station2(905,"00905 - GARE DE BERCY (STATION MOBILE 5)","GARE DE BERCY - ANGLE RUE CORBINEAU - 75012 PARIS",
           20,2.382472269083633,48.83966087889425);
       State state4 = new State(19,0,"20131030125959");
       station4.setIsOpen(true);
@@ -272,16 +397,16 @@ public class Station extends StationExtendedDynamic {
       System.out.println(station4);
       
       //Creation d'une ArrayList de stations
-      ArrayList<Station> stationList = new ArrayList<Station> ();
+      ArrayList<Station2> stationList = new ArrayList<Station2> ();
       stationList.add(station1);
       stationList.add(station2);
       stationList.add(station3);
       stationList.add(station4);
      
       System.out.println("Distance de la 1e station: 1-2, 1-3, 1-4:");
-      System.out.println(Station.getDistanceBetweenTwoStations(station1, station2));
-      System.out.println(Station.getDistanceBetweenTwoStations(station1, station3));
-      System.out.println(Station.getDistanceBetweenTwoStations(station1, station4));
+      System.out.println(Station2.getDistanceBetweenTwoStations(station1, station2));
+      System.out.println(Station2.getDistanceBetweenTwoStations(station1, station3));
+      System.out.println(Station2.getDistanceBetweenTwoStations(station1, station4));
       station1.setClosestStationsId(3, stationList);
      
       System.out.println("Size of the closestStationIdList for station1:");
@@ -290,7 +415,7 @@ public class Station extends StationExtendedDynamic {
       System.out.println(station1.getClosestStationIdList().get(1));
       System.out.println(station1.getClosestStationIdList().get(2)); 
      
-      System.out.println(Station.findStation(903, stationList)); 
+      System.out.println(Station2.findStation(903, stationList)); 
       
       System.out.println();
       System.out.println();
