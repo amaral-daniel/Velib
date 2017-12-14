@@ -34,7 +34,7 @@ public class EvaluatorScenario
     		for (int i = 0; i < stationList.size(); i++) 
     		{
 	    		Station currentStation = stationList.get(i);
-	    		EvaluatorStation.setMinimalCriticalTime(30*60);
+	    		EvaluatorStation.setMinimalCriticalTime(10);
 	    		if(EvaluatorStation.isCritical(currentStation ))
 	    		{
 	    			criticalStations.add(currentStation);
