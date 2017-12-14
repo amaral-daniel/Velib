@@ -112,11 +112,11 @@ public class Trip {
     /* Setters */
     public void setStartStation(Station newStartStation) {
       startStation = newStartStation;
-      isValid = false;
+
     }
     public void setEndStation(Station newEndStation) {
       endStation = newEndStation;
-      isValid = false;
+
     }
    
     public void setReason(int i) {
