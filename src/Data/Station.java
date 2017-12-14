@@ -48,7 +48,9 @@ public class Station extends StationExtendedDynamic {
      **/
     public Station(Station station)
     {
-      super(station);
+    		super(station.getIdentity(), station.getName(), station.getAddress(), station.getCapacity(), station.getLongitude(),station.getLatitude()  );
+    		super.setPrimaryState(station.getState(0));
+    		
     }
     
     

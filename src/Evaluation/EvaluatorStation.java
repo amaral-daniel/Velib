@@ -15,7 +15,7 @@ import Data.Station;
 public final class EvaluatorStation {
 	private EvaluatorStation()
 	{
-		minimalCriticalTime = 30*60; //30 minutes 
+		minimalCriticalTime = 1*60; //1 minutes 
 	}
 	
 	private static int minimalCriticalTime;
@@ -30,13 +30,17 @@ public final class EvaluatorStation {
 
 		int criticalTime = 0;
 
+		if(station.getNumberOfStates() == 0)
+		{
+			System.out.println("empty states!!!!!!!!!!!!!!!!!!!!!!");
+		}
 		for	(int j = 0; j < station.getNumberOfStates() - 1; j++)
 		{
 
 			State currentState = station.getState(j);
 			State nextState = station.getState(j + 1);
 			
-			if (currentState.getNBikes() <= 0 || currentState.getNBikes() == station.getCapacity()) 
+			if (currentState.getNBikes() == 0 || currentState.getNBikes() == station.getCapacity()) 
 			{			
 				long durationState = nextState.getDate().getTime() - currentState.getDate().getTime() ;	
 				criticalTime += (int)durationState;
@@ -46,6 +50,8 @@ public final class EvaluatorStation {
 		
 		if(criticalTime >= minimalCriticalTime)
 		{
+			System.out.println("empty states!!!!!!!!!!!!!!!!!!!!!!");
+
 				return true;
 		}
 		return false;
