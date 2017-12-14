@@ -261,7 +261,7 @@ public class Read
 					
 					
 					//Corrigir depois pra implementar trips com station 0
-					if(startStationId == 0)
+					if(startStationId < 900)
 					{	
 						Trip trip = new Trip(reason, startTime, null, 
 								endTime, findStationWithId(endStationId, stationList));
@@ -271,7 +271,7 @@ public class Read
 						continue;
 					}
 					
-					else if (endStationId == 0)
+					else if (endStationId <900)
 					{
 						Trip trip = new Trip(reason, startTime, findStationWithId(endStationId, stationList), 
 								endTime, null);
