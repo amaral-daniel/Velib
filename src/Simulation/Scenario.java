@@ -153,6 +153,51 @@ public Scenario (float growthParameter) {
     	
     		return;
     } 
+    
+    public void runTrips(float collaborationRate) {
+        
+    	//	while loop runs through the tripList 
+    	int i = 0;
+    	while (i < tripList.size())	{
+    		
+    		// pointer i on the selectedTrip in the tripList
+    		Trip selectedTrip = tripList.get(i);
+    		
+    		// determines the next Trip to execute
+    		Trip currentTrip = findNextTrip(selectedTrip);
+    	
+    		/* if findNextTrip did not change currentTrip
+    		=> start Trip i and proceed to the next trip (i++) */
+    		if (selectedTrip == currentTrip) {
+    			
+    			startTrip(currentTrip);
+    			i++;
+    		}
+    	
+    		/* if the findNextTrip changes currentTrip
+    		=> end currentTrip */
+    		else {
+    			
+    			endTrip(currentTrip);
+    		} 
+    	} //loop end
+    	
+    	// terminate trips in the waiting list
+    	while (waitingTrips.size() > 0) {
+    		
+    		Trip tempTrip = waitingTrips.get(0);
+    		for (int p = 0; p < waitingTrips.size(); p++) { //can be potentially erased by improving metho findNextStation
+        		
+        		if (tempTrip.getEndDate().after(waitingTrips.get(p).getEndDate())) {
+        			tempTrip = waitingTrips.get(p);
+        		}	
+    		}
+    		
+    		endTrip(tempTrip);
+    	}
+    	
+    		return;
+    }
 
     /** simple Version of runTrips to run tests */
     public void runTripsTest () {
@@ -389,7 +434,7 @@ for (int i=tripList.size(); i > 0; i=((float) i)-helpvar ) { //schleifenkopf übe
     	station3.setIsOpen(true);
     	station3.setPrimaryState(state3);
     	testStations.add(station3);
-    	station2.setClosestStaion(2,testStations);
+    	station2.setClosestStations(2,testStations);
     	//{"nb":905,"lb":"00905 - GARE DE BERCY (STATION MOBILE 5)","add":"GARE DE BERCY - ANGLE RUE CORBINEAU - 75012 PARIS","totbs":20,"lng":2.382472269083633,"lat":48.83966087889425,"ststate":{"nb":905,"state":"open","freebk":19,"freebs":1}}
     
     	// initializing test dates
