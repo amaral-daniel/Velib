@@ -73,7 +73,7 @@ public class EvaluatorScenario
     		
     		
     }
-    
+
     public void exportCSVCriticalStationsNames(String fileName) throws FileNotFoundException
     {
    		PrintWriter out = new PrintWriter( fileName) ;
@@ -86,7 +86,7 @@ public class EvaluatorScenario
     		out.close();
 		
     }
-    
+
     public void exportCSVStationStates(int identity,String fileName) throws FileNotFoundException
     {
     		ArrayList<Station> stationList = refScenario.getStationList();
@@ -110,7 +110,30 @@ public class EvaluatorScenario
     		
     		EvaluatorStation.exportCSVStationStates(searchedStation,fileName);	
     }
-    
+   
+    public void exportCSVStationStates(String stationName,String fileName) throws FileNotFoundException
+    {
+    		ArrayList<Station> stationList = refScenario.getStationList();
+    		Station searchedStation = null;
+    		
+    		
+    		for(int i = 0; i < stationList.size(); i++)
+    		{
+    			if(stationList.get(i).getName() == stationName )
+    			{
+    				searchedStation = stationList.get(i);
+    				i = stationList.size(); //ugly solution to quit the loop
+    			}
+    		}
+    		if(searchedStation == null)
+    		{
+    			System.out.println("station " + stationName + " not found!!!!!!!!!!!111 \n");
+    			return;
+    		}
+    		
+    		EvaluatorStation.exportCSVStationStates(searchedStation,fileName);	
+    }
+   
     public void visualizeStationStates(int identity)
     {
 		ArrayList<Station> stationList = refScenario.getStationList();
@@ -152,29 +175,11 @@ public class EvaluatorScenario
 		GraphStation my_graph = new GraphStation(searchedStation);
 		my_graph.showWindow();
     }
-
-    
-    public void exportCSVStationStates(String stationName,String fileName) throws FileNotFoundException
+   
+    public void visualizeCriticalStationsVariation(int step)
     {
-    		ArrayList<Station> stationList = refScenario.getStationList();
-    		Station searchedStation = null;
-    		
-    		
-    		for(int i = 0; i < stationList.size(); i++)
-    		{
-    			if(stationList.get(i).getName() == stationName )
-    			{
-    				searchedStation = stationList.get(i);
-    				i = stationList.size(); //ugly solution to quit the loop
-    			}
-    		}
-    		if(searchedStation == null)
-    		{
-    			System.out.println("station " + stationName + " not found!!!!!!!!!!!111 \n");
-    			return;
-    		}
-    		
-    		EvaluatorStation.exportCSVStationStates(searchedStation,fileName);	
+    		GraphScenario graph = new GraphScenario(this.refScenario,step);
+    		graph.showWindow();
     }
     //fonction qui va donner la somme du temps de tous les trajets valides
     public int getSecondsTrajets()
@@ -266,17 +271,21 @@ public class EvaluatorScenario
 		Date endTrip3 = new GregorianCalendar(1995, 02, 31,2,33).getTime();
 		Date startTrip4 = new GregorianCalendar(1995, 02, 31,2,39).getTime();
 		Date endTrip4 = new GregorianCalendar(1995, 02, 31,2,40).getTime();
+		Date startTrip5 = new GregorianCalendar(1995, 02, 31,12,39).getTime();
+		Date endTrip5 = new GregorianCalendar(1995, 02, 31,12,40).getTime();
 		//Creating trips.....
 		
 		Trip trip1 = new Trip(Reason.RENT, startTrip1, station1, endTrip1, station2);
 		Trip trip2 = new Trip(Reason.RENT, startTrip2 , station1,endTrip2, station2);
 		Trip trip3 = new Trip(Reason.RENT, startTrip3, station1,endTrip3, station2);
 		Trip trip4 = new Trip(Reason.RENT, startTrip4 , station1,endTrip4, station2);
+		Trip trip5 = new Trip(Reason.RENT, startTrip5 , station2,endTrip5, station1);
 		ArrayList<Trip> tripList = new ArrayList<Trip>();
 		tripList.add(trip1);
 		tripList.add(trip2);
 		tripList.add(trip3);
 		tripList.add(trip4);
+		tripList.add(trip5);
 		
 		//Creating scenario.....
 		
@@ -328,13 +337,6 @@ public class EvaluatorScenario
 			my_evaluateur.visualizeStationStates(stations.get(i).getName());
 			
 		}
-		System.out.println("--------------drawing graphs stations------------- ");
-		
-		//GraphStation my_graph = new GraphStation(stations.get(0));
-		//my_graph.showWindow();
-		
-		//GraphStation my_graph2 = new GraphStation(stations.get(1));
-		//my_graph2.showWindow();
 		
 		System.out.println("--------------drawing graph");
 	    System.out.println("----------testing isEmptyOrFull-------------");
@@ -350,6 +352,10 @@ public class EvaluatorScenario
 		System.out.println("--------------testing exportCSVCriticalStations--------");
 		
 		my_evaluateur.exportCSVCriticalStationsVariation(30*60,"src/Evaluation/variationOfCriticalStations.csv");
+		
+		System.out.println("-------------visualize variation critical stations------------");
+		
+		my_evaluateur.visualizeCriticalStationsVariation(15*60);
 		
 		System.out.println("-------------testing isUnbalanced-------------");
 		

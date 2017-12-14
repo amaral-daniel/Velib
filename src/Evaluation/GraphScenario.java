@@ -5,6 +5,7 @@ import Data.*;
 import Simulation.Scenario;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.jfree.chart.ChartFactory; 
 import org.jfree.chart.ChartPanel; 
@@ -17,12 +18,14 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.ui.ApplicationFrame; 
 import org.jfree.ui.RefineryUtilities;
 
-public class GraphStation extends ApplicationFrame {
-	private Station station;
-   public GraphStation(  Station station ) {
+public class GraphScenario extends ApplicationFrame {
+	private Scenario scenario;
+	private int step;
+   public GraphScenario(  Scenario scenario, int step ) {
 
       super( "grafico" );   
-      this.station = station;
+      this.step = step;
+      this.scenario = scenario;
       final XYDataset dataset = createDataset( );        
       final JFreeChart chart = createChart( dataset );       
       final ChartPanel chartPanel = new ChartPanel( chart ); 
@@ -35,13 +38,21 @@ public class GraphStation extends ApplicationFrame {
    private XYDataset createDataset( ) {
       final TimeSeries series = new TimeSeries( "Velib Graph" );         
    //   Second current = new Second( );   
-      double value = 100.0;         
-	   ArrayList<State> stateList = this.station.getStateList();
-      for (int i = 0; i < stateList.size(); i++) {
+      ArrayList<Station> stations = scenario.getStationList();
+      Date initialDate = stations.get(0).getState(0).getDate();	
+	   for(int i = 0; step*i < 24*60*60; i++) {
          try {
-        	 	Second current = new Second(stateList.get(i).getDate());
-            value = stateList.get(i).getNBikes();              
-            series.add(current, new Double( value ) );                 
+        	 	int numberOfBadStations = 0;
+        	 	Date currentDate = new Date(initialDate.getTime() + i*step*1000);
+        	 	Second current = new Second(currentDate);
+        		for(int j = 0; j < stations.size() ; j++)
+    			{
+    				if(EvaluatorStation.isEmptyOrFull(stations.get(j), currentDate))
+    				{
+    					numberOfBadStations += 1;
+    				}
+    			}             
+            series.add(current, new Double( numberOfBadStations ) );                 
             current = ( Second ) current.next( ); 
          } catch ( SeriesException e ) {
             System.err.println("Error adding to series");
@@ -50,6 +61,7 @@ public class GraphStation extends ApplicationFrame {
 
       return new TimeSeriesCollection(series);
    }     
+   
    public void showWindow()
    {
 	    this.pack( );         
@@ -59,7 +71,7 @@ public class GraphStation extends ApplicationFrame {
 
    private JFreeChart createChart( final XYDataset dataset ) {
       return ChartFactory.createTimeSeriesChart(             
-         "Station:" + station.getName(), 
+         "Variation of critical stations", 
          "Time",              
          "Number of bikes",              
          dataset,             
