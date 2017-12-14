@@ -1,7 +1,7 @@
 package Simulation;
 
 import Data.*;
-import Evaluation.EvaluateurScenario;
+import Evaluation.EvaluatorScenario;
 
 import java.io.FileNotFoundException;
 import java.text.ParseException;
@@ -245,7 +245,7 @@ public Scenario (float growthParameter) {
     		// find closest station that is not already full
     		trip.setEndStation(findNextUsableStation(trip.getEndStation()));
     	}
-    	
+
     	trip.getEndStation().returnBike(trip);
     	waitingTrips.remove(trip);
     	
@@ -294,7 +294,7 @@ public Scenario (float growthParameter) {
     public Station findNextUsableStation(Station referenceStation, int iteration) {
     	
     	Station usableStation = referenceStation;
-    	ArrayList<Station> closestStations = referenceStation.getClosestStations(); //Zhehao => implement get
+    	ArrayList<Station> closestStations = referenceStation.getClosestStationList();
     
     	// search all the closest stations for the reference station
     	// the list should ideally be sorted by distance to the reference station
@@ -311,7 +311,7 @@ public Scenario (float growthParameter) {
     	if (usableStation == referenceStation) {
     		if (iteration > 5) {
     			
-    			//throw NoStationsAvailableException....
+    			//throw new NoStationsAvailableException;
     		}
     		
     		else {
@@ -377,16 +377,24 @@ for (int i=tripList.size(); i > 0; i=((float) i)-helpvar ) { //schleifenkopf übe
     	
     	//creation of test stations + states
     	Station station1 = new Station(901,"00901 - ALLEE DU BELVEDERE","ALLEE DU BELVEDERE PARIS 19 - 0 75000 Paris - 75000 PARIS", 20,2.391225227186182,48.892795924112306);
-    	State state1 = new State(1,19, "20131030125959");
+    	State state1 = new State(2,18, "20131030125959");
     	station1.setIsOpen(true);
     	station1.setPrimaryState(state1);
     	testStations.add(station1);
     	    
     	Station station2 = new Station( 903, "00903 - QUAI MAURIAC  / PONT DE BERCY", "FETE DE L\u0027OH (BERCY) - QUAI MAURIAC ANG PONT DE BERCY", 20, 2.374340554605615, 48.83713368945151);
-    	State state2 = new State(15,5,"1383173780727");
+    	State state2 = new State(19,1,"20131030125959");
     	station2.setIsOpen(true);
     	station2.setPrimaryState(state2);
     	testStations.add(station2);
+    	
+    	Station station3 = new Station( 904, "00904 - PLACE JOFFRE / ECOLE MILITAIRE", "ECOLE MILITAIRE-AVENUE DE LA MOTTE PICQUET - 75007 PARIS", 30, 2.301961227213259, 48.85213620522547);
+    	State state3 = new State(24,6,"20131030125959");
+    	station3.setIsOpen(true);
+    	station3.setPrimaryState(state3);
+    	testStations.add(station3);
+    	station2.setClosestStaion(2,testStations);
+    	//{"nb":905,"lb":"00905 - GARE DE BERCY (STATION MOBILE 5)","add":"GARE DE BERCY - ANGLE RUE CORBINEAU - 75012 PARIS","totbs":20,"lng":2.382472269083633,"lat":48.83966087889425,"ststate":{"nb":905,"state":"open","freebk":19,"freebs":1}}
     
     	// initializing test dates
     	Date date1 = new GregorianCalendar(2013, 10, 30,13,0,0).getTime();
@@ -396,25 +404,25 @@ for (int i=tripList.size(); i > 0; i=((float) i)-helpvar ) { //schleifenkopf übe
   		Date date5 = new GregorianCalendar(2013, 10, 30,12,0,5).getTime();
   		Date date6 = new GregorianCalendar(2013, 10, 30,13,0,1).getTime();
   		
-  		 SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmmss");
+  		/* SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddhhmmss");
          try {
            date = ft.parse(currentDateString);
          } catch (ParseException e) {
            System.out.println("Unparseable using" + ft);
-         }
+         } */
     	
   		// initializing test trips
-  		Trip trip3 = new Trip (Reason.RENT, date5, station2, date6, station1); //inverse direction
-    	testTrips.add(trip3);
-    	Trip trip1 = new Trip(Reason.RENT, date1, station1, date2, station2); // 2000s
-    	testTrips.add(trip1);
-    	Trip trip2 = new Trip (Reason.RENT, date3, station1, date4, station2); // later shorter 1000s  
+  		Trip trip1 = new Trip (Reason.RENT, date5, station2, date6, station1); //inverse direction
+    	//testTrips.add(trip1);
+    	Trip trip2 = new Trip(Reason.RENT, date1, station1, date2, station2); // 2000s
     	testTrips.add(trip2);
+    	Trip trip3 = new Trip (Reason.RENT, date3, station1, date4, station2); // later shorter 1000s  
+    	testTrips.add(trip3);
     	
     	
     	// call of the functions to be tested
     	baseScenario = new Scenario (testStations, testTrips);
-    	EvaluateurScenario baseScenarioEvaluateur = new EvaluateurScenario (baseScenario);
+    	EvaluatorScenario baseScenarioEvaluator = new EvaluatorScenario (baseScenario);
     	//baseScenario.runTripsTest();
     	
     	ArrayList <Trip> baseScenarioTripList = baseScenario.tripList;
@@ -428,13 +436,14 @@ for (int i=tripList.size(); i > 0; i=((float) i)-helpvar ) { //schleifenkopf übe
     	// states
     	
     	ArrayList <Station> baseScenarioStationList = baseScenario.stationList;
-    	/* for (int i = 0; i < baseScenarioStationList.size(); i++) {
-    		System.out.println(baseScenarioStationList.get(i));
-    	} */
-    	//baseScenarioStationList.get(i).getIdentity()
     	for (int i = 0; i < baseScenarioStationList.size(); i++) {
-    	baseScenarioEvaluateur.exportCSVStationStates(baseScenarioStationList.get(i).getIdentity());
+    		System.out.println(baseScenarioStationList.get(i));
     	}
+    	
+    	//baseScenarioStationList.get(i).getIdentity()
+    	/*for (int i = 0; i < baseScenarioStationList.size(); i++) {
+    	baseScenarioEvaluator.exportCSVStationStates(baseScenarioStationList.get(i).getIdentity(),"juliustestfile");
+    	}*/
     	// ArrayList <Trip> baseScenarioTripList = baseScenario.tripList;
     	for (int i = 0; i < baseScenarioTripList.size(); i++) {
     		System.out.println(baseScenarioTripList.get(i).isValid());
