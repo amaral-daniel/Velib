@@ -18,6 +18,16 @@ public class State {
       this.isFull = (numOfFreeStands == 0);
       this.isEmpty = (numOfFreeBikes == 0);
       this.date = currentDate;
+      if (numOfFreeStands < 0 ) {
+        String info = "ATTENTION: FREE STANDS OVER DECHARGED, WITH NUMBER OF STANDS EQUALS TO";
+        info = info + this.numberOfFreeStands;
+        System.out.println(info);
+      }
+      if (numOfFreeBikes < 0 ) {
+        String info = "ATTENTION: FREE BIKES OVER CHARGED, WITH NUMBER OF BIKES EQUALS TO";
+        info = info + this.numberOfFreeBikes;
+        System.out.println(info);
+      }
     }
     
     /* Input Date String "yyyyMMddhhmmss" */ 
