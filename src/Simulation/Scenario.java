@@ -24,10 +24,6 @@ public class Scenario {
     private ArrayList<Station> stationList = new ArrayList <Station> ();
     
     private ArrayList<Trip> waitingTrips = new ArrayList <Trip> ();
-
-    private Scenario scenarioResume;
-
-    private Result result;
     
     
     /* Constructors */
