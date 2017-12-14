@@ -374,7 +374,7 @@ public Scenario (float growthParameter) {
     	// catch all closest stations are full => find randomStation
     	if (usableStation == referenceStation) {
     		if (iteration > 5) {
-    			
+    			System.out.println("warning too many iterations finding a new station");
     			//throw new NoStationsAvailableException;
     		}
     		
@@ -447,7 +447,7 @@ for (int i=tripList.size(); i > 0; i=((float) i)-helpvar ) { //schleifenkopf übe
     	testStations.add(station1);
     	    
     	Station station2 = new Station( 903, "00903 - QUAI MAURIAC  / PONT DE BERCY", "FETE DE L\u0027OH (BERCY) - QUAI MAURIAC ANG PONT DE BERCY", 20, 2.374340554605615, 48.83713368945151);
-    	State state2 = new State(19,1,"20131030125959");
+    	State state2 = new State(18,2,"20131030125959");
     	station2.setIsOpen(true);
     	station2.setPrimaryState(state2);
     	testStations.add(station2);
@@ -478,16 +478,15 @@ for (int i=tripList.size(); i > 0; i=((float) i)-helpvar ) { //schleifenkopf übe
   		// initializing test trips
   		Trip trip1 = new Trip (Reason.RENT, date5, station2, date6, station1); //inverse direction
     	//testTrips.add(trip1);
-    	Trip trip2 = new Trip(Reason.RENT, date1, station1, date2, station2); // 2000s
+    	Trip trip2 = new Trip(Reason.RENT, date1, station3, date2, station2); // 2000s
     	testTrips.add(trip2);
-    	Trip trip3 = new Trip (Reason.RENT, date3, station1, date4, station2); // later shorter 1000s  
+    	Trip trip3 = new Trip (Reason.RENT, date3, station3, date4, station2); // later shorter 1000s  
     	testTrips.add(trip3);
     	
     	
     	// call of the functions to be tested
     	baseScenario = new Scenario (testStations, testTrips);
     	EvaluatorScenario baseScenarioEvaluator = new EvaluatorScenario (baseScenario);
-    	//baseScenario.runTripsTest();
     	
     	ArrayList <Trip> baseScenarioTripList = baseScenario.tripList;
     	for (int i = 0; i < baseScenarioTripList.size(); i++) {
@@ -495,6 +494,7 @@ for (int i=tripList.size(); i > 0; i=((float) i)-helpvar ) { //schleifenkopf übe
     	}
     	
     	baseScenario.runTrips();
+    	//baseScenario.runTrips((float) 1.0);
     	
     	// print of results
     	// states
@@ -505,9 +505,9 @@ for (int i=tripList.size(); i > 0; i=((float) i)-helpvar ) { //schleifenkopf übe
     	}
     	
     	//baseScenarioStationList.get(i).getIdentity()
-    	/*for (int i = 0; i < baseScenarioStationList.size(); i++) {
-    	baseScenarioEvaluator.exportCSVStationStates(baseScenarioStationList.get(i).getIdentity(),"juliustestfile");
-    	}*/
+    	//for (int i = 0; i < baseScenarioStationList.size(); i++) {
+    	baseScenarioEvaluator.exportCSVStationStates((903),"juliustestfile");
+    	//}
     	// ArrayList <Trip> baseScenarioTripList = baseScenario.tripList;
     	for (int i = 0; i < baseScenarioTripList.size(); i++) {
     		System.out.println(baseScenarioTripList.get(i).isValid());

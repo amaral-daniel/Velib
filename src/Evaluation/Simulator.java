@@ -26,6 +26,9 @@ public class Simulator {
 
 		scenario.runTrips();
 
+		scenario.showNStates();
+	//	for(int i = 0; i < stationList.size();)
+		
 		EvaluatorScenario evaluatorScenario = new EvaluatorScenario(scenario);
 
 		evaluatorScenario.exportCSVCriticalStationsNames("src/Evaluation/criticalStations.csv");

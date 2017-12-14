@@ -15,7 +15,7 @@ import Data.Station;
 public final class EvaluatorStation {
 	private EvaluatorStation()
 	{
-		minimalCriticalTime = 1*60; //1 minutes 
+		minimalCriticalTime = 1; //1 minutes 
 	}
 	
 	private static int minimalCriticalTime;
@@ -27,6 +27,7 @@ public final class EvaluatorStation {
 		
 	public static boolean isCritical(Station station)
 	{
+	//	System.out.println("entering isCritical");
 
 		int criticalTime = 0;
 
@@ -34,14 +35,17 @@ public final class EvaluatorStation {
 		{
 			System.out.println("empty states!!!!!!!!!!!!!!!!!!!!!!");
 		}
+	//	System.out.println("number of states::" + station.getNumberOfStates());
 		for	(int j = 0; j < station.getNumberOfStates() - 1; j++)
 		{
+	//		System.out.println("state::" + j);
 
 			State currentState = station.getState(j);
 			State nextState = station.getState(j + 1);
 			
-			if (currentState.getNBikes() == 0 || currentState.getNBikes() == station.getCapacity()) 
+			if (currentState.isFull() || currentState.isEmpty()) 
 			{			
+				System.out.println("found critical state");
 				long durationState = nextState.getDate().getTime() - currentState.getDate().getTime() ;	
 				criticalTime += (int)durationState;
 			}
@@ -98,7 +102,7 @@ public final class EvaluatorStation {
 	
 		ArrayList<State> stateList = station.getStateList();
 
-		PrintWriter out = new PrintWriter( fileName + station.getName() + ".csv")  ;
+		PrintWriter out = new PrintWriter( fileName + station.getIdentity() + ".csv")  ;
 		out.println("Time, Bikes");
 		for(int i = 0; i < stateList.size(); i++)
 		{    		     	 
