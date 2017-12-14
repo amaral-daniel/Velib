@@ -208,7 +208,7 @@ public Scenario (float growthParameter) {
     	
     	if ((float) Math.random() <= this.collaborationRate) {
     		ArrayList<Station> closestStations = currentTrip.getEndStation().getClosestStationList();
-    		for (int j; j < closestStations.size(); j++) {
+    		for (int j= 0; j < closestStations.size(); j++) {
     		
     			Station currentStation = closestStations.get(j);
     			State currentState = currentStation.getLatestState();

@@ -70,6 +70,12 @@ public class State {
     public boolean isEmpty() {
       return isEmpty;
     }
+    public boolean isCriticallyFull() { //add by Jul
+        return isCriticallyFull;
+      }
+      public boolean isCriticallyEmpty() { //add by Jul
+        return isCriticallyEmpty;
+      }
     
     /* Setters */
     public void setDate(final Date p1) {
