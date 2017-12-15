@@ -4,8 +4,6 @@ import Data.*;
 import Evaluation.EvaluatorScenario;
 
 import java.io.FileNotFoundException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -13,9 +11,7 @@ import java.util.GregorianCalendar;
 public class Scenario {
 	
 	/* declaration of attributes */
-    private boolean regulation;
     private double collaborationRate;
-    private float growthParameter;
     private ArrayList<Trip> tripList;
     private ArrayList<Station> stationList;
     private ArrayList<Trip> waitingTrips ;
@@ -43,23 +39,18 @@ public class Scenario {
 	{
 		return stationList;
 	}
-
-    public boolean getRegulation ()
-    {
-    		return regulation;
-    }
-    
-    public double getCollaborationRate () 
-    {
-    		return collaborationRate;
-    }
-    
-    public float getGrowthParameter ()
-    {
-    		return growthParameter;
-    }
-       
+           
     /** function to execute trips, essential simulation tool */
+    public void startNewDay()
+    {
+    		for(int i = 0; i < stationList.size(); i++)
+    		{
+    			State newFirstState    =	 stationList.get(i).getLatestState();
+    			newFirstState.setDate(stationList.get(i).getState(0).getDate());
+    			stationList.get(i).clearStates();
+    			stationList.get(i).setPrimaryState(newFirstState);
+    		}
+    }
     
     public void runTrips() 
     {     
@@ -150,14 +141,13 @@ public class Scenario {
 		{
 			trip.getStartStation().takeBike(trip);
 			waitingTrips.add(trip);
-				// waitingTrips.sort(endDate,) //sort List => endDates
 			trip.validateTrip();
 		}    	
 	    	return;
     }
     
     /** Terminates a Trip */
-    public void endTrip (Trip trip)	
+    private void endTrip (Trip trip)	
     {  	
 	    	if(trip.getEndStation() == null)
 	    	{
@@ -210,13 +200,13 @@ public class Scenario {
 	    	return nextTrip;
     }
     
-    public Station findNextUsableStation(Station referenceStation) 
+    private Station findNextUsableStation(Station referenceStation) 
     {
     		return findNextUsableStation(referenceStation, 1);
     }
     
     /** Finds another close station based on the referenceStation*/
-    public Station findNextUsableStation(Station referenceStation, int iteration) {
+    private Station findNextUsableStation(Station referenceStation, int iteration) {
     	
 	    	Station usableStation = referenceStation;
 	    	ArrayList<Station> closestStations = referenceStation.getClosestStationList();
@@ -251,8 +241,7 @@ public class Scenario {
 	    	}
 	    	return usableStation;
     }
-   
-    
+      
     /* different Simulation Methods */
     
     /** method to simulate a Velib Scenario without regulation 

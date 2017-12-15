@@ -35,8 +35,13 @@ public class Simulator {
 		System.out.println("% cancelled trips analyze: " + evaluatorScenario.getCancelledTrips());
 
 	}
+
+	public void simulate7days()
+	{
+		
+	}
 	
-	public void exportStationStates(int identity) throws FileNotFoundException
+ 	public void exportStationStates(int identity) throws FileNotFoundException
 	{
 		EvaluatorScenario evaluatorScenario = new EvaluatorScenario(scenario);
 		
