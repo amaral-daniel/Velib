@@ -8,18 +8,18 @@ import Evaluation.*;
 import Simulation.Simulator;
 import Simulation.*;
 
-//
+//Imports pour la fenetre
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.*;
 import java.awt.event.*;
 
+
+
 public class Window extends JFrame implements ActionListener
-{
-	//Window's variables to be used
-	
-	//Window's layout objects
-	private JButton button_run, button_show;
+{	
+	//Objets du layout de la fenetre
+	private JButton button_run, button_show, button_growth, button_collaboration;
 	
 	private JTextField input_collaboration_rate;
 	private JTextField input_regulation;
@@ -67,7 +67,7 @@ public class Window extends JFrame implements ActionListener
 		
 		//Creates trip list
 		baseTripList = read.createTripsList(tripsFileName, baseStationList);
-		
+	
 		ready=true;
 		System.out.println("ok");
 		
@@ -100,11 +100,19 @@ public class Window extends JFrame implements ActionListener
 		
 		button_run = new JButton("Run");
 		button_run.addActionListener(this);
-		button_run.setBounds(230, 200, 80, 30); //x,y,width,height
+		button_run.setBounds(50, 200, 80, 30); //x,y,width,height
 		
 		button_show = new JButton("Show");
-		button_show.setBounds(330, 200, 80, 30);
+		button_show.setBounds(140, 200, 80, 30);
 		button_show.addActionListener(this);
+		
+		button_growth = new JButton("Pop. Growth");
+		button_growth.setBounds(230, 200, 80, 30);
+		button_growth.addActionListener(this);
+		
+		button_collaboration = new JButton("Collaboration");
+		button_collaboration.setBounds(320, 200, 80, 30);
+		button_collaboration.addActionListener(this);
 		
 		
 		
@@ -130,6 +138,8 @@ public class Window extends JFrame implements ActionListener
 		
 		panel.add(button_run);
 		panel.add(button_show);
+		panel.add(button_growth);
+		panel.add(button_collaboration);
 		
 		panel.add(input_collaboration_rate);
 		panel.add(input_regulation);
@@ -166,8 +176,18 @@ public class Window extends JFrame implements ActionListener
 			
 			if(e.getSource() == button_show)
 			{
-				System.out.println(9);
 				simulation.visualizeCriticalStationsVariation();
+				simulation.visualizeCancelledTrips10days();
+			}
+			
+			if(e.getSource() == button_growth)
+			{
+				simulation.visualizeImpactGrowth();
+			}
+			
+			if(e.getSource() == button_collaboration)
+			{
+				simulation.visualizeImpactCollaboration();
 			}
 			
 			if(e.getSource() == input_collaboration_rate)
