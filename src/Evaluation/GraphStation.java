@@ -41,7 +41,8 @@ public class GraphStation extends ApplicationFrame {
          try {
         	 	Second current = new Second(stateList.get(i).getDate());
             value = stateList.get(i).getNBikes();              
-            series.add(current, new Double( value ) );                 
+            series.add(current, new Double( value ) );   
+            System.out.println(stateList.get(i));
             current = ( Second ) current.next( ); 
          } catch ( SeriesException e ) {
             System.err.println("Error adding to series");

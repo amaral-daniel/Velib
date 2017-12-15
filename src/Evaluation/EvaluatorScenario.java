@@ -34,7 +34,7 @@ public class EvaluatorScenario
     		for (int i = 0; i < stationList.size(); i++) 
     		{
 	    		Station currentStation = stationList.get(i);
-	    		EvaluatorStation.setMinimalCriticalTime(10);
+	    		EvaluatorStation.setMinimalCriticalTime(240*60*1000);
 	    		if(EvaluatorStation.isCritical(currentStation ))
 	    		{
 	    			criticalStations.add(currentStation);
@@ -81,7 +81,7 @@ public class EvaluatorScenario
     		ArrayList<Station> criticalStations = identifyCriticalStations();
     		for(int i = 0; i < criticalStations.size(); i++)
     		{
-    			out.println(criticalStations.get(i).getName() + "," + criticalStations.get(i).getIdentity());
+    			out.println(i + "::" + criticalStations.get(i).getName() + "," + criticalStations.get(i).getIdentity());
     		}
     		out.close();
 		
@@ -297,10 +297,10 @@ public class EvaluatorScenario
 		
 		ArrayList<Station> stations = scenario.getStationList();
 		
-		for(int i = 0; i < stations.size(); i++)
-		{
-			System.out.println(stations.get(i));
-		}
+	//	for(int i = 0; i < stations.size(); i++)
+	//	{
+	//		System.out.println(stations.get(i));
+	//	}
 		
 		//System.out.println("running trips....\n");
 		scenario.runTripsTest();

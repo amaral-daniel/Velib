@@ -15,7 +15,7 @@ import Data.Station;
 public final class EvaluatorStation {
 	private EvaluatorStation()
 	{
-		minimalCriticalTime = 1; //1 minutes 
+		minimalCriticalTime = 30*60*1000; //30 minutes 
 	}
 	
 	private static int minimalCriticalTime;
@@ -35,6 +35,10 @@ public final class EvaluatorStation {
 		{
 			System.out.println("empty states!!!!!!!!!!!!!!!!!!!!!!");
 		}
+		if(!station.isOpen())
+		{
+			return false;
+		}
 	//	System.out.println("number of states::" + station.getNumberOfStates());
 		for	(int j = 0; j < station.getNumberOfStates() - 1; j++)
 		{
@@ -45,7 +49,6 @@ public final class EvaluatorStation {
 			
 			if (currentState.isFull() || currentState.isEmpty()) 
 			{			
-				System.out.println("found critical state");
 				long durationState = nextState.getDate().getTime() - currentState.getDate().getTime() ;	
 				criticalTime += (int)durationState;
 			}
@@ -54,7 +57,6 @@ public final class EvaluatorStation {
 		
 		if(criticalTime >= minimalCriticalTime)
 		{
-			System.out.println("empty states!!!!!!!!!!!!!!!!!!!!!!");
 
 				return true;
 		}

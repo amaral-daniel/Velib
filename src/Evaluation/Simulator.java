@@ -20,20 +20,23 @@ public class Simulator {
 	
 	public void analyze() throws FileNotFoundException
 	{
-		ArrayList<Station> stations_copy = getCopyOfStations();
+	//	ArrayList<Station> stations_copy = getCopyOfStations();
 
-		scenario = new Scenario(stations_copy,base_trips);
+		scenario = new Scenario(stations,base_trips);
 
 		scenario.runTrips();
 
-		scenario.showNStates();
-	//	for(int i = 0; i < stationList.size();)
 		
 		EvaluatorScenario evaluatorScenario = new EvaluatorScenario(scenario);
 
-		evaluatorScenario.exportCSVCriticalStationsNames("src/Evaluation/criticalStations.csv");
+	//	evaluatorScenario.exportCSVCriticalStationsNames("src/Evaluation/criticalStations.csv");
 
-		evaluatorScenario.exportCSVCriticalStationsVariation(10*60,"src/Evaluation/variationOfCriticalStations.csv");
+	//	evaluatorScenario.exportCSVCriticalStationsVariation(10*60,"src/Evaluation/variationOfCriticalStations.csv");
+		
+	//	evaluatorScenario.exportCSVStationStates(1023, "states_");
+		
+		evaluatorScenario.visualizeStationStates(1023);
+		evaluatorScenario.visualizeStationStates(1008);
 		
 		System.out.println("csvs exported");
 		

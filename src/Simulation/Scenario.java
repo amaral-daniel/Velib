@@ -180,7 +180,7 @@ public Scenario (float growthParameter) {
     			
     			State currentEndState = currentTrip.getEndStation().getLatestState();
     			
-    			if (currentEndState.isCriticallyFull() && !currentEndState.isCriticallyEmpty()) { //peut yetre autre critère empty closest Station exists
+    			if (currentEndState.isCriticallyFull() && !currentEndState.isCriticallyEmpty()) { //peut yetre autre critï¿½re empty closest Station exists
     			proposeCollaboration(currentTrip);
     			}
     			endTrip(currentTrip);
@@ -283,6 +283,10 @@ public Scenario (float growthParameter) {
     /** Starts a Trip */
     public void startTrip(Trip trip) {
     	
+    	if(trip.getStartStation() == null)
+    	{
+    		return;
+    	}
     	if (!trip.getStartStation().isOpen()) {
 			trip.cancelTrip();
 		}
@@ -303,6 +307,12 @@ public Scenario (float growthParameter) {
     
     /** Terminates a Trip */
     public void endTrip (Trip trip)	{
+    	
+    	if(trip.getEndStation() == null)
+    	{
+    		return;
+    	}
+    	//System.out.println(trip);
     	
     	if (!trip.getEndStation().isOpen() || trip.getEndStation().getLatestState().isFull()) {//is full => find close station
     		
@@ -422,7 +432,7 @@ public Scenario (float growthParameter) {
     	
    float helpvar=1/(growthParameter-1);
     			
-for (int i=tripList.size(); i > 0; i=((float) i)-helpvar ) { //schleifenkopf überprüfen
+for (int i=tripList.size(); i > 0; i=((float) i)-helpvar ) { //schleifenkopf ï¿½berprï¿½fen
     	
 	//clone implementation
     	tripList.get((int) i).clone();
