@@ -158,6 +158,7 @@ public Scenario (float growthParameter) {
         
     	//	while loop runs through the tripList 
     	int i = 0;
+    	this.collaborationRate = collaborationRate;
     	while (i < tripList.size())	{
     		
     		// pointer i on the selectedTrip in the tripList
@@ -180,8 +181,8 @@ public Scenario (float growthParameter) {
     			
     			State currentEndState = currentTrip.getEndStation().getLatestState();
     			
-    			if (currentEndState.isCriticallyFull() && !currentEndState.isCriticallyEmpty()) { //peut yetre autre crit�re empty closest Station exists
-    			proposeCollaboration(currentTrip);
+    			if (!currentEndState.isCriticallyEmpty()) { //peut yetre autre crit�re empty closest Station exists
+    				proposeCollaboration(currentTrip);
     			}
     			endTrip(currentTrip);
     		} 
@@ -205,16 +206,14 @@ public Scenario (float growthParameter) {
     }
     
     private void proposeCollaboration (Trip currentTrip) {
-    	
-    	if ((float) Math.random() <= this.collaborationRate) {
+    	if (Math.random() < this.collaborationRate) {
     		ArrayList<Station> closestStations = currentTrip.getEndStation().getClosestStationList();
-    		for (int j= 0; j < closestStations.size(); j++) {
+    		for (int j= 1; j < closestStations.size(); j++) {
     		
     			Station currentStation = closestStations.get(j);
     			State currentState = currentStation.getLatestState();
-    		
-    			if (currentState.isCriticallyEmpty()) {
-    				currentTrip.setEndStation(currentStation);
+    			if (currentState.isEmpty()) {
+    				currentTrip.setEndStation(findStation(currentTrip.getEndStation().getIdentity()));//PROBLEM HERE!!!!!!!!!!!!!!!!!1 NA LOGICA!!!!!
     				break;
     			}
     		}
@@ -277,6 +276,20 @@ public Scenario (float growthParameter) {
     	
     	return;
     	}
+
+    private Station findStation(int id)
+    {
+    		for(int i = 0; i < stationList.size();i++)
+    		{
+    			if(stationList.get(i).getIdentity() == id)
+    			{
+    				return stationList.get(i);
+    			}
+    			
+    		}
+    		System.out.println("Station not found!!!");
+    		return null;
+    }
     
     /* supplementary methods for runTrips() */
     
