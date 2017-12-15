@@ -2,14 +2,13 @@ package IHM;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import Data.*;
 import Evaluation.*;
 import Simulation.Simulator;
 import Simulation.*;
 
-//Window imports
+//
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.*;
@@ -37,13 +36,14 @@ public class Window extends JFrame implements ActionListener
 	private static ArrayList<Station> baseStationList;
 	private static ArrayList<State> stateList;
 	private static ArrayList<Trip> baseTripList;
+	private static Simulator simulation; 
 	
 	
 	//User input
 	private static double collaboration_rate = 0.0;
-	private static int regulation = 1;
+	private static boolean regulation = true;
 	private static double popularity_growth = 0.0;
-	
+	private static int stationID = 0;
 	
 	//Simple boolean to prevent a Run 
 	static boolean ready = false;
@@ -52,10 +52,6 @@ public class Window extends JFrame implements ActionListener
 	{
 		
 		Window window = new Window(500, 400, "Projet Velib");
-		
-		
-		//Reader (pra input no console): excluir se for inutil
-		Scanner reader = new Scanner(System.in);
 		
 		//File Names
 		String stationAddressesFileName = "src/files/stationsAddresses.txt";
@@ -114,16 +110,19 @@ public class Window extends JFrame implements ActionListener
 		
 		input_collaboration_rate = new JTextField();
 		input_collaboration_rate.setBounds(50, 30, 110, 20);
+		input_collaboration_rate.addActionListener(this);
 		
 		input_regulation = new JTextField();
 		input_regulation.setBounds(200, 30, 110, 20);
+		input_regulation.addActionListener(this);
 		
 		input_popularity_growth = new JTextField();
 		input_popularity_growth.setBounds(320, 30, 110, 20);
+		input_popularity_growth.addActionListener(this);
 		
 		input_station = new JTextField();
 		input_station.setBounds(250, 250, 110, 20);
-
+		input_station.addActionListener(this);
 		
 		
 		label_collaboration_rate = new JLabel("Collaboration Rate");
@@ -151,11 +150,14 @@ public class Window extends JFrame implements ActionListener
 					System.out.println("Please wait");
 				}
 				else {
-					Simulator simulas = new Simulator(baseTripList, baseStationList);
+					System.out.println(7);
+					simulation = new Simulator(baseTripList, baseStationList,regulation, 
+							collaboration_rate, popularity_growth);
 					try {
-						simulas.simulate(false,0,0);
+						System.out.println(8);
+						simulation.simulate();
+						System.out.println(9);
 					} catch (FileNotFoundException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 						System.out.println("File not found");
 					}
@@ -164,17 +166,50 @@ public class Window extends JFrame implements ActionListener
 			
 			if(e.getSource() == button_show)
 			{
-				System.out.println("button_show");
+				System.out.println(9);
+				simulation.visualizeCriticalStationsVariation();
 			}
 			
 			if(e.getSource() == input_collaboration_rate)
 			{
 				String collab_input = input_collaboration_rate.getText();
 				input_collaboration_rate.selectAll();
-				System.out.println(collab_input);
+				collaboration_rate = Double.parseDouble(collab_input);
+				System.out.println(collaboration_rate);
+				
+			}
+			
+			if(e.getSource() == input_regulation)
+			{
+				String reg_input = input_regulation.getText();
+				input_regulation.selectAll();
+				
+				regulation = Integer.parseInt(reg_input)==1 ? true : false;
+				System.out.println(regulation);
+				
+			}
+			
+			if(e.getSource() == input_popularity_growth)
+			{
+				String pop_input = input_popularity_growth.getText();
+				input_popularity_growth.selectAll();
+				popularity_growth = Double.parseDouble(pop_input);
+				System.out.println(popularity_growth);
+				
+			}
+			
+			if(e.getSource() == input_station)
+			{
+				String sta_input = input_station.getText();
+				input_station.selectAll();
+				stationID = Integer.parseInt(sta_input);
+				System.out.println(stationID);
 				
 			}
 			
 			
 		}
+
+
+		
 }
