@@ -22,8 +22,6 @@ public class Main extends JFrame
 	//Window's layout objects
 	private JButton button_run, button_show;
 	
-	private JButton button03;
-	private JButton button04;
 	private JTextField input_collaboration_rate;
 	private JTextField input_regulation;
 	private JTextField input_popularity_growth;
@@ -107,30 +105,40 @@ public class Main extends JFrame
 		
 		button_run = new JButton("Run");
 		button_run.addActionListener(butLis);
-		button_run.setBounds(60, 200, 80, 30); //x,y,width, height
+		button_run.setBounds(230, 200, 80, 30); //x,y,width,height
 		
 		button_show = new JButton("Show");
-		button_show.setBounds(0, 40, 80, 30);
+		button_show.setBounds(330, 200, 80, 30);
 		button_show.addActionListener(butLis);
 		
-		button03 = new JButton("Ok");
-		button03.setBounds(110, 40, 80, 30);
-		button03.addActionListener(butLis);
 		
-		button04 = new JButton("Ok");
-		button04.setBounds(210, 40, 80, 30);
-		button04.addActionListener(butLis);
 		
 		input_collaboration_rate = new JTextField();
+		input_collaboration_rate.setBounds(50, 30, 110, 20);
 		
+		input_regulation = new JTextField();
+		input_regulation.setBounds(200, 30, 110, 20);
+		
+		input_popularity_growth = new JTextField();
+		input_popularity_growth.setBounds(320, 30, 110, 20);
+		
+		input_station = new JTextField();
+		input_station.setBounds(250, 250, 110, 20);
+
+		
+		
+		label_collaboration_rate = new JLabel("Collaboration Rate");
+		label_collaboration_rate.setBounds(210, 80, 300, 40);
 		
 		panel.add(button_run);
 		panel.add(button_show);
-		panel.add(button03);
-		panel.add(button04);
 		
 		panel.add(input_collaboration_rate);
+		panel.add(input_regulation);
+		panel.add(input_popularity_growth);
+		panel.add(input_station);
 		
+		panel.add(label_collaboration_rate);
 		
 	}
 	
@@ -161,14 +169,7 @@ public class Main extends JFrame
 				System.out.println("button_show");
 			}
 			
-			if(e.getSource() == button03)
-			{
-				System.out.println("button03");
-			}
-			if(e.getSource() == button04)
-			{
-				System.out.println("button04");
-			}
+			
 		}
 	}
 }
