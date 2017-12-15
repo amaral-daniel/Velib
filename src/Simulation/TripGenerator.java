@@ -10,14 +10,15 @@ public class TripGenerator {
 	private ArrayList<Trip> base_trips;
 	private ArrayList<Trip> simulation_trips;
 	private boolean regulation;
-	private float popularity_growth;
+	private double popularity_growth;
 	
-	public TripGenerator(ArrayList<Trip> base_trips, boolean regulation, float popularity_growth)
+	public TripGenerator(ArrayList<Trip> base_trips, boolean regulation, double popularity_growth)
 	{
 		this.base_trips = base_trips;
 		this.regulation = regulation;
 		this.popularity_growth = popularity_growth;
 		this.simulation_trips = new ArrayList<Trip>(base_trips);
+		this.createTrips();
 	}
 	
 	public void setRegulation(boolean regulation)
@@ -44,12 +45,15 @@ public class TripGenerator {
 					break;
 				case RENT:
 					simulation_trips.add(base_trips.get(i));
-					if(popularity_growth != 0)
+					double aux = popularity_growth;
+					while(aux > 1)
 					{
-						if(Math.random() < popularity_growth)
-						{
-							simulation_trips.add(new Trip(base_trips.get(i))); //adds a copy of the trip 
-						}
+						simulation_trips.add(new Trip(base_trips.get(i)));
+						aux-=1;
+					}
+					if(Math.random() < popularity_growth)
+					{
+						simulation_trips.add(new Trip(base_trips.get(i))); //adds a copy of the trip 
 					}
 					break;
 				case MAINTENANCE:

@@ -132,6 +132,9 @@ public class StationExtendedDynamic extends StationStatic {
   public State getLatestState() {
     return stateList.get(stateList.size()-1);
   }
+  public void clearStates() {
+	  stateList.clear();
+  }
   public State getState(int n) {
     return stateList.get(n);
   }
