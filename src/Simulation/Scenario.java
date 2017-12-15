@@ -37,41 +37,8 @@ public class Scenario {
 	   return;
    }
     
-    /*
-    public Scenario (boolean regulation, float collaborationRate, float growthParameter) {
-    	
-    	this.regulation = regulation;
-    	this.collaborationRate = collaborationRate;
-    	this.growthParameter = growthParameter;
-    	
-    	return;
-    } */
     
     /** regulation constructor */
-/* public Scenario (boolean regulation) {
-    	
-	this.Scenario(regulation,(float) 1,(float) 1);
-	
-    	return;
-    }
-    
-/** collaborationRate constructor 
-public Scenario (float collaborationRate) {
-	
-	this.Scenario( false, collaborationRate, (float) 1);
-	
-    	return;
-    }
-    
-/** growthParameter constructor 
-public Scenario (float growthParameter) {
-	
-	this.Scenario( false,(float) 1, growthParameter);
-	
-    	return;
-    } */
-
-    /* getters */
     
 	public ArrayList <Trip> getTripList () {
 		return tripList;
@@ -93,20 +60,6 @@ public Scenario (float growthParameter) {
     	return growthParameter;
     }
     
-    /** setters */
-    
-    /* public void setTripList () {
-    	return;
-    }
-    
-    public void setStationList () {
-    	return;
-    }
-
-    public void setTripList () {
-	
-    }
-    */
     
     /** function to execute trips, essential simulation tool */
     public void runTrips() {
@@ -208,11 +161,12 @@ public Scenario (float growthParameter) {
     private void proposeCollaboration (Trip currentTrip) {
     	if (Math.random() < this.collaborationRate) {
     		ArrayList<Station> closestStations = currentTrip.getEndStation().getClosestStationList();
-    		for (int j= 1; j < closestStations.size(); j++) {
+    		for (int j= 0; j < closestStations.size(); j++) {
     		
     			Station currentStation = closestStations.get(j);
     			State currentState = currentStation.getLatestState();
-    			if (currentState.isEmpty()) {
+    			if (currentState.isEmpty()) 
+    			{
     				currentTrip.setEndStation(findStation(currentTrip.getEndStation().getIdentity()));//PROBLEM HERE!!!!!!!!!!!!!!!!!1 NA LOGICA!!!!!
     				break;
     			}
@@ -416,43 +370,7 @@ public Scenario (float growthParameter) {
     
     /** method to simulate a Velib Scenario without regulation 
      * @throws FileNotFoundException */
-   /* public void noRegulation() {
-    
-    	ScenarioResume.setSimulationType("Simulation without regulation");
-    	ScenarioResume.setRegulation(false);
-    	
-    	// supression of regulation trips
-    	for (i=0; i < tripList.size(); i++) {
-    		
-    		if (tripList.get(i).getReason() == Reason.REGULATION) {
-    			tripList.remove(i);
-    		}    		
-    	}
-    	
-    	//trip execution without regulation
-    	this.runTrips();
-    	
-    	Result.setResultStations(stationList); // deep copy!!
-    	Result.setResultTrips(tripList);
-    	
-    }
-    */
-/*
-    public void newBehaviour() {
-    }
-
-    public void growPopularity() {
-    	
-   float helpvar=1/(growthParameter-1);
-    			
-for (int i=tripList.size(); i > 0; i=((float) i)-helpvar ) { //schleifenkopf �berpr�fen
-    	
-	//clone implementation
-    	tripList.get((int) i).clone();
-    	
-    }
-
-}*/
+  
     
     // Main method for testing
     public static void main (String args[]) throws FileNotFoundException {
