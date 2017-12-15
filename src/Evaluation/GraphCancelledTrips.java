@@ -15,7 +15,7 @@ public class GraphCancelledTrips extends ApplicationFrame {
 	private ArrayList<Double> cancelledTrips;
 	private int step;
    public GraphCancelledTrips( int step,String Xtitle,ArrayList<Double> cancelledTrips) {
-      super("Cancelled trips x days");
+      super("Cancelled trips");
       this.step = step;
       this.cancelledTrips = cancelledTrips;
       JFreeChart lineChart = ChartFactory.createLineChart(
@@ -35,6 +35,7 @@ public class GraphCancelledTrips extends ApplicationFrame {
       DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
       for(int i = 0; i < cancelledTrips.size(); i+=1)
       {
+    	  System.out.println("i:" + i + ":::" + cancelledTrips.get(i));
     	  	int x = i*step;
     	  	dataset.addValue((int)100*cancelledTrips.get(i), "",String.valueOf(i*step));
       }

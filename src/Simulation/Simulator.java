@@ -14,15 +14,22 @@ public class Simulator {
 	private Scenario scenario;
 	private EvaluatorScenario evaluatorScenario;
 	private ArrayList<Double> cancelledTrips;
-
-	public Simulator(ArrayList<Trip> base_trips, ArrayList<Station> stations)
+	private boolean regulation ;
+	private double collaborationRate ;
+	private double popularityGrowth ;
+	
+	
+	public Simulator(ArrayList<Trip> base_trips, ArrayList<Station> stations,boolean regulation,double collaborationRate, double popularityGrowth)
 	{
+		this.regulation = regulation;
+		this.collaborationRate = collaborationRate;
+		this.popularityGrowth = popularityGrowth;
 		this.base_trips = base_trips;
 		this.stations = stations;
 		cancelledTrips = new ArrayList<Double>();
 	}
 	
-	public void simulate(boolean regulation,double collaborationRate, double popularityGrowth) throws FileNotFoundException
+	public void simulate() throws FileNotFoundException
 	{
 		TripGenerator tripGenerator = new TripGenerator(this.base_trips,regulation,popularityGrowth);	
 		ArrayList<Trip> simulationTrips = tripGenerator.getTrips();
@@ -38,7 +45,6 @@ public class Simulator {
 	//	evaluatorScenario.visualizeCriticalStationsVariation(15*60*1000, 0);
 		System.out.println("% cancelled trips analyze: " + evaluatorScenario.getCancelledTrips());
 		this.cancelledTrips.add(evaluatorScenario.getCancelledTrips());
-		simulate10days(regulation,collaborationRate,popularityGrowth);
 	}
 	
  	public void exportStationStates(int identity) throws FileNotFoundException
@@ -62,11 +68,12 @@ public class Simulator {
 	
 	public void visualizeCriticalStationsVariation()
 	{
-		
+		evaluatorScenario.visualizeCriticalStationsVariation(15*60*1000, 0);
 	}
 	
 	public void visualizeCancelledTrips10days()
 	{
+		simulate10days();
 		System.out.println("visualizing cancelled trips....");
 		GraphCancelledTrips graph = new GraphCancelledTrips(1,"Days",this.cancelledTrips);
 		graph.showWindow();
@@ -74,37 +81,52 @@ public class Simulator {
 	
 	public void visualizeImpactGrowth()
 	{
+		System.out.println("aaa");
+		TripGenerator tripGenerator;
+		ArrayList<Trip> simulationTrips;
+		Scenario simulationScenario;
+		ArrayList<Double> cancelledTrips = new ArrayList<Double>();
+		for(int i = 0; i < 5; i++)
+		{
+			System.out.println("aaa" + i);
+			tripGenerator = new TripGenerator(this.base_trips,regulation,i*0.5);	
+			simulationTrips = tripGenerator.getTrips();
+			simulationScenario = new Scenario(stations,simulationTrips,collaborationRate);
+			simulationScenario.runTrips();
+			evaluatorScenario = new EvaluatorScenario(simulationScenario);
+			cancelledTrips.add(evaluatorScenario.getCancelledTrips());
+
+		}
+		GraphCancelledTrips graph = new GraphCancelledTrips(50,"Growth Rate (%)",cancelledTrips);
+		graph.showWindow();
+		System.out.println("aaabbb");
+
+	}
+	
+	public void visualizeImpactCollaboration()
+	{
 		TripGenerator tripGenerator;
 		ArrayList<Trip> simulationTrips;
 		Scenario simulationScenario;
 		ArrayList<Double> cancelledTrips = new ArrayList<Double>();
 		for(int i = 0; i < 10; i++)
 		{
-			tripGenerator = new TripGenerator(this.base_trips,false,i*0.15);	
+			tripGenerator = new TripGenerator(this.base_trips,regulation,popularityGrowth);	
 			simulationTrips = tripGenerator.getTrips();
-			simulationScenario = new Scenario(stations,simulationTrips,0);
+			simulationScenario = new Scenario(stations,simulationTrips,0.1*i);
 			simulationScenario.runTrips();
 			evaluatorScenario = new EvaluatorScenario(simulationScenario);
 			cancelledTrips.add(evaluatorScenario.getCancelledTrips());
+
 		}
-		evaluatorScenario = new EvaluatorScenario(scenario);
-		
-		for(int i = 0; i < 5; i++)
-		{
-			scenario.startNewDay();
-			scenario.runTrips();
-			cancelledTrips.add(evaluatorScenario.getCancelledTrips());
-		}
-		
+		GraphCancelledTrips graph = new GraphCancelledTrips(10,"Collaboration Rate (%)",cancelledTrips);
+		graph.showWindow();
 	}
 	
-	public void visualizeImpactCollaboration()
+	private void simulate10days()
 	{
-		
-	}
-	
-	private void simulate10days(boolean regulation,double collaborationRate, double popularityGrowth)
-	{
+		System.out.println("begin");
+
 		TripGenerator tripGenerator = new TripGenerator(this.base_trips,false,popularityGrowth);	
 		ArrayList<Trip> simulationTrips = tripGenerator.getTrips();
 
@@ -112,13 +134,13 @@ public class Simulator {
 
 		evaluatorScenario = new EvaluatorScenario(scenario);
 		
-		for(int i = 0; i < 5; i++)
+		for(int i = 0; i < 10; i++)
 		{
 			scenario.startNewDay();
 			scenario.runTrips();
 			cancelledTrips.add(evaluatorScenario.getCancelledTrips());
 		}
-		
+		System.out.println("end");
 		
 		
 	}

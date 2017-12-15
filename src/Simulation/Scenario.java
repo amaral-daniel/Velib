@@ -93,7 +93,11 @@ public class Scenario {
 	        		{
 	        			tempTrip = waitingTrips.get(p);
 	        		}	
-	    		}  		
+	    		}
+    			State currentEndState = tempTrip.getEndStation().getLatestState();	   
+    			if (!currentEndState.isCriticallyEmpty()) { //peut yetre autre crit�re empty closest Station exists
+    				proposeCollaboration(tempTrip);
+    			}
 	    		endTrip(tempTrip);
 	    	}	    	
 	    	return;

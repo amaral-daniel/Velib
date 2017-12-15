@@ -172,33 +172,13 @@ public class EvaluatorScenario
 		GraphStation my_graph = new GraphStation(searchedStation);
 		my_graph.showWindow();
     }
-   
-    
+       
     public void visualizeCriticalStationsVariation(int step,int typeOfGraph)//1 empty stations,2 full stations, 0 critical stations
     		
     {
     		GraphScenario graph = new GraphScenario(this.refScenario,step,typeOfGraph);
     		graph.showWindow();
     }
-    //fonction qui va donner la somme du temps de tous les trajets valides
-    public int getSecondsTrajets()
-    {
-    		ArrayList<Trip> trips = refScenario.getTripList();
-    		int totalSecondsTrajets = 0;
-    		
-    		for(int i = 0; i < trips.size(); i++)
-    		{
-    			Trip currentTrip = trips.get(i);
-    			if(trips.get(i).isValid())
-    			{
-    				long duration = currentTrip.getEndDate().getTime() - currentTrip.getStartDate().getTime();
-    				totalSecondsTrajets += (int)duration;
-    			}
-    			
-    		}
-    		return totalSecondsTrajets/1000; //Converts miliseconds into seconds
-    }
-  
     public double getCancelledTrips()
     {
     		ArrayList<Trip> tripList= refScenario.getTripList();
