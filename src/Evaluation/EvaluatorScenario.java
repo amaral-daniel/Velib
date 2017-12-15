@@ -304,7 +304,7 @@ public class EvaluatorScenario
 		
 		//Creating scenario.....
 		
-		Scenario scenario = new Scenario(stationList,tripList);
+		Scenario scenario = new Scenario(stationList,tripList,0);
 		
 		//Starting tests.....
 		
@@ -318,7 +318,7 @@ public class EvaluatorScenario
 	//	}
 		
 		//System.out.println("running trips....\n");
-		scenario.runTrips(0);
+		scenario.runTrips();
 		
 		EvaluatorScenario my_evaluateur = new EvaluatorScenario(scenario);
 		

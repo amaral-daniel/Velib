@@ -8,7 +8,8 @@ import Data.*;
 public class Simulator {
 	private ArrayList<Trip> base_trips;
 	private ArrayList<Station> stations;
-	Scenario scenario;
+	private Scenario scenario;
+	private EvaluatorScenario evaluatorScenario;
 	
 	
 
@@ -22,36 +23,23 @@ public class Simulator {
 	{
 	//	ArrayList<Station> stations_copy = getCopyOfStations();
 
-		scenario = new Scenario(stations,base_trips);
+		scenario = new Scenario(stations,base_trips,0);
 
 		scenario.runTrips();
 
 		
 		EvaluatorScenario evaluatorScenario = new EvaluatorScenario(scenario);
 
-	//	evaluatorScenario.exportCSVCriticalStationsNames("src/Evaluation/criticalStations.csv");
-
-	//	evaluatorScenario.exportCSVCriticalStationsVariation(10*60,"src/Evaluation/variationOfCriticalStations.csv");
+		evaluatorScenario.exportCSVCriticalStationsNames("src/Evaluation/criticalStations.csv");
 		
 		evaluatorScenario.exportCSVStationStates(1023, "states_");
 		
-		evaluatorScenario.visualizeStationStates(1023);
-		evaluatorScenario.visualizeStationStates(1008);
+		evaluatorScenario.visualizeStationStates(17106);
 		evaluatorScenario.visualizeCriticalStationsVariation(15*60*1000, 0);
 		System.out.println("% cancelled trips analyze: " + evaluatorScenario.getCancelledTrips());
 
 	}
 	
-	private ArrayList<Station> getCopyOfStations()
-	{
-		ArrayList<Station> newStationList = new ArrayList<Station>();
-		for(int i =0; i < stations.size(); i++)
-		{
-			newStationList.add(new Station(stations.get(i)));
-		}
-		
-		return newStationList;
-	}
 	
 	public void analyzeRegulationOff() throws FileNotFoundException
 	{
@@ -60,7 +48,7 @@ public class Simulator {
 		tripGenerator.createTrips();
 		ArrayList<Trip> noRegulationTrips = tripGenerator.getTrips();
 		
-		scenario = new Scenario(stations,noRegulationTrips);
+		scenario = new Scenario(stations,noRegulationTrips,0);
 		
 		scenario.runTrips();
 		
@@ -71,10 +59,6 @@ public class Simulator {
 		evaluatorScenario.exportCSVCriticalStationsVariation(10*60*1000,"src/Evaluation/variationOfCriticalStationsNoRegulation.csv");
 
 		evaluatorScenario.exportCSVStationStates(1023, "states_");
-
-		evaluatorScenario.visualizeStationStates(1023);
-
-		evaluatorScenario.visualizeStationStates(1008);
 
 		evaluatorScenario.visualizeCriticalStationsVariation(15*60*1000, 0);
 		
@@ -89,16 +73,12 @@ public class Simulator {
 		tripGenerator.createTrips();
 		ArrayList<Trip> newTrips = tripGenerator.getTrips();
 		
-		scenario = new Scenario(stations,newTrips);
+		scenario = new Scenario(stations,newTrips,0);
 
 		scenario.runTrips();
 
 		
 		EvaluatorScenario evaluatorScenario = new EvaluatorScenario(scenario);
-
-	//	evaluatorScenario.exportCSVCriticalStationsNames("src/Evaluation/criticalStations.csv");
-
-	//	evaluatorScenario.exportCSVCriticalStationsVariation(10*60,"src/Evaluation/variationOfCriticalStations.csv");
 		
 		evaluatorScenario.exportCSVStationStates(1023, "states_");
 		
@@ -117,12 +97,11 @@ public class Simulator {
 		tripGenerator.createTrips();
 		ArrayList<Trip> noRegulationTrips = tripGenerator.getTrips();
 		
-		scenario = new Scenario(stations,noRegulationTrips);
+		scenario = new Scenario(stations,noRegulationTrips,collaborationRate);
 
-		scenario.runTrips((float)collaborationRate);
-
-		
-		EvaluatorScenario evaluatorScenario = new EvaluatorScenario(scenario);
+		scenario.runTrips();
+	
+		evaluatorScenario = new EvaluatorScenario(scenario);
 
 	//	evaluatorScenario.exportCSVCriticalStationsNames("src/Evaluation/criticalStations.csv");
 
@@ -144,13 +123,17 @@ public class Simulator {
 		evaluatorScenario.exportCSVStationStates(identity, "src/Evaluation/states_");
 		
 	}
-	
+
 	public void exportStationStates(String stationName) throws FileNotFoundException
 	{
 		EvaluatorScenario evaluatorScenario = new EvaluatorScenario(scenario);
 		
 		evaluatorScenario.exportCSVStationStates(stationName, "src/Evaluation/states_");
-		
+	}
+	
+	public void visualizeStationStates(int identity)
+	{
+		evaluatorScenario.visualizeStationStates(identity);
 	}
 	
 

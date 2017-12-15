@@ -14,7 +14,7 @@ public class Scenario {
 	
 	/* declaration of attributes */
     private boolean regulation;
-    private float collaborationRate;
+    private double collaborationRate;
     private float growthParameter;
     private ArrayList<Trip> tripList;
     private ArrayList<Station> stationList;
@@ -24,8 +24,9 @@ public class Scenario {
     /* Constructors */
     
    /** Base Scenario Constructor */
-    public Scenario (ArrayList <Station> stationList, ArrayList <Trip> tripList) 
+    public Scenario (ArrayList <Station> stationList, ArrayList <Trip> tripList, double collaborationRate) 
     {
+    		this.collaborationRate = collaborationRate;
     		this.tripList = tripList;
 	    this.stationList = stationList;
 	    waitingTrips = new ArrayList <Trip> ();
@@ -48,7 +49,7 @@ public class Scenario {
     		return regulation;
     }
     
-    public float getCollaborationRate () 
+    public double getCollaborationRate () 
     {
     		return collaborationRate;
     }
@@ -57,58 +58,13 @@ public class Scenario {
     {
     		return growthParameter;
     }
-    
-    
+       
     /** function to execute trips, essential simulation tool */
-    public void runTrips() 
-    {
-	    	int i = 0;
-	    	while (i < tripList.size())	
-	    	{
-
-	    		Trip selectedTrip = tripList.get(i);
-	    		
-	    		// determines the next Trip to execute
-	    		Trip currentTrip = findNextTrip(selectedTrip);
-	    	
-	    		/* if findNextTrip did not change currentTrip
-	    		=> start Trip i and proceed to the next trip (i++) */
-	    		if (selectedTrip == currentTrip) 
-	    		{	
-	    			startTrip(currentTrip);
-	    			i++;
-	    		}
-	    	
-	    		/* if the findNextTrip changes currentTrip
-	    		=> end currentTrip */
-	    		else 
-	    		{	
-	    			endTrip(currentTrip);
-	    		} 
-	    	} //loop end
-	    	
-	    	// terminate trips in the waiting list
-	    	while (waitingTrips.size() > 0) 
-	    	{	
-	    		Trip tempTrip = waitingTrips.get(0);
-	    		for (int p = 0; p < waitingTrips.size(); p++) 
-	    		{ //can be potentially erased by improving metho findNextStation	        		
-	        		if (tempTrip.getEndDate().after(waitingTrips.get(p).getEndDate())) 
-	        		{
-	        			tempTrip = waitingTrips.get(p);
-	        		}	
-	    		}    		
-	    		endTrip(tempTrip);
-	    	}	    	
-	    	return;
-    } 
     
-    public void runTrips(float collaborationRate) 
-    {
-        
+    public void runTrips() 
+    {     
     	//	while loop runs through the tripList 
 	    	int i = 0;
-	    	this.collaborationRate = collaborationRate;
 	    	while (i < tripList.size())	{
 	    		
 	    		// pointer i on the selectedTrip in the tripList
@@ -162,29 +118,15 @@ public class Scenario {
 	    		
 	    			Station currentStation = closestStations.get(j);
 	    			State currentState = currentStation.getLatestState();
-	    			if (currentState.isEmpty() && currentStation.isOpen()) 
+	    			if (currentState.isEmpty() && currentStation.isOpen() &&(!currentState.isFull())) 
 	    			{
+	    		//		System.out.println("Station::" + currentStation.getIdentity() + " estado : " + currentState.getNBikes());
 	    				currentTrip.setEndStation(currentStation);//PROBLEM HERE!!!!!!!!!!!!!!!!!1 NA LOGICA!!!!!
 	    				break;
 	    			}
 	    		}
 	    	}
 	    	return;
-    }
-
-   
-    private Station findStation(int id)
-    {
-    		for(int i = 0; i < stationList.size();i++)
-    		{
-    			if(stationList.get(i).getIdentity() == id)
-    			{
-    				return stationList.get(i);
-    			}
-    			
-    		}
-    		System.out.println("Station not found!!!");
-    		return null;
     }
     
     /* supplementary methods for runTrips() */
@@ -196,117 +138,118 @@ public class Scenario {
 	    	{
 	    		return;
 	    	}
-	    	if (!trip.getStartStation().isOpen()) 
+	    	else if (!trip.getStartStation().isOpen()) 
 	    	{
 			trip.cancelTrip();
 		}	
 		else if (trip.getStartStation().getLatestState().isEmpty())	
 		{
 			trip.cancelTrip();
-		}
-			
+		}			
 		else 
 		{
 			trip.getStartStation().takeBike(trip);
 			waitingTrips.add(trip);
 				// waitingTrips.sort(endDate,) //sort List => endDates
 			trip.validateTrip();
-		}
-	    	
+		}    	
 	    	return;
     }
     
     /** Terminates a Trip */
-    public void endTrip (Trip trip)	{
-    	
-    	if(trip.getEndStation() == null)
-    	{
-    		return;
-    	}
-    	//System.out.println(trip);
-    	
-    	if (!trip.getEndStation().isOpen() || trip.getEndStation().getLatestState().isFull()) {//is full => find close station
-    		
-    		// find closest station that is not already full
-    		trip.setEndStation(findNextUsableStation(trip.getEndStation()));
-    	}
-
-    	trip.getEndStation().returnBike(trip);
-    	waitingTrips.remove(trip);
-    	
-    	return;
+    public void endTrip (Trip trip)	
+    {  	
+	    	if(trip.getEndStation() == null)
+	    	{
+	    		return;
+	    	}
+	    	//System.out.println(trip);
+	    	
+	    	if (!trip.getEndStation().isOpen() || trip.getEndStation().getLatestState().isFull()) {//is full => find close station
+	    		
+	    		// find closest station that is not already full
+	    		trip.setEndStation(findNextUsableStation(trip.getEndStation()));
+	    	}	
+	    	trip.getEndStation().returnBike(trip);
+	    	waitingTrips.remove(trip);
+	    	
+	    	return;
     }
 
     /** Finds the next Trip for execution */
-    public Trip findNextTrip(Trip selectedTrip) {
-    	
-    	// findNextTrip default return is the given Trip selectedTrip
-    	Trip nextTrip = selectedTrip;
-    	
-    	// check for Trips in the waiting list
-    	if	(!waitingTrips.isEmpty())	{
-    		
-    		// find the Trip in the waiting list which finishes next
-    		Trip nextEndTrip = waitingTrips.get(0);
-    		
-    		for (int i = 0; i < waitingTrips.size(); i++) {
-    		
-    			if (nextEndTrip.getEndDate().after(waitingTrips.get(i).getEndDate())) {
-    				nextEndTrip = waitingTrips.get(i);
-    			}
-    		}
-    	
-    		/* check if the default Trip starts before the next ending Trip
-    		
-    		if trips from the waiting list are passed to the method, the check is skipped since trips in the waiting list are always valid
-    		trips that have not passed startTrip will always be checked, because the default return of isValid is false
-    		
-    		it should be avoided to pass trips that have gone through startTrip, and have been cancelled
-    		(then the method findNextTrip needs to be adjusted) */
-    		if	(!selectedTrip.isValid() && nextTrip.getStartDate().after(nextEndTrip.getEndDate()))  {
-    			nextTrip = nextEndTrip;
-    		}
-    	}
-    	
-    	return nextTrip;
+    private Trip findNextTrip(Trip selectedTrip) 
+    {	
+	    	// findNextTrip default return is the given Trip selectedTrip
+	    	Trip nextTrip = selectedTrip;
+	    	// check for Trips in the waiting list
+	    	if	(!waitingTrips.isEmpty())	
+	    	{ 		
+	    		// find the Trip in the waiting list which finishes next
+	    		Trip nextEndTrip = waitingTrips.get(0);
+	    		
+	    		for (int i = 0; i < waitingTrips.size(); i++) 
+	    		{   		
+	    			if (nextEndTrip.getEndDate().after(waitingTrips.get(i).getEndDate())) 
+	    			{
+	    				nextEndTrip = waitingTrips.get(i);
+	    			}
+	    		}
+	    	
+	    		/* check if the default Trip starts before the next ending Trip
+	    		
+	    		if trips from the waiting list are passed to the method, the check is skipped since trips in the waiting list are always valid
+	    		trips that have not passed startTrip will always be checked, because the default return of isValid is false
+	    		
+	    		it should be avoided to pass trips that have gone through startTrip, and have been cancelled
+	    		(then the method findNextTrip needs to be adjusted) */
+	    		if	(!selectedTrip.isValid() && nextTrip.getStartDate().after(nextEndTrip.getEndDate())) 
+	    		{
+	    			nextTrip = nextEndTrip;
+	    		}
+	    	}    	
+	    	return nextTrip;
     }
     
-    public Station findNextUsableStation(Station referenceStation) {
-    	return findNextUsableStation(referenceStation, 1);
+    public Station findNextUsableStation(Station referenceStation) 
+    {
+    		return findNextUsableStation(referenceStation, 1);
     }
     
     /** Finds another close station based on the referenceStation*/
     public Station findNextUsableStation(Station referenceStation, int iteration) {
     	
-    	Station usableStation = referenceStation;
-    	ArrayList<Station> closestStations = referenceStation.getClosestStationList();
-    
-    	// search all the closest stations for the reference station
-    	// the list should ideally be sorted by distance to the reference station
-    	for (int i = 0; i < closestStations.size(); i++) {
-    		
-    		// when you find a non full station => select it and break the loop
-    		if (!closestStations.get(i).getLatestState().isFull()) {
-    			usableStation = closestStations.get(i);
-    			break;
-    		}
-    	}
-    	
-    	// catch all closest stations are full => find randomStation
-    	if (usableStation == referenceStation) {
-    		if (iteration > 5) {
-    			System.out.println("warning too many iterations finding a new station");
-    			//throw new NoStationsAvailableException;
-    		}
-    		
-    		else {
-    			int tempMax = stationList.size() - 1;
-    			int randomIndex = (int) (tempMax * Math.random());
-    			Station randomStation = stationList.get(randomIndex);
-    			findNextUsableStation(randomStation, iteration + 1);	 //recursive!!
-    		}
-    	}
-    	return usableStation;
+	    	Station usableStation = referenceStation;
+	    	ArrayList<Station> closestStations = referenceStation.getClosestStationList();
+	    
+	    	// search all the closest stations for the reference station
+	    	// the list should ideally be sorted by distance to the reference station
+	    	for (int i = 0; i < closestStations.size(); i++)
+	    	{	
+	    		// when you find a non full station => select it and break the loop
+	    		if (!closestStations.get(i).getLatestState().isFull()) 
+	    		{
+	    			usableStation = closestStations.get(i);
+	    			break;
+	    		}
+	    	}
+	    	
+	    	// catch all closest stations are full => find randomStation
+	    	if (usableStation == referenceStation) 
+	    	{
+	    		if (iteration > 5) 
+	    		{
+	    			System.out.println("warning too many iterations finding a new station");
+	    			//throw new NoStationsAvailableException;
+	    		}    		
+	    		else 
+	    		{
+	    			int tempMax = stationList.size() - 1;
+	    			int randomIndex = (int) (tempMax * Math.random());
+	    			Station randomStation = stationList.get(randomIndex);
+	    			findNextUsableStation(randomStation, iteration + 1);	 //recursive!!
+	    		}
+	    	}
+	    	return usableStation;
     }
    
     
@@ -370,7 +313,7 @@ public class Scenario {
     	
     	
     	// call of the functions to be tested
-    	baseScenario = new Scenario (testStations, testTrips);
+    	baseScenario = new Scenario (testStations, testTrips,0);
     	EvaluatorScenario baseScenarioEvaluator = new EvaluatorScenario (baseScenario);
     	
     	ArrayList <Trip> baseScenarioTripList = baseScenario.tripList;
