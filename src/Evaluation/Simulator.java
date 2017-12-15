@@ -37,9 +37,9 @@ public class Simulator {
 		
 		evaluatorScenario.visualizeStationStates(1023);
 		evaluatorScenario.visualizeStationStates(1008);
-		evaluatorScenario.visualizeCriticalStationsVariation(15*60);
-		System.out.println("csvs exported");
-		
+		evaluatorScenario.visualizeCriticalStationsVariation(15*60*1000, 0);
+		System.out.println("% cancelled trips analyze: " + evaluatorScenario.getCancelledTrips());
+
 	}
 	
 	private ArrayList<Station> getCopyOfStations()
@@ -53,41 +53,59 @@ public class Simulator {
 		return newStationList;
 	}
 	
-	public void simulateRegulationOff() throws FileNotFoundException
+	public void analyzeRegulationOff() throws FileNotFoundException
 	{
-		ArrayList<Station> stations_copy = getCopyOfStations();
 		TripGenerator tripGenerator = new TripGenerator(this.base_trips,false,0);
 		
+		tripGenerator.createTrips();
 		ArrayList<Trip> noRegulationTrips = tripGenerator.getTrips();
 		
-		scenario = new Scenario(stations_copy,noRegulationTrips);
+		scenario = new Scenario(stations,noRegulationTrips);
 		
 		scenario.runTrips();
 		
 		EvaluatorScenario evaluatorScenario = new EvaluatorScenario(scenario);
-		
+
 		evaluatorScenario.exportCSVCriticalStationsNames("src/Evaluation/criticalStationsNoRegulation.csv");
+
+		evaluatorScenario.exportCSVCriticalStationsVariation(10*60*1000,"src/Evaluation/variationOfCriticalStationsNoRegulation.csv");
+
+		evaluatorScenario.exportCSVStationStates(1023, "states_");
+
+		evaluatorScenario.visualizeStationStates(1023);
+
+		evaluatorScenario.visualizeStationStates(1008);
+
+		evaluatorScenario.visualizeCriticalStationsVariation(15*60*1000, 0);
 		
-		evaluatorScenario.exportCSVCriticalStationsVariation(10*60,"src/Evaluation/variationOfCriticalStationsNoRegulation.csv");
-		
+		System.out.println("% cancelled trips no regulation: " + evaluatorScenario.getCancelledTrips());
+
 	}
 
-	public void simulateGrowthPopularity(float popularity_growth) throws FileNotFoundException
+	public void simulateGrowthPopularityNoRegulation(float popularity_growth) throws FileNotFoundException
 	{
-		ArrayList<Station> stations_copy = getCopyOfStations();
-		TripGenerator tripGenerator = new TripGenerator(this.base_trips,true,popularity_growth);
+		TripGenerator tripGenerator = new TripGenerator(this.base_trips,false,popularity_growth);
 		
-		ArrayList<Trip> noRegulationTrips = tripGenerator.getTrips();
+		tripGenerator.createTrips();
+		ArrayList<Trip> newTrips = tripGenerator.getTrips();
 		
-		scenario = new Scenario(stations_copy,noRegulationTrips);
-		
+		scenario = new Scenario(stations,newTrips);
+
 		scenario.runTrips();
+
 		
 		EvaluatorScenario evaluatorScenario = new EvaluatorScenario(scenario);
+
+	//	evaluatorScenario.exportCSVCriticalStationsNames("src/Evaluation/criticalStations.csv");
+
+	//	evaluatorScenario.exportCSVCriticalStationsVariation(10*60,"src/Evaluation/variationOfCriticalStations.csv");
 		
-		evaluatorScenario.exportCSVCriticalStationsNames("src/Evaluation/criticalStationsPopularityGrowth.csv");
+		evaluatorScenario.exportCSVStationStates(1023, "states_");
 		
-		evaluatorScenario.exportCSVCriticalStationsVariation(10*60,"src/Evaluation/variationOfCriticalStationsPopularityGrowth.csv");
+		evaluatorScenario.visualizeStationStates(1023);
+		evaluatorScenario.visualizeStationStates(1008);
+		evaluatorScenario.visualizeCriticalStationsVariation(15*60*1000, 0);
+		System.out.println("% cancelled trips analyze: " + evaluatorScenario.getCancelledTrips());
 	
 	}
 

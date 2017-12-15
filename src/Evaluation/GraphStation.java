@@ -35,14 +35,14 @@ public class GraphStation extends ApplicationFrame {
    private XYDataset createDataset( ) {
       final TimeSeries series = new TimeSeries( "Velib Graph" );         
    //   Second current = new Second( );   
-      double value = 100.0;         
+      double value = 0;         
 	   ArrayList<State> stateList = this.station.getStateList();
       for (int i = 0; i < stateList.size(); i++) {
          try {
         	 	Second current = new Second(stateList.get(i).getDate());
             value = stateList.get(i).getNBikes();              
             series.add(current, new Double( value ) );   
-            System.out.println(stateList.get(i));
+         //   System.out.println(stateList.get(i));
             current = ( Second ) current.next( ); 
          } catch ( SeriesException e ) {
             System.err.println("Error adding to series");

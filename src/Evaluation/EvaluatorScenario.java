@@ -52,9 +52,9 @@ public class EvaluatorScenario
     		out.println("Time, CriticalStations");
     		DateFormat df = new SimpleDateFormat("MM-dd-yyyy HH:mm"); 
     		
-    		for(int i = 0; step*i < 24*60*60; i++)
+    		for(int i = 0; step*i < 24*60*60*1000; i++)
     		{
-    			Date currentDate = new Date(initialDate.getTime() + i*step*1000);
+    			Date currentDate = new Date(initialDate.getTime() + i*step);
     		    String reportDate = df.format(currentDate.getTime());
     			int numberOfBadStations = 0;
 
@@ -176,14 +176,11 @@ public class EvaluatorScenario
 		my_graph.showWindow();
     }
    
-    public void visualizeEmptyStationsVariation(int step)
-    {
-    	
-    }
     
-    public void visualizeCriticalStationsVariation(int step)
+    public void visualizeCriticalStationsVariation(int step,int typeOfGraph)//1 empty stations,2 full stations, 0 critical stations
+    		
     {
-    		GraphScenario graph = new GraphScenario(this.refScenario,step);
+    		GraphScenario graph = new GraphScenario(this.refScenario,step,typeOfGraph);
     		graph.showWindow();
     }
     //fonction qui va donner la somme du temps de tous les trajets valides
@@ -205,6 +202,20 @@ public class EvaluatorScenario
     		return totalSecondsTrajets/1000; //Converts miliseconds into seconds
     }
   
+    public double getCancelledTrips()
+    {
+    		ArrayList<Trip> tripList= refScenario.getTripList();
+    		int nCancelledTrips = 0;
+    		for(int i = 0; i < tripList.size(); i++)
+    		{
+    			if( !tripList.get(i).isValid())
+    			{
+    				nCancelledTrips += 1;
+    			}
+    		}
+    		
+    		return nCancelledTrips/(double)tripList.size();
+    }
     //fonction pour dire si le scenario est deja desequilibre, return true si ils est desequilibre.
     //Il n'est pas encore implemente
     //Il faut calculer la % de trips qui ont ete canceles/ ont eu des problemes
@@ -360,7 +371,7 @@ public class EvaluatorScenario
 		
 		System.out.println("-------------visualize variation critical stations------------");
 		
-		my_evaluateur.visualizeCriticalStationsVariation(15*60);
+		my_evaluateur.visualizeCriticalStationsVariation(15*60,0);
 		
 		System.out.println("-------------testing isUnbalanced-------------");
 		
