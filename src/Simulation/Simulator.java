@@ -24,7 +24,7 @@ public class Simulator {
 	
 	public void simulate(boolean regulation,double collaborationRate, double popularityGrowth) throws FileNotFoundException
 	{
-		TripGenerator tripGenerator = new TripGenerator(this.base_trips,false,popularityGrowth);	
+		TripGenerator tripGenerator = new TripGenerator(this.base_trips,regulation,popularityGrowth);	
 		ArrayList<Trip> simulationTrips = tripGenerator.getTrips();
 		
 		scenario = new Scenario(stations,simulationTrips,collaborationRate);
@@ -77,13 +77,15 @@ public class Simulator {
 		TripGenerator tripGenerator;
 		ArrayList<Trip> simulationTrips;
 		Scenario simulationScenario;
-		ArrayList<Double> cancelledTrips;
-		evaluatorScenario = new EvaluatorScenario(simulationScenario);
+		ArrayList<Double> cancelledTrips = new ArrayList<Double>();
 		for(int i = 0; i < 10; i++)
 		{
 			tripGenerator = new TripGenerator(this.base_trips,false,i*0.15);	
 			simulationTrips = tripGenerator.getTrips();
 			simulationScenario = new Scenario(stations,simulationTrips,0);
+			simulationScenario.runTrips();
+			evaluatorScenario = new EvaluatorScenario(simulationScenario);
+			cancelledTrips.add(evaluatorScenario.getCancelledTrips());
 		}
 		evaluatorScenario = new EvaluatorScenario(scenario);
 		
