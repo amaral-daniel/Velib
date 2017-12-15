@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 import Data.*;
 import Evaluation.*;
-import Evaluation.Simulator;
+import Simulation.Simulator;
 import Simulation.*;
 
 //Window imports
@@ -135,7 +135,7 @@ public class Main extends JFrame
 			{
 				Simulator simulas = new Simulator(baseTripList, baseStationList);
 				try {
-					simulas.analyze();
+					simulas.simulate(false,0,0);
 				} catch (FileNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

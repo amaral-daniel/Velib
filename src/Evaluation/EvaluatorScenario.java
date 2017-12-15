@@ -215,29 +215,6 @@ public class EvaluatorScenario
     		
     		return nCancelledTrips/(double)tripList.size();
     }
-    //fonction pour dire si le scenario est deja desequilibre, return true si ils est desequilibre.
-    //Il n'est pas encore implemente
-    //Il faut calculer la % de trips qui ont ete canceles/ ont eu des problemes
-    
-	public boolean isUnbalanced()
-	{
-		ArrayList<Trip> trips = refScenario.getTripList();
-		int validTrips = 0;
-		for(int i = 0; i < trips.size(); i ++)
-		{
-			if(trips.get(i).isValid())
-			{
-				validTrips += 1;
-			}
-		}
-		
-		if(validTrips/trips.size() < unbalancedCriteria)
-		{
-			return true;
-		}
-		
-		return false;
-	}
 
 
 	public static void main(String[] args) throws FileNotFoundException 
@@ -374,9 +351,9 @@ public class EvaluatorScenario
 		
 		System.out.println("-------------testing isUnbalanced-------------");
 		
-		boolean isUnbalanced = my_evaluateur.isUnbalanced();
+		//boolean isUnbalanced = my_evaluateur.isUnbalanced();
 		
-		System.out.println("is unbalanced? " + isUnbalanced);
+	//	System.out.println("is unbalanced? " + isUnbalanced);
 		return;
 		
 	}
