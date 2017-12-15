@@ -10,12 +10,13 @@ public class Simulator {
 	private ArrayList<Station> stations;
 	private Scenario scenario;
 	private EvaluatorScenario evaluatorScenario;
-	
+	private ArrayList<Double> cancelledTrips;
 
 	public Simulator(ArrayList<Trip> base_trips, ArrayList<Station> stations)
 	{
 		this.base_trips = base_trips;
 		this.stations = stations;
+		cancelledTrips = new ArrayList<Double>();
 	}
 	
 	public void simulate(boolean regulation,double collaborationRate, double popularityGrowth) throws FileNotFoundException
@@ -36,12 +37,12 @@ public class Simulator {
 
 	}
 
-	public void simulate7days(boolean regulation,double collaborationRate, double popularityGrowth)
+	public void simulate10days(boolean regulation,double collaborationRate, double popularityGrowth)
 	{
 		TripGenerator tripGenerator = new TripGenerator(this.base_trips,false,popularityGrowth);	
 		ArrayList<Trip> simulationTrips = tripGenerator.getTrips();
 		
-		ArrayList<Double> cancelledTrips;
+		cancelledTrips.clear();
 		scenario = new Scenario(stations,simulationTrips,collaborationRate);
 
 		evaluatorScenario = new EvaluatorScenario(scenario);
@@ -49,11 +50,10 @@ public class Simulator {
 		for(int i = 0; i < 7; i++)
 		{
 			scenario.runTrips();
-		//	evaluatorScenario.getCancelledTrips
-		//	scenario.startNewDay();
+			cancelledTrips.add(evaluatorScenario.getCancelledTrips());
+			scenario.startNewDay();
 		}
 		
-		scenario.runTrips();
 		
 		
 	}
@@ -77,8 +77,14 @@ public class Simulator {
 		evaluatorScenario.visualizeStationStates(identity);
 	}
 	
+	public void visualizeCriticalStationsVariation()
+	{
+		
+	}
+	
+	public void visualizeCancelledTrips10days()
+	{
 
-	
-	
+	}
 	
 }
