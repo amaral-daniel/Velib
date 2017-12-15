@@ -35,22 +35,13 @@ public class Read
 	/* Class Read:
 	 * Attributes: 
 	 * 2 Strings representing the path of address file and trips file.
-	 * Format: "Velib\\src\\files\\filename.txt"
+	 * Format: "src/files/file.txt"
 	 * 
 	 * Methods: 
 	 * readTrips: REads trips file and converts the text in data.
 	 * 
 	 * */
-	private String stationsAddressesFileName;
-	private String initialStatesFileName;
-	private String tripsFileName;
 	
-	public Read (String stationsAddressesFileName, String initialStatesFileName, String tripsFileName)
-	{	
-		this.stationsAddressesFileName = stationsAddressesFileName;
-		this.initialStatesFileName = initialStatesFileName;
-		this.tripsFileName = tripsFileName;
-	}
 	
 	public static Station findStationWithId(int id, ArrayList<Station> stationList)
 	{
@@ -224,7 +215,6 @@ public class Read
 			System.out.println("Something went wrong");
 		}
 	}
-	
 	
 	
 	public ArrayList<Trip> createTripsList(String tripsFileName, ArrayList<Station> stationList)

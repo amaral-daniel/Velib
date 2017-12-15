@@ -6,13 +6,51 @@ import java.util.Scanner;
 
 import Data.*;
 import Evaluation.*;
+import Evaluation.Simulator;
 import Simulation.*;
 
-public class Main {
+//Window imports
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import javax.swing.*;
+import java.awt.event.*;
+
+public class Main extends JFrame
+{
+	//Window's variables to be used
+	
+	//Window's layout objects
+	private JButton button_run;
+	private JButton button_show;
+	private JButton button03;
+	private JButton button04;
+	private JTextField input_collaboration_rate;
+	private JTextField input_regulation;
+	private JTextField input_popularity_growth;
+	private JTextField input_station;
+	
+	
+	
+	//Objects used in the simulation
+	private static ArrayList<Station> baseStationList;
+	private static ArrayList<State> stateList;
+	private static ArrayList<Trip> baseTripList;
+	
+	
+	//User input
+	private static double collaboration_rate = 0.0;
+	private static int regulation = 1;
+	private static double popularity_growth = 0.0;
+	
+	static int mode = 0;
 	
 	public static void main(String[] args) throws FileNotFoundException
 	{
-		//Reader
+		
+		Main window = new Main(400, 300, "Projet Velib");
+		
+		
+		//Reader (pra input no console): excluir se for inutil
 		Scanner reader = new Scanner(System.in);
 		
 		//File Names
@@ -21,129 +59,105 @@ public class Main {
 		String tripsFileName = "src/files/trips-2013-10-31.txt";
 		
 		//Construct reader
-		Read read = new Read(stationAddressesFileName, initialStatesFileName, tripsFileName);
+		Read read = new Read();
 		
 		//Creates stationList with their initial condition
-		ArrayList<Station> stationList = read.createStationList(stationAddressesFileName);
-		read.defineInitalStates(initialStatesFileName, stationList);
+		baseStationList = read.createStationList(stationAddressesFileName);
+		read.defineInitalStates(initialStatesFileName, baseStationList);
 		
 		//Creates trip list
-		ArrayList<Trip> tripList = read.createTripsList(tripsFileName, stationList);
+		baseTripList = read.createTripsList(tripsFileName, baseStationList);
+		
+		System.out.println(baseStationList.get(0));
+		
 		
 	//	Scenario scenario_base = new Scenario (stationList, tripList);
 		
-		Simulator simul = new Simulator(tripList, stationList);
-		simul.analyze();
+	//	Simulator simul = new Simulator(tripList, stationList);
+	//	simul.analyze();
 		
-		int mode = 0;
-	//	int option;
 		
-		while(true)
-		{
-			switch(mode)
-			{
-				case 0:
-					System.out.println("What would you like to do?");
-					System.out.println("Analyse base scenario: 1");
-					System.out.println("Analyse scenario without regulation: 2");
-					System.out.println("Analyse scenario with new user behavior: 3");
-					System.out.println("Quit application: 9");
-					
-					mode = reader.nextInt();
-					
-					if(mode == 9)
-					{
-						return;
-					}
+		
+		
 
-					break;
-
-
-				case 1:
-					System.out.println("1What would you like to do?");
-					System.out.println("See critical stations: 1");
-					System.out.println("See specific station: 2");
-					System.out.println("Go back: 9");
-					
-					mode = reader.nextInt();
-					
-					switch(mode)
-					{
-						case 1:
-							
-							mode=1;
-							
-							
-						case 2:
-							
-							mode=1;
-							
-							
-						case 9:
-							
-							mode=0;
-							
-					}
-					
-				//
-				case 2:
-					System.out.println("2What would you like to do?");
-					System.out.println("See critical stations: 1");
-					System.out.println("See specific station: 2");
-					System.out.println("Go back: 9");
-					
-					mode = reader.nextInt();
-					
-					switch(mode)
-					{
-						case 1:
-							
-							mode=2;
-							
-							
-						case 2:
-							
-							mode=2;
-						
-							
-						case 9:
-							
-							mode=0;
-						
-					}
-					
-				case 3:
-					System.out.println("3What would you like to do?");
-					System.out.println("See critical stations: 1");
-					System.out.println("See specific station: 2");
-					System.out.println("Go back: 9");
-					
-					mode = reader.nextInt();
-					
-					switch(mode)
-					{
-						case 1:
-							
-							mode=3;
-							break;
-							
-						case 2:
-							
-							mode=3;
-							break;
-							
-						case 9:
-							
-							mode=0;
-							break;
-					}
-			}
-			
-		}
+	}
+	
+	
+	public Main(int width, int height, String title)
+	{
+		this.setSize(width, height);
+		this.setTitle(title);
+		this.setResizable(false);
+        this.setLocation(400, 200);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setVisible(true);
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(null);
+		this.add(panel);
+		
+		ButtonListener butLis = new ButtonListener();
+		
+		button_run = new JButton("Run");
+		button_run.addActionListener(butLis);
+		button_run.setBounds(60, 200, 80, 30); //x,y,width, height
 		
 		
+		
+		button_show = new JButton("Show");
+		button_show.setBounds(0, 40, 80, 30);
+		button_show.addActionListener(butLis);
+		
+		button03 = new JButton("Ok");
+		button03.setBounds(110, 40, 80, 30);
+		button03.addActionListener(butLis);
+		
+		button04 = new JButton("Ok");
+		button04.setBounds(210, 40, 80, 30);
+		button04.addActionListener(butLis);
+		
+		
+		
+		
+		panel.add(button_run);
+		panel.add(button_show);
+		panel.add(button03);
+		panel.add(button04);
 		
 		
 	}
-
+	
+	private class ButtonListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			if(e.getSource() == button_run)
+			{
+				Simulator simulas = new Simulator(baseTripList, baseStationList);
+				try {
+					simulas.analyze();
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					System.out.println("File not found");
+				}
+				System.out.println("button_run");
+			}
+			
+			if(e.getSource() == button_show)
+			{
+				System.out.println("button_show");
+			}
+			
+			if(e.getSource() == button03)
+			{
+				System.out.println("button03");
+			}
+			if(e.getSource() == button04)
+			{
+				System.out.println("button04");
+			}
+		}
+	}
 }
+
