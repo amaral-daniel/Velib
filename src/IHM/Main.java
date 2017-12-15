@@ -20,16 +20,20 @@ public class Main extends JFrame
 	//Window's variables to be used
 	
 	//Window's layout objects
-	private JButton button_run;
-	private JButton button_show;
+	private JButton button_run, button_show;
+	
 	private JButton button03;
 	private JButton button04;
 	private JTextField input_collaboration_rate;
 	private JTextField input_regulation;
 	private JTextField input_popularity_growth;
 	private JTextField input_station;
-	
-	
+	private JLabel label_collaboration_rate;
+	private JLabel label_regulation;
+	private JLabel label_popularity_growth;
+	private JLabel label_station;
+	private JLabel label_cancelled_trips;
+	private JLabel label_time_unbalanced;
 	
 	//Objects used in the simulation
 	private static ArrayList<Station> baseStationList;
@@ -42,12 +46,14 @@ public class Main extends JFrame
 	private static int regulation = 1;
 	private static double popularity_growth = 0.0;
 	
-	static int mode = 0;
+	
+	//Simple boolean to prevent a Run 
+	static boolean ready = false;
 	
 	public static void main(String[] args) throws FileNotFoundException
 	{
 		
-		Main window = new Main(400, 300, "Projet Velib");
+		Main window = new Main(500, 400, "Projet Velib");
 		
 		
 		//Reader (pra input no console): excluir se for inutil
@@ -68,6 +74,7 @@ public class Main extends JFrame
 		//Creates trip list
 		baseTripList = read.createTripsList(tripsFileName, baseStationList);
 		
+		ready=true;
 		System.out.println(baseStationList.get(0));
 		
 		
@@ -102,8 +109,6 @@ public class Main extends JFrame
 		button_run.addActionListener(butLis);
 		button_run.setBounds(60, 200, 80, 30); //x,y,width, height
 		
-		
-		
 		button_show = new JButton("Show");
 		button_show.setBounds(0, 40, 80, 30);
 		button_show.addActionListener(butLis);
@@ -116,13 +121,15 @@ public class Main extends JFrame
 		button04.setBounds(210, 40, 80, 30);
 		button04.addActionListener(butLis);
 		
-		
+		input_collaboration_rate = new JTextField();
 		
 		
 		panel.add(button_run);
 		panel.add(button_show);
 		panel.add(button03);
 		panel.add(button04);
+		
+		panel.add(input_collaboration_rate);
 		
 		
 	}
@@ -131,17 +138,22 @@ public class Main extends JFrame
 	{
 		public void actionPerformed(ActionEvent e)
 		{
+			//Event from button "run"
 			if(e.getSource() == button_run)
 			{
-				Simulator simulas = new Simulator(baseTripList, baseStationList);
-				try {
-					simulas.simulate(false,0,0);
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-					System.out.println("File not found");
+				if(!ready) {
+					System.out.println("Please wait");
 				}
-				System.out.println("button_run");
+				else {
+					Simulator simulas = new Simulator(baseTripList, baseStationList);
+					try {
+						simulas.simulate(false,0,0);
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+						System.out.println("File not found");
+					}
+				}
 			}
 			
 			if(e.getSource() == button_show)
