@@ -7,7 +7,6 @@ import java.util.Date;
 import java.io.FileNotFoundException;
 import java.util.GregorianCalendar;
 
-import org.jfree.ui.RefineryUtilities;
 
 import java.io.PrintWriter;
 import java.text.DateFormat;
@@ -319,7 +318,7 @@ public class EvaluatorScenario
 	//	}
 		
 		//System.out.println("running trips....\n");
-		scenario.runTripsTest();
+		scenario.runTrips(0);
 		
 		EvaluatorScenario my_evaluateur = new EvaluatorScenario(scenario);
 		

@@ -14,223 +14,165 @@ public class Scenario {
 	
 	/* declaration of attributes */
     private boolean regulation;
-
     private float collaborationRate;
-
     private float growthParameter;
-    
-    private ArrayList<Trip> tripList = new ArrayList <Trip> ();
-
-    private ArrayList<Station> stationList = new ArrayList <Station> ();
-    
-    private ArrayList<Trip> waitingTrips = new ArrayList <Trip> ();
+    private ArrayList<Trip> tripList;
+    private ArrayList<Station> stationList;
+    private ArrayList<Trip> waitingTrips ;
     
     
     /* Constructors */
     
    /** Base Scenario Constructor */
-    public Scenario (ArrayList <Station> stationList, ArrayList <Trip> tripList) {
-	   
-	   this.tripList = tripList;
-	   this.stationList = stationList;
-	   
-	   return;
+    public Scenario (ArrayList <Station> stationList, ArrayList <Trip> tripList) 
+    {
+    		this.tripList = tripList;
+	    this.stationList = stationList;
+	    waitingTrips = new ArrayList <Trip> ();
    }
-    
-    
+       
     /** regulation constructor */
     
-	public ArrayList <Trip> getTripList () {
+	public ArrayList <Trip> getTripList () 
+	{
 		return tripList;
 	}
 	
-	public ArrayList <Station> getStationList () {
+	public ArrayList <Station> getStationList () 
+	{
 		return stationList;
 	}
 
-    public boolean getRegulation () {
-    	return regulation;
+    public boolean getRegulation ()
+    {
+    		return regulation;
     }
     
-    public float getCollaborationRate () {
-    	return collaborationRate;
+    public float getCollaborationRate () 
+    {
+    		return collaborationRate;
     }
     
-    public float getGrowthParameter () {
-    	return growthParameter;
+    public float getGrowthParameter ()
+    {
+    		return growthParameter;
     }
     
     
     /** function to execute trips, essential simulation tool */
-    public void runTrips() {
-    
-    	//	while loop runs through the tripList 
-    	int i = 0;
-    	while (i < tripList.size())	{
-    		
-    		// pointer i on the selectedTrip in the tripList
-    		Trip selectedTrip = tripList.get(i);
-    		
-    		// determines the next Trip to execute
-    		Trip currentTrip = findNextTrip(selectedTrip);
-    	
-    		/* if findNextTrip did not change currentTrip
-    		=> start Trip i and proceed to the next trip (i++) */
-    		if (selectedTrip == currentTrip) {
-    			
-    			startTrip(currentTrip);
-    			i++;
-    		}
-    	
-    		/* if the findNextTrip changes currentTrip
-    		=> end currentTrip */
-    		else {
-    			
-    			endTrip(currentTrip);
-    		} 
-    	} //loop end
-    	
-    	// terminate trips in the waiting list
-    	while (waitingTrips.size() > 0) {
-    		
-    		Trip tempTrip = waitingTrips.get(0);
-    		for (int p = 0; p < waitingTrips.size(); p++) { //can be potentially erased by improving metho findNextStation
-        		
-        		if (tempTrip.getEndDate().after(waitingTrips.get(p).getEndDate())) {
-        			tempTrip = waitingTrips.get(p);
-        		}	
-    		}
-    		
-    		endTrip(tempTrip);
-    	}
-    	
-    		return;
+    public void runTrips() 
+    {
+	    	int i = 0;
+	    	while (i < tripList.size())	
+	    	{
+
+	    		Trip selectedTrip = tripList.get(i);
+	    		
+	    		// determines the next Trip to execute
+	    		Trip currentTrip = findNextTrip(selectedTrip);
+	    	
+	    		/* if findNextTrip did not change currentTrip
+	    		=> start Trip i and proceed to the next trip (i++) */
+	    		if (selectedTrip == currentTrip) 
+	    		{	
+	    			startTrip(currentTrip);
+	    			i++;
+	    		}
+	    	
+	    		/* if the findNextTrip changes currentTrip
+	    		=> end currentTrip */
+	    		else 
+	    		{	
+	    			endTrip(currentTrip);
+	    		} 
+	    	} //loop end
+	    	
+	    	// terminate trips in the waiting list
+	    	while (waitingTrips.size() > 0) 
+	    	{	
+	    		Trip tempTrip = waitingTrips.get(0);
+	    		for (int p = 0; p < waitingTrips.size(); p++) 
+	    		{ //can be potentially erased by improving metho findNextStation	        		
+	        		if (tempTrip.getEndDate().after(waitingTrips.get(p).getEndDate())) 
+	        		{
+	        			tempTrip = waitingTrips.get(p);
+	        		}	
+	    		}    		
+	    		endTrip(tempTrip);
+	    	}	    	
+	    	return;
     } 
     
-    public void runTrips(float collaborationRate) {
+    public void runTrips(float collaborationRate) 
+    {
         
     	//	while loop runs through the tripList 
-    	int i = 0;
-    	this.collaborationRate = collaborationRate;
-    	while (i < tripList.size())	{
-    		
-    		// pointer i on the selectedTrip in the tripList
-    		Trip selectedTrip = tripList.get(i);
-    		
-    		// determines the next Trip to execute
-    		Trip currentTrip = findNextTrip(selectedTrip);
-    	
-    		/* if findNextTrip did not change currentTrip
-    		=> start Trip i and proceed to the next trip (i++) */
-    		if (selectedTrip == currentTrip) {
-    			
-    			startTrip(currentTrip);
-    			i++;
-    		}
-    	
-    		/* if the findNextTrip changes currentTrip
-    		=> end currentTrip */
-    		else {
-    			
-    			State currentEndState = currentTrip.getEndStation().getLatestState();
-    			
-    			if (!currentEndState.isCriticallyEmpty()) { //peut yetre autre crit�re empty closest Station exists
-    				proposeCollaboration(currentTrip);
-    			}
-    			endTrip(currentTrip);
-    		} 
-    	} //loop end
-    	
-    	// terminate trips in the waiting list
-    	while (waitingTrips.size() > 0) {
-    		
-    		Trip tempTrip = waitingTrips.get(0);
-    		for (int p = 0; p < waitingTrips.size(); p++) { //can be potentially erased by improving metho findNextStation
-        		
-        		if (tempTrip.getEndDate().after(waitingTrips.get(p).getEndDate())) {
-        			tempTrip = waitingTrips.get(p);
-        		}	
-    		}
-    		
-    		endTrip(tempTrip);
-    	}
-    	
-    		return;
+	    	int i = 0;
+	    	this.collaborationRate = collaborationRate;
+	    	while (i < tripList.size())	{
+	    		
+	    		// pointer i on the selectedTrip in the tripList
+	    		Trip selectedTrip = tripList.get(i);
+	    		
+	    		// determines the next Trip to execute
+	    		Trip currentTrip = findNextTrip(selectedTrip);
+	    	
+	    		/* if findNextTrip did not change currentTrip
+	    		=> start Trip i and proceed to the next trip (i++) */
+	    		if (selectedTrip == currentTrip) {
+	    			
+	    			startTrip(currentTrip);
+	    			i++;
+	    		}
+	    	
+	    		/* if the findNextTrip changes currentTrip
+	    		=> end currentTrip */
+	    		else
+	    		{
+	    			State currentEndState = currentTrip.getEndStation().getLatestState();	    			
+	    			if (!currentEndState.isCriticallyEmpty()) { //peut yetre autre crit�re empty closest Station exists
+	    				proposeCollaboration(currentTrip);
+	    			}
+	    			endTrip(currentTrip);
+	    		} 
+	    	} //loop end	    	
+	    	// terminate trips in the waiting list
+	    	while (waitingTrips.size() > 0) 
+	    	{    		
+	    		Trip tempTrip = waitingTrips.get(0);
+	    		for (int p = 0; p < waitingTrips.size(); p++)
+	    		{ 	
+	        		if (tempTrip.getEndDate().after(waitingTrips.get(p).getEndDate()))
+	        		{
+	        			tempTrip = waitingTrips.get(p);
+	        		}	
+	    		}  		
+	    		endTrip(tempTrip);
+	    	}	    	
+	    	return;
     }
     
-    private void proposeCollaboration (Trip currentTrip) {
-    	if (Math.random() < this.collaborationRate) {
-    		ArrayList<Station> closestStations = currentTrip.getEndStation().getClosestStationList();
-    		for (int j= 0; j < closestStations.size(); j++) {
-    		
-    			Station currentStation = closestStations.get(j);
-    			State currentState = currentStation.getLatestState();
-    			if (currentState.isEmpty()) 
-    			{
-    				currentTrip.setEndStation(findStation(currentTrip.getEndStation().getIdentity()));//PROBLEM HERE!!!!!!!!!!!!!!!!!1 NA LOGICA!!!!!
-    				break;
-    			}
-    		}
-    	}
-    	return;
+    private void proposeCollaboration (Trip currentTrip) 
+    {
+	    	if (Math.random() < this.collaborationRate)
+	    	{
+	    		ArrayList<Station> closestStations = currentTrip.getEndStation().getClosestStationList();
+	    		for (int j= 0; j < closestStations.size(); j++) 
+	    		{
+	    		
+	    			Station currentStation = closestStations.get(j);
+	    			State currentState = currentStation.getLatestState();
+	    			if (currentState.isEmpty() && currentStation.isOpen()) 
+	    			{
+	    				currentTrip.setEndStation(currentStation);//PROBLEM HERE!!!!!!!!!!!!!!!!!1 NA LOGICA!!!!!
+	    				break;
+	    			}
+	    		}
+	    	}
+	    	return;
     }
 
-    /** simple Version of runTrips to run tests */
-    public void runTripsTest () {
-    	
-    	// loop runnig through the tripList
-    	for(int i=0; i < tripList.size(); i++) {
-    		
-    		// pointer i
-    		Trip currentTrip = tripList.get(i);
-    		
-    		// printBlock for testing (state comparison before and after bike use)
-    		System.out.println("before:");
-    		System.out.println("Start station:");
-    		String dummyNumberBikes =  Integer.toString(currentTrip.getStartStation().getLatestState().getNBikes());
-    		System.out.println(dummyNumberBikes + "free bikes");
-    		String dummyNumberStands =  Integer.toString(currentTrip.getStartStation().getLatestState().getNStands());
-    		System.out.println(dummyNumberStands + "free stands");
-    		System.out.println("End station:");
-    		dummyNumberBikes =  Integer.toString(currentTrip.getEndStation().getLatestState().getNBikes());
-    		System.out.println(dummyNumberBikes + "free bikes");
-    		dummyNumberStands =  Integer.toString(currentTrip.getEndStation().getLatestState().getNStands());
-    		System.out.println(dummyNumberStands + "free stands");
-    		
-    		// bike use under certain conditions
-    		// 1. startStation is open
-    		// 2. endStation is open
-    		// 3. StartStation is not empty
-    		// 4. endStation is not full
-    		if	(currentTrip.getStartStation().isOpen() && currentTrip.getEndStation().isOpen() && !currentTrip.getStartStation().getLatestState().isEmpty() && !currentTrip.getEndStation().getLatestState().isFull ())	{
-    			currentTrip.getStartStation().takeBike(currentTrip);
-    			currentTrip.getEndStation().returnBike(currentTrip);
-    			currentTrip.validateTrip();
-    		}
-    		
-    		// trip cancellation
-    		else {
-    			currentTrip.cancelTrip();
-    		}
-    		
-    		// printBlock for testing (state comparison before and after bike use)
-    		System.out.println("after:");
-    		System.out.println("Start station:");
-    		dummyNumberBikes =  Integer.toString(currentTrip.getStartStation().getLatestState().getNBikes());
-    		System.out.println(dummyNumberBikes + "free bikes");
-    		dummyNumberStands =  Integer.toString(currentTrip.getStartStation().getLatestState().getNStands());
-    		System.out.println(dummyNumberStands + "free places");
-    		System.out.println("End station:");
-    		dummyNumberBikes =  Integer.toString(currentTrip.getEndStation().getLatestState().getNBikes());
-    		System.out.println(dummyNumberBikes + "free bikes");
-    		dummyNumberStands =  Integer.toString(currentTrip.getEndStation().getLatestState().getNStands());
-    		System.out.println(dummyNumberStands + "free stands");
-    		System.out.println();
-    	}
-    	
-    	return;
-    	}
-
+   
     private Station findStation(int id)
     {
     		for(int i = 0; i < stationList.size();i++)
@@ -248,28 +190,30 @@ public class Scenario {
     /* supplementary methods for runTrips() */
     
     /** Starts a Trip */
-    public void startTrip(Trip trip) {
-    	
-    	if(trip.getStartStation() == null)
-    	{
-    		return;
-    	}
-    	if (!trip.getStartStation().isOpen()) {
+    private void startTrip(Trip trip) 
+    {
+	    	if(trip.getStartStation() == null)
+	    	{
+	    		return;
+	    	}
+	    	if (!trip.getStartStation().isOpen()) 
+	    	{
+			trip.cancelTrip();
+		}	
+		else if (trip.getStartStation().getLatestState().isEmpty())	
+		{
 			trip.cancelTrip();
 		}
-		
-		else if (trip.getStartStation().getLatestState().isEmpty())	{
-			trip.cancelTrip();
-		}
-		
-		else {
+			
+		else 
+		{
 			trip.getStartStation().takeBike(trip);
 			waitingTrips.add(trip);
-			// waitingTrips.sort(endDate,) //sort List => endDates
+				// waitingTrips.sort(endDate,) //sort List => endDates
 			trip.validateTrip();
 		}
-    	
-    	return;
+	    	
+	    	return;
     }
     
     /** Terminates a Trip */
