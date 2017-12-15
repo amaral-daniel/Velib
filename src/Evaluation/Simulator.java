@@ -33,11 +33,11 @@ public class Simulator {
 
 	//	evaluatorScenario.exportCSVCriticalStationsVariation(10*60,"src/Evaluation/variationOfCriticalStations.csv");
 		
-	//	evaluatorScenario.exportCSVStationStates(1023, "states_");
+		evaluatorScenario.exportCSVStationStates(1023, "states_");
 		
 		evaluatorScenario.visualizeStationStates(1023);
 		evaluatorScenario.visualizeStationStates(1008);
-		
+		evaluatorScenario.visualizeCriticalStationsVariation(15*60);
 		System.out.println("csvs exported");
 		
 	}

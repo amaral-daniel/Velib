@@ -47,7 +47,7 @@ public class GraphScenario extends ApplicationFrame {
         	 	Second current = new Second(currentDate);
         		for(int j = 0; j < stations.size() ; j++)
     			{
-    				if(EvaluatorStation.isEmptyOrFull(stations.get(j), currentDate))
+    				if(EvaluatorStation.isCritical(stations.get(j), currentDate))
     				{
     					numberOfBadStations += 1;
     				}

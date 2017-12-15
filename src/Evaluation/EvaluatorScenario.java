@@ -60,7 +60,7 @@ public class EvaluatorScenario
 
     			for(int j = 0; j < stations.size() ; j++)
     			{
-    				if(EvaluatorStation.isEmptyOrFull(stations.get(j), currentDate))
+    				if(EvaluatorStation.isCritical(stations.get(j), currentDate))
     				{
     					numberOfBadStations += 1;
     				}
@@ -176,6 +176,11 @@ public class EvaluatorScenario
 		my_graph.showWindow();
     }
    
+    public void visualizeEmptyStationsVariation(int step)
+    {
+    	
+    }
+    
     public void visualizeCriticalStationsVariation(int step)
     {
     		GraphScenario graph = new GraphScenario(this.refScenario,step);
@@ -342,11 +347,11 @@ public class EvaluatorScenario
 	    System.out.println("----------testing isEmptyOrFull-------------");
 		
 		Date date1 = new GregorianCalendar(1995, 02, 31,2,36).getTime();
-		boolean isCritical =  EvaluatorStation.isEmptyOrFull(station1, date1);
+		boolean isCritical =  EvaluatorStation.isCritical(station1, date1);
 		System.out.println("Station 1 is critical at" + date1 + " ? " + isCritical);
 		
 		Date date2 = new GregorianCalendar(1995, 02, 31,2,34).getTime();
-		isCritical =  EvaluatorStation.isEmptyOrFull(station2, date2);
+		isCritical =  EvaluatorStation.isCritical(station2, date2);
 		System.out.println("Station 2 is critical at" + date2 + " ? " + isCritical);
 		
 		System.out.println("--------------testing exportCSVCriticalStations--------");

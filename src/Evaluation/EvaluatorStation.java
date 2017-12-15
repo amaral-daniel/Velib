@@ -63,7 +63,7 @@ public final class EvaluatorStation {
 		return false;
 	}
 	
-	public static boolean isEmptyOrFull(Station station,Date date)
+	public static boolean isCritical(Station station,Date date)
 	{
 		for(int i = 0; i < station.getNumberOfStates() - 1; i++)
 		{
@@ -86,6 +86,78 @@ public final class EvaluatorStation {
 		if(station.getLatestState().getDate().getTime()   <= date.getTime() )
 		{
 			if(station.getLatestState().getNBikes() == 0 || station.getLatestState().getNStands() == 0 )
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}		
+		
+		System.out.println("INVALID DATE AT isEmptyOrFull!!!!!!!!!!!" + date);
+		return false;
+	}
+
+	public static boolean isEmpty(Station station,Date date)
+	{
+		for(int i = 0; i < station.getNumberOfStates() - 1; i++)
+		{
+			State currentState = station.getState(i);
+			State nextState = station.getState(i + 1);
+			
+			if(currentState.getDate().getTime() <= date.getTime() &&  nextState.getDate().getTime() > date.getTime() ) 
+			{
+				if(currentState.getNBikes() == 0  )
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+		
+		if(station.getLatestState().getDate().getTime()   <= date.getTime() )
+		{
+			if(station.getLatestState().getNBikes() == 0 )
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}		
+		
+		System.out.println("INVALID DATE AT isEmptyOrFull!!!!!!!!!!!" + date);
+		return false;
+	}
+	
+	public static boolean isFull(Station station,Date date)
+	{
+		for(int i = 0; i < station.getNumberOfStates() - 1; i++)
+		{
+			State currentState = station.getState(i);
+			State nextState = station.getState(i + 1);
+			
+			if(currentState.getDate().getTime() <= date.getTime() &&  nextState.getDate().getTime() > date.getTime() ) 
+			{
+				if( currentState.getNStands() == 0 )
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+		
+		if(station.getLatestState().getDate().getTime()   <= date.getTime() )
+		{
+			if(station.getLatestState().getNStands() == 0 )
 			{
 				return true;
 			}
