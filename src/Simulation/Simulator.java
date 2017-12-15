@@ -1,6 +1,9 @@
 package Simulation;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+
+import org.jfree.ui.RefineryUtilities;
+
 import Evaluation.*;
 
 import Data.*;
@@ -32,30 +35,10 @@ public class Simulator {
 
 		evaluatorScenario.exportCSVCriticalStationsNames("output/criticalStations.csv");
 
-		evaluatorScenario.visualizeCriticalStationsVariation(15*60*1000, 0);
+	//	evaluatorScenario.visualizeCriticalStationsVariation(15*60*1000, 0);
 		System.out.println("% cancelled trips analyze: " + evaluatorScenario.getCancelledTrips());
-
-	}
-
-	public void simulate10days(boolean regulation,double collaborationRate, double popularityGrowth)
-	{
-		TripGenerator tripGenerator = new TripGenerator(this.base_trips,false,popularityGrowth);	
-		ArrayList<Trip> simulationTrips = tripGenerator.getTrips();
-		
-		cancelledTrips.clear();
-		scenario = new Scenario(stations,simulationTrips,collaborationRate);
-
-		evaluatorScenario = new EvaluatorScenario(scenario);
-		
-		for(int i = 0; i < 7; i++)
-		{
-			scenario.runTrips();
-			cancelledTrips.add(evaluatorScenario.getCancelledTrips());
-			scenario.startNewDay();
-		}
-		
-		
-		
+		this.cancelledTrips.add(evaluatorScenario.getCancelledTrips());
+		simulate10days(regulation,collaborationRate,popularityGrowth);
 	}
 	
  	public void exportStationStates(int identity) throws FileNotFoundException
@@ -84,7 +67,58 @@ public class Simulator {
 	
 	public void visualizeCancelledTrips10days()
 	{
+		System.out.println("visualizing cancelled trips....");
+		GraphCancelledTrips graph = new GraphCancelledTrips(1,"Days",this.cancelledTrips);
+		graph.showWindow();
+	}
+	
+	public void visualizeImpactGrowth()
+	{
+		TripGenerator tripGenerator;
+		ArrayList<Trip> simulationTrips;
+		Scenario simulationScenario;
+		ArrayList<Double> cancelledTrips;
+		evaluatorScenario = new EvaluatorScenario(simulationScenario);
+		for(int i = 0; i < 10; i++)
+		{
+			tripGenerator = new TripGenerator(this.base_trips,false,i*0.15);	
+			simulationTrips = tripGenerator.getTrips();
+			simulationScenario = new Scenario(stations,simulationTrips,0);
+		}
+		evaluatorScenario = new EvaluatorScenario(scenario);
+		
+		for(int i = 0; i < 5; i++)
+		{
+			scenario.startNewDay();
+			scenario.runTrips();
+			cancelledTrips.add(evaluatorScenario.getCancelledTrips());
+		}
+		
+	}
+	
+	public void visualizeImpactCollaboration()
+	{
+		
+	}
+	
+	private void simulate10days(boolean regulation,double collaborationRate, double popularityGrowth)
+	{
+		TripGenerator tripGenerator = new TripGenerator(this.base_trips,false,popularityGrowth);	
+		ArrayList<Trip> simulationTrips = tripGenerator.getTrips();
 
+		scenario = new Scenario(stations,simulationTrips,collaborationRate);
+
+		evaluatorScenario = new EvaluatorScenario(scenario);
+		
+		for(int i = 0; i < 5; i++)
+		{
+			scenario.startNewDay();
+			scenario.runTrips();
+			cancelledTrips.add(evaluatorScenario.getCancelledTrips());
+		}
+		
+		
+		
 	}
 	
 }

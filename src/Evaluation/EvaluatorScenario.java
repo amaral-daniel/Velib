@@ -15,12 +15,10 @@ import java.text.SimpleDateFormat;
 public class EvaluatorScenario 
 {
     private Scenario refScenario;
-    private float unbalancedCriteria;
-    
+
 	public EvaluatorScenario(Scenario newScenario)
 	{
 		refScenario = newScenario;
-		unbalancedCriteria = (float)0.7;
 	}
 	
 	//fonction qui va identifier tous les stations qui sont restes vide ou pleines pendant plus que 30 minutes

@@ -1,101 +1,67 @@
 package Evaluation;
-
-import Data.*;
-
-import Simulation.Scenario;
+import org.jfree.chart.ChartPanel;
 
 import java.util.ArrayList;
-import java.util.Date;
 
-import org.jfree.chart.ChartFactory; 
-import org.jfree.chart.ChartPanel; 
-import org.jfree.chart.JFreeChart; 
-import org.jfree.data.general.SeriesException; 
-import org.jfree.data.time.Second; 
-import org.jfree.data.time.TimeSeries; 
-import org.jfree.data.time.TimeSeriesCollection; 
-import org.jfree.data.xy.XYDataset; 
-import org.jfree.ui.ApplicationFrame; 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
+import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
 
-public class GraphScenario extends ApplicationFrame {
-	private Scenario scenario;
+public class GraphCancelledTrips extends ApplicationFrame {
+
+	private ArrayList<Double> cancelledTrips;
 	private int step;
-	private String yAxisTitle;
-   public GraphScenario(  Scenario scenario  ) {
-
-      super( "grafico" );   
+   public GraphCancelledTrips( int step,String Xtitle,ArrayList<Double> cancelledTrips) {
+      super("Cancelled trips x days");
       this.step = step;
-      this.scenario = scenario;
-      final XYDataset dataset;
-      switch(type) {
-      	case 1: dataset = createDatasetEmpty();
-      		yAxisTitle = "Empty stations";
-    	  		break;
-      	case 2: dataset = createDatasetFull();
-      		yAxisTitle = "Full stations";
-      		break;
-      	default: dataset = createDataset();
-      			yAxisTitle = "Critical stations";
-      			break;
-      }
-    //  final XYDataset dataset = createDataset( );        
-      final JFreeChart chart = createChart( dataset );       
-      final ChartPanel chartPanel = new ChartPanel( chart ); 
-      chartPanel.setPreferredSize( new java.awt.Dimension( 560 , 370 ) );  
-      chartPanel.setMouseZoomable( true , false );         
-      setContentPane( chartPanel );
+      this.cancelledTrips = cancelledTrips;
+      JFreeChart lineChart = ChartFactory.createLineChart(
+         "",
+         Xtitle,"% Cancelled trips",
+         createDataset(),
+         PlotOrientation.VERTICAL,
+         true,true,false);
+	  System.out.println(cancelledTrips.get(2));
 
+      ChartPanel chartPanel = new ChartPanel( lineChart );
+      chartPanel.setPreferredSize( new java.awt.Dimension( 560 , 367 ) );
+      setContentPane( chartPanel );
    }
 
-   private XYDataset createDataset( ) {
-      final TimeSeries series = new TimeSeries( "Velib Graph" );         
-   //   Second current = new Second( );   
-      ArrayList<Station> stations = scenario.getStationList();
-      Date initialDate = stations.get(0).getState(0).getDate();	
-	   for(int i = 0; step*i < 24*60*60*1000; i++) {
-         try {
-        	 	int numberOfBadStations = 0;
-        	 	Date currentDate = new Date(initialDate.getTime() + i*step);
-        	 	Second current = new Second(currentDate);
-        		for(int j = 0; j < stations.size() ; j++)
-    			{
-    				if(EvaluatorStation.isCritical(stations.get(j), currentDate))
-    				{
-    					numberOfBadStations += 1;
-    				}
-    			}             
-            series.add(current, new Double( numberOfBadStations ) );                 
-            current = ( Second ) current.next( ); 
-         } catch ( SeriesException e ) {
-            System.err.println("Error adding to series");
-         }
+   private DefaultCategoryDataset createDataset( ) {
+      DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
+      for(int i = 0; i < cancelledTrips.size(); i+=1)
+      {
+    	  	int x = i*step;
+    	  	dataset.addValue((int)100*cancelledTrips.get(i), "",String.valueOf(i*step));
       }
 
-      return new TimeSeriesCollection(series);
-   }        
-     
+      return dataset;
+   }
    
    public void showWindow()
    {
-	    this.pack( );         
-	    RefineryUtilities.positionFrameRandomly( this );         
-	    this.setVisible( true );
+	   this.pack();
+	   RefineryUtilities.centerFrameOnScreen( this );
+	   this.setVisible( true );
    }
+   public static void main( String[ ] args ) {
+	   ArrayList<Double> cancelledTrips = new ArrayList<Double>();
+	   
+	   for(int i = 0; i < 10; i++)
+	   {
 
-   private JFreeChart createChart( final XYDataset dataset ) {
-      return ChartFactory.createTimeSeriesChart(             
-         yAxisTitle, 
-         "Time",              
-         "Number of bikes",              
-         dataset,             
-         false,              
-         false,              
-         false);
+		   cancelledTrips.add(0.5*i);
+	   }
+	   
+      GraphCancelledTrips chart = new GraphCancelledTrips(10,"Days",cancelledTrips);
+
+      chart.pack( );
+      RefineryUtilities.centerFrameOnScreen( chart );
+      chart.setVisible( true );
    }
-
    
-   public static void main( final String[ ] args ) {
-
-   }
-}   
+}
