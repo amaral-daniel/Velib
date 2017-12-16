@@ -203,17 +203,20 @@ public class Trip {
       
       trp.validateTrip();
       System.out.println();
-      System.out.println("After validation of trip:");
+      System.out.println("-----------After validation of trip:-------------");
+      System.out.println();
       System.out.println(trp);
       
       trp.setEndStation(station1);
       System.out.println();
-      System.out.println("After change of end station, NB: the trip becomes invalid");
-      System.out.println(trp);
-      
-      //Créeation d'un nouveau trip
-      Trip trp2 = new Trip(1,"20131031000002",station1,"20131031000907",station2);
+      System.out.println("-----------After change of end station, NB: the trip becomes invalid------------");
       System.out.println();
+      System.out.println(trp);
+      System.out.println();
+
+      //Créeation d'un nouveau trip
+      System.out.println("-----------Creating new trip------------");
+      Trip trp2 = new Trip(1,"20131031000002",station1,"20131031000907",station2);
       System.out.println();
       System.out.println(trp2);
       
@@ -226,8 +229,12 @@ public class Trip {
       tripList.add(trp3);
       tripList.sort(endDateComparator);
       System.out.println();
+      System.out.println("----------After sort by end date:-------------");
       System.out.println();
-      System.out.println(tripList);
+      for(int i = 0; i< tripList.size(); i++)
+      {
+    	  	System.out.println(tripList.get(i));
+      }
     }
 
 }

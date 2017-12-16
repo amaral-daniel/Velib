@@ -216,15 +216,15 @@ public class Station extends StationExtendedDynamic {
       State state1 = new State(6,14,"20131030125959");
       station1.setIsOpen(true);
       station1.setPrimaryState(state1);
-//      station1.getStateList().add(state1);
-      System.out.println("Création de la 1e station");
+
+      System.out.println("-------------Création de la 1e station---------------");
       System.out.println(station1);
       
       // Test de takeBike() et returnBike()
       Date date1 = new Date();
       station1.takeBike(date1);
       System.out.println();
-      System.out.println("After taking a bike:");
+      System.out.println("------------After taking a bike:-------------");
       System.out.println(station1);
       try        
       {
@@ -238,7 +238,7 @@ public class Station extends StationExtendedDynamic {
       Date date2 = new Date();
       System.out.println();
       station1.returnBike(date2);
-      System.out.println("After returning a bike:");
+      System.out.println("------------After returning a bike:-------------");
       System.out.println(station1);
       
       //Creation de la 2e station
@@ -248,7 +248,7 @@ public class Station extends StationExtendedDynamic {
       station2.setIsOpen(true);
       station2.setPrimaryState(state2);
       System.out.println();      
-      System.out.println("Creation de la 2e station");
+      System.out.println("-------------Création de la 2e station---------------");
       System.out.println(station2);
       
       
@@ -259,7 +259,7 @@ public class Station extends StationExtendedDynamic {
       station3.setIsOpen(true);
       station3.setPrimaryState(state3);
       System.out.println();      
-      System.out.println("Creation de la 3e station");
+      System.out.println("-------------Création de la 3e station---------------");
       System.out.println(station3);
       
       
@@ -270,7 +270,7 @@ public class Station extends StationExtendedDynamic {
       station4.setIsOpen(true);
       station4.setPrimaryState(state4);
       System.out.println();
-      System.out.println("Creation de la 4e station");
+      System.out.println("-------------Création de la 4e station---------------");
       System.out.println(station4);
       
       //Creation d'une ArrayList de stations

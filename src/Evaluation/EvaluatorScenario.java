@@ -179,6 +179,7 @@ public class EvaluatorScenario
     		GraphScenario graph = new GraphScenario(this.refScenario,step,typeOfGraph);
     		graph.showWindow();
     }
+   
     public double getCancelledTrips()
     {
     		ArrayList<Trip> tripList= refScenario.getTripList();
@@ -204,7 +205,7 @@ public class EvaluatorScenario
 		int capacity1 = 20;
 		String name1 = "Meuh";
 		String address1 = "Rue Saint Jacques";
-		int numberOfFreeBikes1 = 4;
+		int numberOfFreeBikes1 = 2;
 		int numberOfFreeStands1 = 15;
 		
 		int identity2 = 1;
@@ -239,26 +240,22 @@ public class EvaluatorScenario
 		Date endTrip2 = new GregorianCalendar(1995, 02, 31,2,31).getTime();
 		Date startTrip3 = new GregorianCalendar(1995, 02, 31,2,32).getTime();
 		Date endTrip3 = new GregorianCalendar(1995, 02, 31,2,33).getTime();
-		Date startTrip4 = new GregorianCalendar(1995, 02, 31,2,39).getTime();
-		Date endTrip4 = new GregorianCalendar(1995, 02, 31,2,40).getTime();
-		Date startTrip5 = new GregorianCalendar(1995, 02, 31,12,39).getTime();
-		Date endTrip5 = new GregorianCalendar(1995, 02, 31,12,40).getTime();
+		Date startTrip4 = new GregorianCalendar(1995, 02, 31,12,39).getTime();
+		Date endTrip4 = new GregorianCalendar(1995, 02, 31,12,40).getTime();
+
 		//Creating trips.....
 		Trip trip1 = new Trip(Reason.RENT, startTrip1, station1, endTrip1, station2);
 		Trip trip2 = new Trip(Reason.RENT, startTrip2 , station1,endTrip2, station2);
 		Trip trip3 = new Trip(Reason.RENT, startTrip3, station1,endTrip3, station2);
-		Trip trip4 = new Trip(Reason.RENT, startTrip4 , station1,endTrip4, station2);
-		Trip trip5 = new Trip(Reason.RENT, startTrip5 , station2,endTrip5, station1);
+		Trip trip4 = new Trip(Reason.RENT, startTrip4 , station2,endTrip4, station1);
 		ArrayList<Trip> tripList = new ArrayList<Trip>();
 		tripList.add(trip1);
 		tripList.add(trip2);
 		tripList.add(trip3);
-		tripList.add(trip4);
-		tripList.add(trip5);		
+		tripList.add(trip4);	
 		//Creating scenario.....
 		Scenario scenario = new Scenario(stationList,tripList,0);		
 		//Starting tests.....	
-		System.out.println("--------------before running trips-------------\n");
 		
 		ArrayList<Station> stations = scenario.getStationList();
 		
@@ -272,7 +269,14 @@ public class EvaluatorScenario
 		System.out.println("-------------------------critical stations -----------------------\n ");
 		for(int i = 0; i < criticalStations.size(); i++)
 		{
-			System.out.println(criticalStations.get(i));
+			if(criticalStations.get(i).getIdentity() != identity1)
+			{
+				System.out.println("Error searching for critical stations. ERROR");
+			}
+			else
+			{
+				System.out.println("Successfully found the critical station id:" + criticalStations.get(i).getIdentity() + "\n");
+			}
 		}
 		
 		System.out.println("--------------after running trips------------- \n");
@@ -285,33 +289,65 @@ public class EvaluatorScenario
 			System.out.println(stations.get(i));
 		}
 		
-		System.out.println("------------writting to files-----------");
+		if(stations.get(0).getLatestState().getNBikes() == 1)
+		{
+			System.out.println("Last state of first station 1 is right \n" );
+		}
+		else
+		{
+			System.out.println("Last state of first station 1 is wrong. ERROR" );
+		}
+		
+		System.out.println("------------writting to files----------- \n");
 		
 		for(int i = 0; i < stations.size(); i++)
 		{
-			my_evaluateur.exportCSVStationStates(stations.get(i).getName(),"src/Evaluation/states_");
-			my_evaluateur.visualizeStationStates(stations.get(i).getName());			
+			my_evaluateur.exportCSVStationStates(stations.get(i).getName(),"output/states_");		
 		}
 		
-	    System.out.println("----------testing isEmptyOrFull-------------");
+	    System.out.println("----------testing isEmptyOrFull-------------\n");
 		
 		Date date1 = new GregorianCalendar(1995, 02, 31,2,36).getTime();
 		boolean isCritical =  EvaluatorStation.isCritical(station1, date1);
 		System.out.println("Station 1 is critical at" + date1 + " ? " + isCritical);
+		if(isCritical)
+		{
+			System.out.println("EvaluatorStation.isCritical seems to work \n");
+		}
+		else
+		{
+			System.out.println("EvaluatorStation.isCritical doesnt seem to work. ERROR \n");
+		}
 		
 		Date date2 = new GregorianCalendar(1995, 02, 31,2,34).getTime();
 		isCritical =  EvaluatorStation.isCritical(station2, date2);
 		System.out.println("Station 2 is critical at" + date2 + " ? " + isCritical);
 		
-		System.out.println("--------------testing exportCSVCriticalStations--------");
+		if(!isCritical)
+		{
+			System.out.println("EvaluatorStation.isCritical seems to work \n");
+		}
+		else
+		{
+			System.out.println("EvaluatorStation.isCritical doesnt seem to work. ERROR");
+		}
+		
+		System.out.println("--------------testing exportCSVCriticalStations--------\n");
 		
 		my_evaluateur.exportCSVCriticalStationsVariation(30*60,"src/Evaluation/variationOfCriticalStations.csv");
 		
-		System.out.println("-------------visualize variation critical stations------------");
+		System.out.println("-------------visualizing variation critical stations------------\n");
 		
 		my_evaluateur.visualizeCriticalStationsVariation(15*60*1000,0);
 		
-		System.out.println("-------------testing isUnbalanced-------------");
+		System.out.println("-------------visualizing states variation of all stations---------\n");
+		
+		for(int i = 0; i < stations.size(); i++)
+		{
+			my_evaluateur.visualizeStationStates(stations.get(i).getName());	
+		}
+		
+		System.out.println("-------------test ended succesfully-------------\n");
 		
 		return;
 		

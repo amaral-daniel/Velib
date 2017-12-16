@@ -101,16 +101,17 @@ public class State {
     
     /* Pour tester le code */
     public static void main(String [] args) {
+    	System.out.println("Printing 3 states with 0, 5 and 10 bikes");
+    	
       // Constructeur de classe Date 1 
       Date date1 = new Date();
-      State st1 = new State(3,7,date1); 
+      State st1 = new State(0,10,date1); 
       System.out.println(st1);
-      
+
       // Constructeur de classe Date 2 
       Date date2 = new Date();
-      State st2 = new State(0,10,date2); 
+      State st2 = new State(5,5,date2); 
       System.out.println(st2);
-      
       // Constructeur de String 3 
       SimpleDateFormat myFormater = new SimpleDateFormat ("yyyyMMddhhmmss");
       try {
@@ -121,13 +122,6 @@ public class State {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
-      
-      // Essaie de ArrayList
-      ArrayList<State> stateList = new ArrayList<State>();
-      stateList.add(st1);
-      stateList.add(st2);
-      
-      System.out.println(stateList.get(0));
       
 
     }
