@@ -214,6 +214,7 @@ public class Window extends JFrame implements ActionListener
 				String sta_input = input_station.getText();
 				input_station.selectAll();
 				stationID = Integer.parseInt(sta_input);
+				simulation.visualizeStationStates(stationID);
 				System.out.println(stationID);
 				
 			}
