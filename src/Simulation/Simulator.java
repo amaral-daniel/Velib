@@ -45,6 +45,8 @@ public class Simulator {
 	//	evaluatorScenario.visualizeCriticalStationsVariation(15*60*1000, 0);
 		System.out.println("% cancelled trips analyze: " + evaluatorScenario.getCancelledTrips());
 		this.cancelledTrips.add(evaluatorScenario.getCancelledTrips());
+		
+		simulate10days();
 	}
 	
  	public void exportStationStates(int identity) throws FileNotFoundException
@@ -73,7 +75,6 @@ public class Simulator {
 	
 	public void visualizeCancelledTrips10days()
 	{
-		simulate10days();
 		System.out.println("visualizing cancelled trips....");
 		GraphCancelledTrips graph = new GraphCancelledTrips(1,"Days",this.cancelledTrips);
 		graph.showWindow();
@@ -81,14 +82,12 @@ public class Simulator {
 	
 	public void visualizeImpactGrowth()
 	{
-		System.out.println("aaa");
 		TripGenerator tripGenerator;
 		ArrayList<Trip> simulationTrips;
 		Scenario simulationScenario;
 		ArrayList<Double> cancelledTrips = new ArrayList<Double>();
 		for(int i = 0; i < 5; i++)
 		{
-			System.out.println("aaa" + i);
 			tripGenerator = new TripGenerator(this.base_trips,regulation,i*0.5);	
 			simulationTrips = tripGenerator.getTrips();
 			simulationScenario = new Scenario(stations,simulationTrips,collaborationRate);
@@ -99,7 +98,6 @@ public class Simulator {
 		}
 		GraphCancelledTrips graph = new GraphCancelledTrips(50,"Growth Rate (%)",cancelledTrips);
 		graph.showWindow();
-		System.out.println("aaabbb");
 
 	}
 	

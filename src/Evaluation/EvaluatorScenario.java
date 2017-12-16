@@ -244,7 +244,6 @@ public class EvaluatorScenario
 		Date startTrip5 = new GregorianCalendar(1995, 02, 31,12,39).getTime();
 		Date endTrip5 = new GregorianCalendar(1995, 02, 31,12,40).getTime();
 		//Creating trips.....
-		
 		Trip trip1 = new Trip(Reason.RENT, startTrip1, station1, endTrip1, station2);
 		Trip trip2 = new Trip(Reason.RENT, startTrip2 , station1,endTrip2, station2);
 		Trip trip3 = new Trip(Reason.RENT, startTrip3, station1,endTrip3, station2);
@@ -255,31 +254,18 @@ public class EvaluatorScenario
 		tripList.add(trip2);
 		tripList.add(trip3);
 		tripList.add(trip4);
-		tripList.add(trip5);
-		
+		tripList.add(trip5);		
 		//Creating scenario.....
-		
-		Scenario scenario = new Scenario(stationList,tripList,0);
-		
-		//Starting tests.....
-		
+		Scenario scenario = new Scenario(stationList,tripList,0);		
+		//Starting tests.....	
 		System.out.println("--------------before running trips-------------\n");
 		
 		ArrayList<Station> stations = scenario.getStationList();
 		
-	//	for(int i = 0; i < stations.size(); i++)
-	//	{
-	//		System.out.println(stations.get(i));
-	//	}
-		
-		//System.out.println("running trips....\n");
 		scenario.runTrips();
 		
 		EvaluatorScenario my_evaluateur = new EvaluatorScenario(scenario);
 		
-		int secondsTrajet  = my_evaluateur.getSecondsTrajets();
-		
-		System.out.println("total time :" + secondsTrajet);
 		
 		ArrayList<Station> criticalStations = my_evaluateur.identifyCriticalStations();
 		
@@ -304,11 +290,9 @@ public class EvaluatorScenario
 		for(int i = 0; i < stations.size(); i++)
 		{
 			my_evaluateur.exportCSVStationStates(stations.get(i).getName(),"src/Evaluation/states_");
-			my_evaluateur.visualizeStationStates(stations.get(i).getName());
-			
+			my_evaluateur.visualizeStationStates(stations.get(i).getName());			
 		}
 		
-		System.out.println("--------------drawing graph");
 	    System.out.println("----------testing isEmptyOrFull-------------");
 		
 		Date date1 = new GregorianCalendar(1995, 02, 31,2,36).getTime();
@@ -325,13 +309,10 @@ public class EvaluatorScenario
 		
 		System.out.println("-------------visualize variation critical stations------------");
 		
-		my_evaluateur.visualizeCriticalStationsVariation(15*60,0);
+		my_evaluateur.visualizeCriticalStationsVariation(15*60*1000,0);
 		
 		System.out.println("-------------testing isUnbalanced-------------");
 		
-		//boolean isUnbalanced = my_evaluateur.isUnbalanced();
-		
-	//	System.out.println("is unbalanced? " + isUnbalanced);
 		return;
 		
 	}
