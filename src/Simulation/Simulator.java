@@ -92,7 +92,7 @@ public class Simulator {
 			simulationTrips = tripGenerator.getTrips();
 			simulationScenario = new Scenario(stations,simulationTrips,collaborationRate);
 			simulationScenario.runTrips();
-			evaluatorScenario = new EvaluatorScenario(simulationScenario);
+			EvaluatorScenario evaluatorScenario = new EvaluatorScenario(simulationScenario);
 			cancelledTrips.add(evaluatorScenario.getCancelledTrips());
 
 		}
@@ -113,7 +113,7 @@ public class Simulator {
 			simulationTrips = tripGenerator.getTrips();
 			simulationScenario = new Scenario(stations,simulationTrips,0.1*i);
 			simulationScenario.runTrips();
-			evaluatorScenario = new EvaluatorScenario(simulationScenario);
+			EvaluatorScenario evaluatorScenario = new EvaluatorScenario(simulationScenario);
 			cancelledTrips.add(evaluatorScenario.getCancelledTrips());
 
 		}
@@ -128,14 +128,14 @@ public class Simulator {
 		TripGenerator tripGenerator = new TripGenerator(this.base_trips,false,popularityGrowth);	
 		ArrayList<Trip> simulationTrips = tripGenerator.getTrips();
 
-		scenario = new Scenario(stations,simulationTrips,collaborationRate);
+		Scenario scenario2 = new Scenario(stations,simulationTrips,collaborationRate);
 
-		evaluatorScenario = new EvaluatorScenario(scenario);
+		EvaluatorScenario evaluatorScenario = new EvaluatorScenario(scenario2);
 		
 		for(int i = 0; i < 10; i++)
 		{
-			scenario.startNewDay();
-			scenario.runTrips();
+			scenario2.startNewDay();
+			scenario2.runTrips();
 			cancelledTrips.add(evaluatorScenario.getCancelledTrips());
 		}
 		System.out.println("end");
