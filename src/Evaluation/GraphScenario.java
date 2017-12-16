@@ -24,7 +24,7 @@ public class GraphScenario extends ApplicationFrame {
 	private String yAxisTitle;
    public GraphScenario(  Scenario scenario, int step, int type  ) {
 
-      super( "grafico" );   
+      super( "Critical stations variation" );   
       this.step = step;
       this.scenario = scenario;
       final XYDataset dataset;
@@ -140,7 +140,7 @@ public class GraphScenario extends ApplicationFrame {
       return ChartFactory.createTimeSeriesChart(             
          yAxisTitle, 
          "Time",              
-         "Number of bikes",              
+         "Number of stations",              
          dataset,             
          false,              
          false,              
