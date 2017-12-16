@@ -45,7 +45,7 @@ public class GraphStation extends ApplicationFrame {
          //   System.out.println(stateList.get(i));
             current = ( Second ) current.next( ); 
          } catch ( SeriesException e ) {
-            System.err.println("Error adding to series");
+    //        System.err.println("Error adding to series");
          }
       }
 
