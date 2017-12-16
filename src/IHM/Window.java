@@ -20,21 +20,12 @@ public class Window extends JFrame implements ActionListener
 {	
 	//Objets du layout de la fenetre
 	private JButton button_run, button_show, button_growth, button_collaboration;
-	
-	private JTextField input_collaboration_rate;
-	private JTextField input_regulation;
-	private JTextField input_popularity_growth;
-	private JTextField input_station;
-	private JLabel label_collaboration_rate;
-	private JLabel label_regulation;
-	private JLabel label_popularity_growth;
-	private JLabel label_station;
-	private JLabel label_cancelled_trips;
-	private JLabel label_time_unbalanced;
+	private JTextField input_collaboration_rate, input_regulation, input_popularity_growth, input_station;
+	JLabel label_collaboration_rate, label_regulation, label_popularity_growth, label_station, 
+	label_cancelled_trips, label_time_unbalanced;
 	
 	//Objects used in the simulation
 	private static ArrayList<Station> baseStationList;
-	private static ArrayList<State> stateList;
 	private static ArrayList<Trip> baseTripList;
 	private static Simulator simulation; 
 	
@@ -160,13 +151,13 @@ public class Window extends JFrame implements ActionListener
 					System.out.println("Please wait");
 				}
 				else {
-					System.out.println(7);
+					
 					simulation = new Simulator(baseTripList, baseStationList,regulation, 
 							collaboration_rate, popularity_growth);
 					try {
-						System.out.println(8);
+					
 						simulation.simulate();
-						System.out.println(9);
+						
 					} catch (FileNotFoundException e1) {
 						e1.printStackTrace();
 						System.out.println("File not found");
