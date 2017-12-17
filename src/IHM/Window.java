@@ -83,13 +83,13 @@ public class Window extends JFrame implements ActionListener
 		this.setResizable(false);
         this.setLocation(400, 200);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setVisible(true);
+		
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		this.add(panel);
 		
-		
+		//Buttons
 		button_run = new JButton("Run");
 		button_run.addActionListener(this);
 		button_run.setBounds(50, 120, 80, 30); //x,y,width,height
@@ -110,26 +110,35 @@ public class Window extends JFrame implements ActionListener
 		button_crit_export.setBounds(320, 200, 80, 30);
 		button_crit_export.addActionListener(this);
 		
-		
+		//Text fields
 		input_collaboration_rate = new JTextField();
-		input_collaboration_rate.setBounds(50, 30, 110, 20);
+		input_collaboration_rate.setBounds(50, 50, 110, 20);
 		input_collaboration_rate.addActionListener(this);
 		
 		input_regulation = new JTextField();
-		input_regulation.setBounds(200, 30, 110, 20);
+		input_regulation.setBounds(200, 50, 110, 20);
 		input_regulation.addActionListener(this);
 		
 		input_popularity_growth = new JTextField();
-		input_popularity_growth.setBounds(350, 30, 110, 20);
+		input_popularity_growth.setBounds(350, 50, 110, 20);
 		input_popularity_growth.addActionListener(this);
 		
 		input_station = new JTextField();
 		input_station.setBounds(250, 300, 110, 20);
 		input_station.addActionListener(this);
 		
+		//labels
+		label_collaboration_rate = new JLabel("Collaboration");
+		label_collaboration_rate.setBounds(50, 30, 110, 20);
 		
-		label_collaboration_rate = new JLabel("Collaboration Rate");
-		label_collaboration_rate.setBounds(210, 80, 300, 40);
+		label_regulation = new JLabel("Régulation");
+		label_regulation.setBounds(200, 30, 110, 20);
+		
+		label_popularity_growth = new JLabel("Croiassance");
+		label_popularity_growth.setBounds(350, 30, 110, 20);
+		
+		label_station = new JLabel("Station ID: ");
+		label_station.setBounds(180, 300, 110, 20);
 		
 		panel.add(button_run);
 		panel.add(button_show);
@@ -142,8 +151,11 @@ public class Window extends JFrame implements ActionListener
 		panel.add(input_popularity_growth);
 		panel.add(input_station);
 		
-	//	panel.add(label_collaboration_rate);
-		
+		panel.add(label_collaboration_rate);
+		panel.add(label_regulation);
+		panel.add(label_popularity_growth);
+		panel.add(label_station);
+		this.setVisible(true);
 	}
 	
 	
