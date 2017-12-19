@@ -289,7 +289,6 @@ public class Window extends JFrame implements ActionListener
 					
 					if(e.getSource() == button_crit_export)
 					{
-						System.out.println("ue");
 						try {
 							System.out.println("ue2");
 							simulation.exportStationStates(stationID);
@@ -300,13 +299,10 @@ public class Window extends JFrame implements ActionListener
 						
 					}
 					
-					
 				}
-				
 				
 			}
 			
-			
 		}
-		
+
 }
