@@ -54,9 +54,6 @@ public class Window extends JFrame implements ActionListener
 		//Construct reader
 		Read read = new Read();
 		
-		//Creates stationList with their initial condition
-		baseStationList = read.createStationList(stationAddressesFileName);
-		
 	
 		ready=true;
 		System.out.println("ok");
@@ -169,6 +166,8 @@ public class Window extends JFrame implements ActionListener
 				if(e.getSource() == button_run)
 				{
 					Read read = new Read();
+					//Creates stationList with their initial condition
+					baseStationList = read.createStationList(stationAddressesFileName);
 					read.defineInitalStates("src/files/initialstates.txt", baseStationList);
 					
 					//Creates trip list
@@ -225,6 +224,7 @@ public class Window extends JFrame implements ActionListener
 				{
 					if(e.getSource() == button_show)
 					{
+						
 						simulation.visualizeCriticalStationsVariation();
 						Read read = new Read();
 						ArrayList<Station> baseStationList10days;
