@@ -25,6 +25,9 @@ public class Window extends JFrame implements ActionListener
 	label_cancelled_trips, label_time_unbalanced;
 	
 	//Objects used in the simulation
+	private static String stationAddressesFileName = "src/files/stationsAddresses.txt";
+	private static String tripsFileName = "src/files/trips-2013-10-31.txt";
+	private static String initialStatesFileName = "src/files/initialstates.txt";
 	private static ArrayList<Station> baseStationList;
 	private static ArrayList<Trip> baseTripList;
 	private static Simulator simulation; 
@@ -46,19 +49,14 @@ public class Window extends JFrame implements ActionListener
 		Window window = new Window(500, 400, "Projet Velib");
 		
 		//File Names
-		String stationAddressesFileName = "src/files/stationsAddresses.txt";
-		String initialStatesFileName = "src/files/initialstates.txt";
-		String tripsFileName = "src/files/trips-2013-10-31.txt";
+		
 		
 		//Construct reader
 		Read read = new Read();
 		
 		//Creates stationList with their initial condition
 		baseStationList = read.createStationList(stationAddressesFileName);
-		read.defineInitalStates(initialStatesFileName, baseStationList);
 		
-		//Creates trip list
-		baseTripList = read.createTripsList(tripsFileName, baseStationList);
 	
 		ready=true;
 		System.out.println("ok");
@@ -170,6 +168,12 @@ public class Window extends JFrame implements ActionListener
 				//Event from button "run"
 				if(e.getSource() == button_run)
 				{
+					Read read = new Read();
+					read.defineInitalStates("src/files/initialstates.txt", baseStationList);
+					
+					//Creates trip list
+					baseTripList = read.createTripsList("src/files/trips-2013-10-31.txt", baseStationList);
+					
 					simulation = new Simulator(baseTripList, baseStationList,regulation, 
 							collaboration_rate, popularity_growth);
 					try {
@@ -226,12 +230,37 @@ public class Window extends JFrame implements ActionListener
 					
 					if(e.getSource() == button_growth)
 					{
-						simulation.visualizeImpactGrowth();
+						Read read = new Read();
+						ArrayList<Station> baseStationListGrowth;
+						baseStationListGrowth = read.createStationList(stationAddressesFileName);
+						
+						read.defineInitalStates(initialStatesFileName, baseStationListGrowth);
+						
+						//Creates trip list
+						ArrayList<Trip> baseTripListGrowth;
+						baseTripListGrowth = read.createTripsList(tripsFileName, baseStationListGrowth);
+						
+						Simulator simulationGrowth = new Simulator(baseTripListGrowth, baseStationListGrowth,
+								regulation, collaboration_rate, popularity_growth);
+						simulationGrowth.visualizeImpactGrowth();
 					}
 					
 					if(e.getSource() == button_collaboration)
 					{
-						simulation.visualizeImpactCollaboration();
+						Read read = new Read();
+						ArrayList<Station> baseStationListCollaboration;
+						baseStationListCollaboration = read.createStationList(stationAddressesFileName);
+						
+						read.defineInitalStates(initialStatesFileName, baseStationListCollaboration);
+						
+						//Creates trip list
+						ArrayList<Trip> baseTripListCollaboration;
+						baseTripListCollaboration = read.createTripsList(tripsFileName, baseStationListCollaboration);
+						
+						Simulator simulationCollaboration = new Simulator(baseTripListCollaboration, baseStationListCollaboration,
+								regulation, collaboration_rate, popularity_growth);
+						
+						simulationCollaboration.visualizeImpactCollaboration();
 					}
 					
 					
