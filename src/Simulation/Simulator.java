@@ -2,8 +2,6 @@ package Simulation;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-import org.jfree.ui.RefineryUtilities;
-
 import Evaluation.*;
 
 import Data.*;
@@ -42,11 +40,10 @@ public class Simulator {
 
 		evaluatorScenario.exportCSVCriticalStationsNames("output/criticalStations.csv");
 
-	//	evaluatorScenario.visualizeCriticalStationsVariation(15*60*1000, 0);
-		System.out.println("% cancelled trips analyze: " + evaluatorScenario.getCancelledTrips());
+		//System.out.println("critical stations names exported to output/criticalStations.csv");
+
 		this.cancelledTrips.add(evaluatorScenario.getCancelledTrips());
 		
-		simulate10days();
 	}
 	
  	public void exportStationStates(int identity) throws FileNotFoundException
@@ -75,7 +72,8 @@ public class Simulator {
 	
 	public void visualizeCancelledTrips10days()
 	{
-		System.out.println("visualizing cancelled trips....");
+		simulate10days();
+
 		GraphCancelledTrips graph = new GraphCancelledTrips(1,"Days",this.cancelledTrips);
 		graph.showWindow();
 	}
@@ -92,8 +90,8 @@ public class Simulator {
 			simulationTrips = tripGenerator.getTrips();
 			simulationScenario = new Scenario(stations,simulationTrips,collaborationRate);
 			simulationScenario.runTrips();
-			EvaluatorScenario evaluatorScenario = new EvaluatorScenario(simulationScenario);
-			cancelledTrips.add(evaluatorScenario.getCancelledTrips());
+			EvaluatorScenario evaluatorScenario1 = new EvaluatorScenario(simulationScenario);
+			cancelledTrips.add(evaluatorScenario1.getCancelledTrips());
 
 		}
 		GraphCancelledTrips graph = new GraphCancelledTrips(50,"Growth Rate (%)",cancelledTrips);
@@ -113,8 +111,8 @@ public class Simulator {
 			simulationTrips = tripGenerator.getTrips();
 			simulationScenario = new Scenario(stations,simulationTrips,0.1*i);
 			simulationScenario.runTrips();
-			EvaluatorScenario evaluatorScenario = new EvaluatorScenario(simulationScenario);
-			cancelledTrips.add(evaluatorScenario.getCancelledTrips());
+			EvaluatorScenario evaluatorScenario1 = new EvaluatorScenario(simulationScenario);
+			cancelledTrips.add(evaluatorScenario1.getCancelledTrips());
 
 		}
 		GraphCancelledTrips graph = new GraphCancelledTrips(10,"Collaboration Rate (%)",cancelledTrips);
@@ -123,22 +121,20 @@ public class Simulator {
 	
 	private void simulate10days()
 	{
-		System.out.println("begin");
 
-		TripGenerator tripGenerator = new TripGenerator(this.base_trips,false,popularityGrowth);	
-		ArrayList<Trip> simulationTrips = tripGenerator.getTrips();
+		TripGenerator tripGenerator1 = new TripGenerator(this.base_trips,regulation,popularityGrowth);	
+		ArrayList<Trip> simulationTrips1 = tripGenerator1.getTrips();
 
-		Scenario scenario2 = new Scenario(stations,simulationTrips,collaborationRate);
+		Scenario scenario1 = new Scenario(stations,simulationTrips1,collaborationRate);
 
-		EvaluatorScenario evaluatorScenario = new EvaluatorScenario(scenario2);
+		EvaluatorScenario evaluatorScenario1 = new EvaluatorScenario(scenario1);
 		
 		for(int i = 0; i < 10; i++)
 		{
-			scenario2.startNewDay();
-			scenario2.runTrips();
-			cancelledTrips.add(evaluatorScenario.getCancelledTrips());
+			scenario1.startNewDay();
+			scenario1.runTrips();
+			cancelledTrips.add(evaluatorScenario1.getCancelledTrips());
 		}
-		System.out.println("end");
 		
 		
 	}

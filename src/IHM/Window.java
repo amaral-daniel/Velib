@@ -129,7 +129,7 @@ public class Window extends JFrame implements ActionListener
 		label_collaboration_rate = new JLabel("Collaboration");
 		label_collaboration_rate.setBounds(50, 30, 110, 20);
 		
-		label_regulation = new JLabel("Régulation");
+		label_regulation = new JLabel("Rï¿½gulation");
 		label_regulation.setBounds(200, 30, 110, 20);
 		
 		label_popularity_growth = new JLabel("Croiassance");
@@ -180,6 +180,7 @@ public class Window extends JFrame implements ActionListener
 						
 						simulation.simulate();
 						alreadyRun = true;
+						System.out.println("ready to show");
 							
 					} catch (FileNotFoundException e1) {
 						e1.printStackTrace();
@@ -225,7 +226,19 @@ public class Window extends JFrame implements ActionListener
 					if(e.getSource() == button_show)
 					{
 						simulation.visualizeCriticalStationsVariation();
-						simulation.visualizeCancelledTrips10days();
+						Read read = new Read();
+						ArrayList<Station> baseStationList10days;
+						baseStationList10days = read.createStationList(stationAddressesFileName);
+						
+						read.defineInitalStates(initialStatesFileName, baseStationList10days);
+						
+						//Creates trip list
+						ArrayList<Trip> baseTripList10days;
+						baseTripList10days = read.createTripsList(tripsFileName, baseStationList10days);
+						
+						Simulator simulation10days = new Simulator(baseTripList10days, baseStationList10days,
+								regulation, collaboration_rate, popularity_growth);
+						simulation10days.visualizeCancelledTrips10days();
 					}
 					
 					if(e.getSource() == button_growth)
