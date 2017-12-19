@@ -132,7 +132,7 @@ public class Window extends JFrame implements ActionListener
 		label_regulation = new JLabel("R�gulation");
 		label_regulation.setBounds(200, 30, 110, 20);
 		
-		label_popularity_growth = new JLabel("Croiassance");
+		label_popularity_growth = new JLabel("Croissance");
 		label_popularity_growth.setBounds(350, 30, 110, 20);
 		
 		label_station = new JLabel("Station ID: ");
